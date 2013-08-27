@@ -13,11 +13,11 @@ ACTION_BUTTON = 0x02
 
 def testing():
     print "TESTING"
-    auto_detect_ip_threaded()
-    #auto_detect_ip()
 
 def main():
     print "MAIN"
+    setup_ip()
+
     testing()
     
 if __name__ == "__main__":
@@ -26,6 +26,7 @@ if __name__ == "__main__":
 class YamahaRXClient:
     def __init__(self):
         print "Init"
+        setup_ip()
 
     def send_action(self, msg = '', type = ACTION_EXECBUILTIN):
         if msg == 'VolumeUp':

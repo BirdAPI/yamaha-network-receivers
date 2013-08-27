@@ -6,7 +6,11 @@ import socket
 from settings import *
 import yamaha
 
-_FOUND_IP = None
+def setup_ip():
+    if SETTINGS.ip_auto_detect:
+        ip = auto_detect_ip_threaded()
+        if ip is not None:
+            SETTINGS.ip_address = ip
 
 def get_lan_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -36,17 +40,17 @@ def auto_detect_ip():
     print "finished in", delta.total_seconds(), "seconds"
     return found_ip
 
+_FOUND_IP = None
 def auto_detect_ip_threaded():
     global _FOUND_IP
     _FOUND_IP = None
     start = datetime.now()
     threads = []
 
-    # Get LAN IP in order to detect subnet
+    # Get LAN IP in order to detect network prefix (eg 192.168.1)
     lan_ip = get_lan_ip()
     ip_range = create_ip_range(lan_ip[:lan_ip.rfind('.')] + '.1', lan_ip[:lan_ip.rfind('.')] + '.254')
 
-    #ip_range = create_ip_range(SETTINGS.ip_range_start, SETTINGS.ip_range_end)
     for ip in ip_range:
         t = Thread(target=try_connect, kwargs={'ip':ip})
         t.daemon = True
