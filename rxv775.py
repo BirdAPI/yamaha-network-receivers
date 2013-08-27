@@ -4,6 +4,7 @@ from xml.dom import minidom
 import httplib
 import urllib
 import re
+import time
 
 # Receiver internet connection info
 IP_ADDRESS = "192.168.1.23"
@@ -42,7 +43,7 @@ def get_config():
     return get_xml(CONFIG_XML)
     
 def send_xml(XML):
-    conn = httplib.HTTPConnection("192.168.1.22:80")
+    conn = httplib.HTTPConnection("%s:%s" % ( IP_ADDRESS, PORT ))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)
@@ -229,8 +230,34 @@ def get_radio_preset_count():
 def set_scene(scene_num):
     send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Scene><Scene_Load>Scene %i</Scene_Load></Scene></Main_Zone></YAMAHA_AV>' % scene_num)
     
+def tests():
+    # conf = get_config()
+    # print conf
+    # print '\n\n\n'
+    # basic = get_basic_status()
+    # print basic
+    # print '\n\n\n'
+    # print get_string_param('Power')
+    # print 'Volume:', get_volume()
+    # toggle_on_standby()
+    # set_volume(-19.1)
+    # time.sleep(3)
+    # print 'Volume:', get_volume()
+    # print get_string_param('Power')
+    
+    power_on()
+    time.sleep(2)
+    print 'Volume:', get_volume()
+    for i in range(10):
+        increase_volume()
+        time.sleep(1)
+        print 'Volume:', get_volume()
+        
+    
+    
 def main():
     print "MAIN"
+    tests()
     
 if __name__ == "__main__":
     main()
