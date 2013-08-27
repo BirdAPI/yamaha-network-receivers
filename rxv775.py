@@ -21,7 +21,7 @@ TUNER_STATUS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Info>GetParam</Play_Info><
 TUNER_PRESETS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner></YAMAHA_AV>'
 CONFIG_XML = '<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></YAMAHA_AV>'
     
-def get_xml(XML, Settings):
+def get_xml(XML):
     conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
@@ -246,16 +246,15 @@ def tests():
     # print 'Volume:', get_volume()
     # print get_string_param('Power')
     
-    # power_on()
-    # time.sleep(2)
-    # print 'Volume:', get_volume()
-    # for i in range(10):
-        # increase_volume()
-        # time.sleep(1)
-        # print 'Volume:', get_volume()
+    power_on()
+    time.sleep(2)
+    print 'Volume:', get_volume()
+    for i in range(10):
+        increase_volume()
+        time.sleep(1)
+        print 'Volume:', get_volume()
     
-    global SETTINGS
-    ip_range = create_ip_range(SETTINGS.ip_range_start, SETTINGS.ip_range_end)
+    #ip_range = create_ip_range(SETTINGS.ip_range_start, SETTINGS.ip_range_end)
         
     
     
