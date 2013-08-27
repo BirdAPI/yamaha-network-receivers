@@ -1,15 +1,17 @@
-from rxv775 import *
+__author__ = 'Anthony Casagrande'
+
+from client import *
 
 # expose some information about the plugin through an eg.PluginInfo subclass
 
 eg.RegisterPlugin(
-    name = "RX-V775",
+    name = "Yamaha RX Network Receiver",
     author = "Anthony Casagrande",
     version = "0.7",
     kind = "program",
     createMacrosOnAdd = True,
     url = "",
-    description = "Adds actions to control Yamaha RX-V775 (or similar) receiver.",
+    description = "Adds actions to control Yamaha RX-*** network receiver.",
 )
 
 ACTIONS = (   
@@ -86,11 +88,11 @@ ACTIONS = (
 class ActionPrototype(eg.ActionClass):
     def __call__(self):
         try:
-            self.plugin.rxv775.send_action(self.value, ACTION_BUTTON)
+            self.plugin.client.send_action(self.value, ACTION_BUTTON)
         except:
             raise self.Exceptions.ProgramNotRunning
 
-class RXV775(eg.PluginClass):
+class YamahaRX(eg.PluginClass):
     def __init__(self):
         self.AddActionsFromList(ACTIONS, ActionPrototype)
-        self.rxv775 = RXV775Client()
+        self.client = YamahaRXClient()
