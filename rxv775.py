@@ -1,14 +1,15 @@
 #!/usr/bin/python
 
+# Python Imports
 from xml.dom import minidom
 import httplib
 import urllib
 import re
 import time
 
-# Receiver internet connection info
-IP_ADDRESS = "192.168.1.23"
-PORT = "80"
+# Local Imports
+from settings import *
+from helpers import *
 
 # EventGhost Constnats
 ACTION_EXECBUILTIN = 0x01
@@ -20,8 +21,8 @@ TUNER_STATUS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Info>GetParam</Play_Info><
 TUNER_PRESETS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner></YAMAHA_AV>'
 CONFIG_XML = '<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></YAMAHA_AV>'
     
-def get_xml(XML):
-    conn = httplib.HTTPConnection("%s:%s" % ( IP_ADDRESS, PORT ))
+def get_xml(XML, Settings):
+    conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)
@@ -43,7 +44,7 @@ def get_config():
     return get_xml(CONFIG_XML)
     
 def send_xml(XML):
-    conn = httplib.HTTPConnection("%s:%s" % ( IP_ADDRESS, PORT ))
+    conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)
@@ -245,13 +246,16 @@ def tests():
     # print 'Volume:', get_volume()
     # print get_string_param('Power')
     
-    power_on()
-    time.sleep(2)
-    print 'Volume:', get_volume()
-    for i in range(10):
-        increase_volume()
-        time.sleep(1)
-        print 'Volume:', get_volume()
+    # power_on()
+    # time.sleep(2)
+    # print 'Volume:', get_volume()
+    # for i in range(10):
+        # increase_volume()
+        # time.sleep(1)
+        # print 'Volume:', get_volume()
+    
+    global SETTINGS
+    ip_range = create_ip_range(SETTINGS.ip_range_start, SETTINGS.ip_range_end)
         
     
     
@@ -318,4 +322,3 @@ class RXV775Client:
         elif msg.startswith('Scene'):
             set_scene(int(msg.replace('Scene', '')))
            
-            
