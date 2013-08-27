@@ -14,8 +14,15 @@ TUNER_STATUS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Info>GetParam</Play_Info><
 TUNER_PRESETS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner></YAMAHA_AV>'
 CONFIG_XML = '<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></YAMAHA_AV>'
 
-def get_xml(XML):
-    conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
+def get_xml(XML, timeout=-1, ip=None, port=None):
+    if ip is None:
+        ip = SETTINGS.ip_address
+    if port is None:
+        port = SETTINGS.port
+    if timeout == -1:
+        conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port))
+    else:
+        conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port), timeout=float(timeout))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)
@@ -24,17 +31,17 @@ def get_xml(XML):
     conn.close()
     return rval
 
-def get_basic_status():
-    return get_xml(BASIC_STATUS_XML)
+def get_basic_status(timeout=-1):
+    return get_xml(BASIC_STATUS_XML, timeout)
 
-def get_tuner_status():
-    return get_xml(TUNER_STATUS_XML)
+def get_tuner_status(timeout=-1):
+    return get_xml(TUNER_STATUS_XML, timeout)
 
-def get_tuner_presets():
-    return get_xml(TUNER_PRESETS_XML)
+def get_tuner_presets(timeout=-1):
+    return get_xml(TUNER_PRESETS_XML, timeout)
 
-def get_config():
-    return get_xml(CONFIG_XML)
+def get_config(timeout=-1, ip=None):
+    return get_xml(CONFIG_XML, timeout, ip=ip)
 
 def send_xml(XML):
     conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
@@ -121,8 +128,9 @@ def get_is_param_on(param):
 def get_int_param(param):
     return int(get_string_param(param))
 
-def get_string_param(param):
-    xml = get_basic_status()
+def get_string_param(param, xml=None):
+    if xml is None:
+        xml = get_basic_status()
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value

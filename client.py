@@ -1,18 +1,24 @@
 #!/usr/bin/python
 
 # Python Imports
-from xml.dom import minidom
-import time
 
 # Local Imports
+from settings import *
 from yamaha import *
+from helpers import *
 
-# EventGhost Constnats
+# EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02
 
+def testing():
+    print "TESTING"
+    auto_detect_ip_threaded()
+    #auto_detect_ip()
+
 def main():
     print "MAIN"
+    testing()
     
 if __name__ == "__main__":
     main()

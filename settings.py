@@ -8,6 +8,8 @@ class Settings(object):
         self.ip_auto_detect = False
         self.ip_range_start = ""
         self.ip_range_end = ""
+        self.auto_detect_timeout = 0.3
+        self.auto_detect_model = "ANY"
 
 def loadSettings(fname, obj, section, ignore=['valid']):
     """
