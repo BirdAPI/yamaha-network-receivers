@@ -26,7 +26,7 @@ if __name__ == "__main__":
     
 class IncreaseVolume(eg.ActionBase):
     def __call__(self, step):
-        print increase_volume(float(step))
+        increase_volume(float(step))
 
     def Configure(self, step=0.5):
         panel = eg.ConfigPanel()
@@ -41,7 +41,7 @@ class IncreaseVolume(eg.ActionBase):
             
 class DecreaseVolume(eg.ActionBase):
     def __call__(self, step):
-        print decrease_volume(float(step))
+        decrease_volume(float(step))
 
     def Configure(self, step=0.5):
         panel = eg.ConfigPanel()
@@ -53,6 +53,20 @@ class DecreaseVolume(eg.ActionBase):
         floatspin.SetDigits(1)
         while panel.Affirmed():
             panel.SetResult(floatspin.GetValue())
+            
+class SetScene(eg.ActionBase):
+    def __call__(self, scene):
+        set_scene(int(scene))
+
+    def Configure(self, scene=1):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Scene Number: ", pos=(10, 10))
+        spin = wx.SpinCtrl(panel, -1, "", (10, 30), (80, -1))
+        spin.SetRange(1,12)
+        spin.SetValue(int(scene))
+        while panel.Affirmed():
+            panel.SetResult(spin.GetValue())
     
 class YamahaRXClient:
     def __init__(self):

@@ -51,19 +51,7 @@ ACTIONS = (
     ("RadioAutoFreqUp", "Radio Auto Freq Up", "Auto increases the radio frequency", "RadioAutoFreqUp"),
     ("RadioAtuoFreqDown", "Radio Auto Freq Down", "Auto decreases the radio frequency", "RadioAutoFreqDown"),
     ("RadioFreqUp", "Radio Freq Up", "Increases the radio frequency", "RadioFreqUp"),
-    ("RadioFreqDown", "Radio Freq Down", "Decreases the radio frequency", "RadioFreqDown"),
-	("Scene1", "Scene 1", "Changes the current scene to be Scene 1", "Scene1"),
-	("Scene2", "Scene 2", "Changes the current scene to be Scene 2", "Scene2"),
-	("Scene3", "Scene 3", "Changes the current scene to be Scene 3", "Scene3"),
-	("Scene4", "Scene 4", "Changes the current scene to be Scene 4", "Scene4"),
-	("Scene5", "Scene 5", "Changes the current scene to be Scene 5", "Scene5"),
-	("Scene6", "Scene 6", "Changes the current scene to be Scene 6", "Scene6"),
-	("Scene7", "Scene 7", "Changes the current scene to be Scene 7", "Scene7"),
-	("Scene8", "Scene 8", "Changes the current scene to be Scene 8", "Scene8"),
-	("Scene9", "Scene 9", "Changes the current scene to be Scene 9", "Scene9"),
-	("Scene10", "Scene 10", "Changes the current scene to be Scene 10", "Scene10"),
-	("Scene11", "Scene 11", "Changes the current scene to be Scene 11", "Scene11"),
-	("Scene12", "Scene 12", "Changes the current scene to be Scene 12", "Scene12"),
+    ("RadioFreqDown", "Radio Freq Down", "Decreases the radio frequency", "RadioFreqDown")
 )    
 
 class ActionPrototype(eg.ActionClass):
@@ -77,5 +65,6 @@ class YamahaRX(eg.PluginClass):
     def __init__(self):
         self.AddAction(IncreaseVolume)
         self.AddAction(DecreaseVolume)
+        self.AddAction(SetScene)
         self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
