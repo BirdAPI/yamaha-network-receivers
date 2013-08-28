@@ -25,7 +25,7 @@ if __name__ == "__main__":
     
 class YamahaRXClient:
     def __init__(self):
-        print "Init"
+        print "Init Yamaha Network Receivers"
         setup_ip()
 
     def send_action(self, msg = '', type = ACTION_EXECBUILTIN):

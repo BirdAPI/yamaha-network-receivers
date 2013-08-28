@@ -8,7 +8,7 @@ eg.RegisterPlugin(
     name = "Yamaha RX Network Receiver",
     author = "Anthony Casagrande",
     version = "0.7",
-    kind = "program",
+    kind = "external",
     createMacrosOnAdd = True,
     url = "",
     description = "Adds actions to control Yamaha RX-*** network receiver.",

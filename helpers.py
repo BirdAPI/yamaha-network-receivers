@@ -7,10 +7,14 @@ from settings import *
 import yamaha
 
 def setup_ip():
+    loadAllSettings()
     if SETTINGS.ip_auto_detect:
+        print "Searching for Yamaha recievers..."
         ip = auto_detect_ip_threaded()
         if ip is not None:
             SETTINGS.ip_address = ip
+    else:
+        print 'IP:', SETTINGS.ip_address
 
 def get_lan_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -44,7 +48,7 @@ _FOUND_IP = None
 def auto_detect_ip_threaded():
     global _FOUND_IP
     _FOUND_IP = None
-    start = datetime.now()
+    #start = datetime.now()
     threads = []
 
     # Get LAN IP in order to detect network prefix (eg 192.168.1)
@@ -61,9 +65,9 @@ def auto_detect_ip_threaded():
             break
         else:
             t.join()
-    end = datetime.now()
-    delta = end-start
-    print "finished in", delta.total_seconds(), "seconds"
+    #end = datetime.now()
+    #delta = end-start
+    #print "finished in", delta.total_seconds(), "seconds"
     print "Found IP:", _FOUND_IP
     return _FOUND_IP
 

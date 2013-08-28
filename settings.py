@@ -1,6 +1,12 @@
 import ConfigParser
 import os
 
+def loadAllSettings():
+    global SETTINGS
+    file = os.path.abspath(__file__)
+    fname = os.path.join(file[:file.rfind('\\')], 'config.ini')
+    loadSettings(fname, SETTINGS, 'Settings')
+
 class Settings(object):
     def __init__(self):
         self.ip_address = ""
@@ -44,4 +50,3 @@ def loadSettings(fname, obj, section, ignore=['valid']):
     return errors
 
 SETTINGS = Settings()
-loadSettings('config.ini', SETTINGS, 'Settings')
