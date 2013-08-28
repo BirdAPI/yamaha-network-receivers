@@ -1,7 +1,5 @@
 __author__ = 'Anthony Casagrande'
 
-import wx.lib.agw.floatspin as FS
-
 from client import *
 from yamaha import *
 
@@ -81,33 +79,3 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(DecreaseVolume)
         self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
-
-class IncreaseVolume(eg.ActionBase):
-    def __call__(self, step):
-        print increase_volume(float(step))
-
-    def Configure(self, step=0.5):
-        panel = eg.ConfigPanel()
-        
-        wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 10))
-        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
-                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
-        floatspin.SetFormat("%f")
-        floatspin.SetDigits(1)
-        while panel.Affirmed():
-            panel.SetResult(floatspin.GetValue())
-            
-class DecreaseVolume(eg.ActionBase):
-    def __call__(self, step):
-        print decrease_volume(float(step))
-
-    def Configure(self, step=0.5):
-        panel = eg.ConfigPanel()
-        
-        wx.StaticText(panel, label="Decrease Amount (Step): ", pos=(10, 10))
-        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
-                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
-        floatspin.SetFormat("%f")
-        floatspin.SetDigits(1)
-        while panel.Affirmed():
-            panel.SetResult(floatspin.GetValue())

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 # Python Imports
+import wx.lib.agw.floatspin as FS
 
 # Local Imports
 from settings import *
@@ -23,21 +24,43 @@ def main():
 if __name__ == "__main__":
     main()
     
+class IncreaseVolume(eg.ActionBase):
+    def __call__(self, step):
+        print increase_volume(float(step))
+
+    def Configure(self, step=0.5):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 10))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(floatspin.GetValue())
+            
+class DecreaseVolume(eg.ActionBase):
+    def __call__(self, step):
+        print decrease_volume(float(step))
+
+    def Configure(self, step=0.5):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Decrease Amount (Step): ", pos=(10, 10))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(floatspin.GetValue())
+    
 class YamahaRXClient:
     def __init__(self):
         print "Init Yamaha Network Receivers"
         setup_ip()
 
     def send_action(self, msg = '', type = ACTION_EXECBUILTIN):
-        if msg == 'VolumeUp':
-            increase_volume()
-        elif msg == 'VolumeDown':
-            decrease_volume()
-        elif msg.startswith('VolumeUp_'):
-            increase_volume(float(msg.replace('VolumeUp_', '')))
-        elif msg.startswith('VolumeDown_'):
-            decrease_volume(float(msg.replace('VolumeDown_', '')))
-        elif msg == 'ToggleMute':
+        if msg == 'ToggleMute':
             toggle_mute()
         elif msg == 'PowerOn':
             power_on()
