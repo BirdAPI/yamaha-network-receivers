@@ -62,7 +62,7 @@ class YamahaRX(eg.PluginClass):
         x_start = 10
         x_padding = 60
         y_start = 10
-        y_padding = 25
+        y_padding = 22
         label_padding = 3
         i = 0
         
@@ -92,7 +92,7 @@ class YamahaRX(eg.PluginClass):
         self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4.5), y_start + (i * y_padding)), size=(100, -1), choices=models, style=wx.CB_DROPDOWN)
         self.combo.SetValue(auto_detect_model)
         
-        i += 2
+        i += 1
         lbl_adv = wx.StaticText(panel, label="Advanced Settings: ", pos=(0, y_start + label_padding + (i * y_padding)))
         font = lbl_adv.GetFont()
         font.SetPointSize(10)
@@ -106,9 +106,25 @@ class YamahaRX(eg.PluginClass):
         self.spin.SetRange(1,65535)
         self.spin.SetValue(int(port))
         
+        i += 1
+        # Auto Detect Timeout
+        wx.StaticText(panel, label="Auto Detect IP Timeout (seconds): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        self.auto_time = FS.FloatSpin(panel, -1, pos=(x_start + (x_padding * 3), y_start + (i * y_padding)), min_val=0.1, max_val=10.0,
+                                 increment=0.1, value=float(auto_detect_timeout), agwStyle=FS.FS_LEFT)
+        self.auto_time.SetFormat("%f")
+        self.auto_time.SetDigits(1)
+        
+        i += 1
+        # Default Timeout
+        wx.StaticText(panel, label="Default Timeout (seconds): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        self.def_time = FS.FloatSpin(panel, -1, pos=(x_start + (x_padding * 3), y_start + (i * y_padding)), min_val=0.1, max_val=10.0,
+                                 increment=0.1, value=float(default_timeout), agwStyle=FS.FS_LEFT)
+        self.def_time.SetFormat("%f")
+        self.def_time.SetDigits(1)
+        
         # Call this once after setting everything up to change the visibility of things
         self.autoDetectChanged(None)
-        
+
         while panel.Affirmed():
-            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), str(self.combo.GetValue()))
+            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), str(self.combo.GetValue()), self.auto_time.GetValue(), self.def_time.GetValue())
         

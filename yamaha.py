@@ -14,13 +14,13 @@ TUNER_STATUS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Info>GetParam</Play_Info><
 TUNER_PRESETS_XML = '<YAMAHA_AV cmd="GET"><Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner></YAMAHA_AV>'
 CONFIG_XML = '<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></YAMAHA_AV>'
 
-def get_xml(XML, timeout=-1, ip=None, port=None):
+def get_xml(XML, timeout=None, ip=None, port=None):
     if ip is None:
         ip = globals.ip_address
     if port is None:
         port = globals.port
-    if timeout == -1:
-        conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port))
+    if timeout is None:
+        conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port), timeout=float(globals.default_timeout))
     else:
         conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port), timeout=float(timeout))
     headers = { "Content-type": "text/xml" }
@@ -44,7 +44,7 @@ def get_config(timeout=-1, ip=None):
     return get_xml(CONFIG_XML, timeout, ip=ip)
 
 def send_xml(XML):
-    conn = httplib.HTTPConnection("%s:%s" % ( globals.ip_address, globals.port ))
+    conn = httplib.HTTPConnection("%s:%s" % ( globals.ip_address, globals.port ), timeout=float(globals.default_timeout))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)
