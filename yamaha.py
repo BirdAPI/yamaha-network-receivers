@@ -5,7 +5,7 @@ from xml.dom import minidom
 import httplib
 
 # Local Imports
-from settings import *
+import globals
 from helpers import *
 
 # Yamaha request xml constants
@@ -16,9 +16,9 @@ CONFIG_XML = '<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></Y
 
 def get_xml(XML, timeout=-1, ip=None, port=None):
     if ip is None:
-        ip = SETTINGS.ip_address
+        ip = globals.ip_address
     if port is None:
-        port = SETTINGS.port
+        port = globals.port
     if timeout == -1:
         conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port))
     else:
@@ -44,7 +44,7 @@ def get_config(timeout=-1, ip=None):
     return get_xml(CONFIG_XML, timeout, ip=ip)
 
 def send_xml(XML):
-    conn = httplib.HTTPConnection("%s:%s" % ( SETTINGS.ip_address, SETTINGS.port ))
+    conn = httplib.HTTPConnection("%s:%s" % ( globals.ip_address, globals.port ))
     headers = { "Content-type": "text/xml" }
     conn.request("POST", "/YamahaRemoteControl/ctrl", "", headers)
     conn.send(XML)

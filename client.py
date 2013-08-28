@@ -4,7 +4,7 @@
 import wx.lib.agw.floatspin as FS
 
 # Local Imports
-from settings import *
+import globals
 from yamaha import *
 from helpers import *
 
@@ -105,9 +105,8 @@ class SetPowerStatus(eg.ActionBase):
     
 class YamahaRXClient:
     def __init__(self):
-        print "Init Yamaha Network Receivers"
-        setup_ip()
-
+        pass
+        
     def send_action(self, msg = '', type = ACTION_EXECBUILTIN):
         if msg == 'ToggleMute':
             toggle_mute()

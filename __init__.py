@@ -2,12 +2,13 @@ __author__ = 'Anthony Casagrande'
 
 from client import *
 from yamaha import *
+import globals
 
 # expose some information about the plugin through an eg.PluginInfo subclass
 eg.RegisterPlugin(
     name = "Yamaha RX Network Receiver",
     author = "Anthony Casagrande",
-    version = "0.7",
+    version = "0.9",
     kind = "external",
     createMacrosOnAdd = True,
     url = "",
@@ -16,10 +17,6 @@ eg.RegisterPlugin(
 
 ACTIONS = (   
     ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
-    ("PowerOff", "Power Off", "Powers off machine", "PowerOff"),
-    ("PowerStandby", "Power Standby", "Turns machine to standby", "PowerStandby"),
-    ("PowerOn", "Power On", "Powers on machine", "PowerOn"),
-    ("ToggleOnStandby", "Toggle On / Standby", "Toggles machine between on and standby", "ToggleOnStandby"),
     ("Straight", "Straight", "Straight", "Straight"),
     ("SurroundDecode", "Surround Decode", "Surround Decode", "SurroundDecode"),
     ("ToggleStraightAndDecode", "Toggle Straight And Decode", "Toggles between Straight and Sourround Decode", "ToggleStraightAndDecode"),
@@ -49,3 +46,13 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetPowerStatus)
         #self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
+        
+    def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+        setup_ip()
+
+    def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+        panel = eg.ConfigPanel()
+        textControl = wx.TextCtrl(panel, -1, myString)
+        panel.sizer.Add(textControl, 1, wx.EXPAND)
+        while panel.Affirmed():
+            panel.SetResult(textControl.GetValue())
