@@ -42,8 +42,24 @@ class YamahaRX(eg.PluginClass):
         setup_ip()
 
     def Configure(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+        x_start = 10
+        x_padding = 60
+        y_start = 10
+        y_padding = 30
+        label_padding = 3
+        i = 0
+        
         panel = eg.ConfigPanel()
-        wx.StaticText(panel, label="IP Address: ", pos=(10, 10))
-        txt_ip = wx.TextCtrl(panel, -1, ip_address, (70, 10), (100, -1))
+        # IP Address
+        wx.StaticText(panel, label="IP Address: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        txt_ip = wx.TextCtrl(panel, -1, ip_address, (x_start + x_padding, y_start), (100, -1))
+        
+        i += 1
+        # Port
+        wx.StaticText(panel, label="Port: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        spin = wx.SpinCtrl(panel, -1, "", (x_start + x_padding, y_start + (i * y_padding)), (80, -1))
+        spin.SetRange(1,65535)
+        spin.SetValue(int(port))
+        
         while panel.Affirmed():
-            panel.SetResult(txt_ip.GetValue())
+            panel.SetResult(txt_ip.GetValue(), spin.GetValue())
