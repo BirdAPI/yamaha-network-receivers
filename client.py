@@ -82,6 +82,26 @@ class SetSourceInput(eg.ActionBase):
         choice = wx.Choice(panel, -1, (10, 30), choices=inputs)
         while panel.Affirmed():
             panel.SetResult(inputs[choice.GetCurrentSelection()])
+            
+class SetPowerStatus(eg.ActionBase):
+    def __call__(self, status):
+        if status == 'TOGGLE_ON_STANDBY':
+            toggle_on_standby()
+        elif status == 'ON':
+            power_on()
+        elif status == 'OFF':
+            power_off()
+        elif status == 'STANDBY':
+            power_standby()
+
+    def Configure(self, status=""):
+        panel = eg.ConfigPanel()
+        
+        inputs = [ 'TOGGLE_ON_STANDBY', 'ON', 'OFF', 'STANDBY' ]
+        wx.StaticText(panel, label="Power Status: ", pos=(10, 10))
+        choice = wx.Choice(panel, -1, (10, 30), choices=inputs)
+        while panel.Affirmed():
+            panel.SetResult(inputs[choice.GetCurrentSelection()])
     
 class YamahaRXClient:
     def __init__(self):

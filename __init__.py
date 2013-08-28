@@ -4,7 +4,6 @@ from client import *
 from yamaha import *
 
 # expose some information about the plugin through an eg.PluginInfo subclass
-
 eg.RegisterPlugin(
     name = "Yamaha RX Network Receiver",
     author = "Anthony Casagrande",
@@ -25,9 +24,6 @@ ACTIONS = (
     ("SurroundDecode", "Surround Decode", "Surround Decode", "SurroundDecode"),
     ("ToggleStraightAndDecode", "Toggle Straight And Decode", "Toggles between Straight and Sourround Decode", "ToggleStraightAndDecode"),
     ("ToogleEnhancer", "Toggle Enhancer", "Toggles the enhancer on and off", "ToggleEnhancer"),
-    #("NextSource", "Next Source", "Goes to the next source", "NextSource"),
-    #("PreviousSource", "Previous Source", "Goes to the previous source", "PreviousSource"),
-    #("ToggleSleep", "Toggle Sleep", "Toggles sleep mode", "ToggleSleep"),
     ("NextRadioPreset", "Next Radio Preset", "Goes to next radio preset, or if radio is not on, it turns it on. Also wraps when you go past the last preset.", "NextRadioPreset"),
     ("PreviousRadioPreset", "Previous Radio Preset", "Goes to previous radio preset, or if radio is not on, it turns it on. Also wraps to the end when you go past the first preset.", "PreviousRadioPreset"),
     ("ToggleRadioAMFM", "Toggle Radio AM / FM", "Toggles radio between AM and FM", "ToggleRadioAMFM"),
@@ -50,5 +46,6 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(DecreaseVolume)
         self.AddAction(SetScene)
         self.AddAction(SetSourceInput)
+        self.AddAction(SetPowerStatus)
         #self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
