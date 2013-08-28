@@ -22,6 +22,16 @@ ACTIONS = (
     ("RadioFreqDown", "Radio Freq Down", "Decreases the radio frequency", "RadioFreqDown")
 )  
 
+ALL_MODELS = [ 'ANY', 
+               '', 
+               'RX-V867',
+               '',
+               'RX-V671', 'RX-V871',
+               '',
+               'RX-V473', 'RX-V573', 'RX-V673', 'RX-V773',
+               '',
+               'RX-V475', 'RX-V575', 'RX-V675', 'RX-V775' ]
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02

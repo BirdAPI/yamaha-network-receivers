@@ -14,7 +14,7 @@ eg.RegisterPlugin(
     kind = "external",
     createMacrosOnAdd = True,
     url = "",
-    description = "Adds actions to control Yamaha RX-*** network receiver.",
+    description = "Adds actions to control Yamaha RX-V network receiver.",
 )
 
 class ActionPrototype(eg.ActionClass):
@@ -87,9 +87,8 @@ class YamahaRX(eg.PluginClass):
         
         # Do not add to index, so they go over top each other
         # Models (Auto Detect)
-        models = [ 'ANY', '', 'RX-V867', 'RX-V473', 'RX-V775' ]
         self.lbl_model = wx.StaticText(panel, label="AV Receiver Model (If you have multiple on network): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
-        self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4.5), y_start + (i * y_padding)), size=(100, -1), choices=models, style=wx.CB_DROPDOWN)
+        self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4.5), y_start + (i * y_padding)), size=(100, -1), choices=globals.ALL_MODELS, style=wx.CB_DROPDOWN)
         self.combo.SetValue(auto_detect_model)
         
         i += 1
