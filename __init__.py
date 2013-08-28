@@ -72,6 +72,13 @@ class YamahaRX(eg.PluginClass):
         self.spin.SetRange(1,65535)
         self.spin.SetValue(int(port))
         
+        i += 1
+        # Models (Auto Detect)
+        models = [ 'ANY', 'RX-V867', 'RX-V473', 'RX-V775' ]
+        wx.StaticText(panel, label="AV Receiver Model (For Auto Detect IP): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        index = -1 if not auto_detect_model in models else models.index(auto_detect_model)
+        self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4), y_start + (i * y_padding)), size=(150, -1), choices=models, style=wx.CB_DROPDOWN)
+        
         while panel.Affirmed():
-            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue())
+            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), self.combo.GetValue(), 1.0)
         

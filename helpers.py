@@ -8,7 +8,7 @@ import yamaha
 
 def setup_ip():
     if globals.ip_auto_detect:
-        print "Searching for Yamaha recievers..."
+        print "Searching for Yamaha Recievers ({0})...".format(globals.auto_detect_model)
         ip = auto_detect_ip_threaded()
         if ip is not None:
             globals.ip_address = ip
