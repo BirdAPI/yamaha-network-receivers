@@ -67,6 +67,21 @@ class SetScene(eg.ActionBase):
         spin.SetValue(int(scene))
         while panel.Affirmed():
             panel.SetResult(spin.GetValue())
+            
+class SetSourceInput(eg.ActionBase):
+    def __call__(self, source):
+        change_source(source)
+
+    def Configure(self, source="HDMI1"):
+        panel = eg.ConfigPanel()
+        
+        inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
+                   'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
+                   'V-AUX', 'TUNER' ]
+        wx.StaticText(panel, label="Source Input: ", pos=(10, 10))
+        choice = wx.Choice(panel, -1, (10, 30), choices=inputs)
+        while panel.Affirmed():
+            panel.SetResult(inputs[choice.GetCurrentSelection()])
     
 class YamahaRXClient:
     def __init__(self):
@@ -114,6 +129,4 @@ class YamahaRXClient:
             manual_radio_freq('Up')
         elif msg == 'RadioFreqDown':
             manual_radio_freq('Down')
-        elif msg.startswith('Scene'):
-            set_scene(int(msg.replace('Scene', '')))
            

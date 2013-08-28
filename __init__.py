@@ -21,23 +21,6 @@ ACTIONS = (
     ("PowerStandby", "Power Standby", "Turns machine to standby", "PowerStandby"),
     ("PowerOn", "Power On", "Powers on machine", "PowerOn"),
     ("ToggleOnStandby", "Toggle On / Standby", "Toggles machine between on and standby", "ToggleOnStandby"),
-    ("Source_HDMI1", "Source HDMI1", "Changes source to HDMI1", "Source_HDMI1"),
-    ("Source_HDMI2", "Source HDMI2", "Changes source to HDMI2", "Source_HDMI2"),
-    ("Source_HDMI3", "Source HDMI3", "Changes source to HDMI3", "Source_HDMI3"),
-    ("Source_HDMI4", "Source HDMI4", "Changes source to HDMI4", "Source_HDMI4"),
-    ("Source_HDMI5", "Source HDMI5", "Changes source to HDMI5", "Source_HDMI5"),
-    ("Source_HDMI6", "Source HDMI6", "Changes source to HDMI6", "Source_HDMI6"),
-    ("Source_HDMI7", "Source HDMI7", "Changes source to HDMI7", "Source_HDMI7"),
-    ("Source_HDMI8", "Source HDMI8", "Changes source to HDMI8", "Source_HDMI8"),
-    ("Source_HDMI9", "Source HDMI9", "Changes source to HDMI9", "Source_HDMI9"),
-    ("Source_V-AUX", "Source V-AUX", "Changes source to V-AUX", "Source_V-AUX"),
-    ("Source_AV1", "Source AV1", "Changes source to AV1", "Source_AV1"),
-    ("Source_AV2", "Source AV2", "Changes source to AV2", "Source_AV2"),
-    ("Source_AV3", "Source AV3", "Changes source to AV3", "Source_AV3"),
-    ("Source_AV4", "Source AV4", "Changes source to AV4", "Source_AV4"),
-    ("Source_AV5", "Source AV5", "Changes source to AV5", "Source_AV5"),
-    ("Source_AV6", "Source AV6", "Changes source to AV6", "Source_AV6"),
-    ("Source_TUNER", "Source Tuner", "Changes source to radio", "Source_TUNER"),
     ("Straight", "Straight", "Straight", "Straight"),
     ("SurroundDecode", "Surround Decode", "Surround Decode", "SurroundDecode"),
     ("ToggleStraightAndDecode", "Toggle Straight And Decode", "Toggles between Straight and Sourround Decode", "ToggleStraightAndDecode"),
@@ -66,5 +49,6 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(IncreaseVolume)
         self.AddAction(DecreaseVolume)
         self.AddAction(SetScene)
-        self.AddActionsFromList(ACTIONS, ActionPrototype)
+        self.AddAction(SetSourceInput)
+        #self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
