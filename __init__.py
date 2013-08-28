@@ -41,6 +41,10 @@ class YamahaRX(eg.PluginClass):
         globals.auto_detect_timeout = auto_detect_timeout
         setup_ip()
 
+    def autoDetectChecked(self, event):
+        self.txt_ip.SetValue("N/A")
+        self.txt_ip.SetEditable(not self.cb.GetValue())
+        
     def Configure(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
         x_start = 10
         x_padding = 60
@@ -50,16 +54,24 @@ class YamahaRX(eg.PluginClass):
         i = 0
         
         panel = eg.ConfigPanel()
+        
+        # Auto Detect IP
+        self.cb = wx.CheckBox(panel, -1, 'Auto Detect IP Address', (x_start, y_start + (i * y_padding)))
+        self.cb.SetValue(ip_auto_detect)
+        wx.EVT_CHECKBOX(panel, self.cb.GetId(), self.autoDetectChecked)
+        
+        i += 1
         # IP Address
-        wx.StaticText(panel, label="IP Address: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
-        txt_ip = wx.TextCtrl(panel, -1, ip_address, (x_start + x_padding, y_start), (100, -1))
+        wx.StaticText(panel, label="Static IP Address: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        self.txt_ip = wx.TextCtrl(panel, -1, ip_address, (x_start + (x_padding * 2), y_start + (i * y_padding)), (100, -1))
         
         i += 1
         # Port
         wx.StaticText(panel, label="Port: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
-        spin = wx.SpinCtrl(panel, -1, "", (x_start + x_padding, y_start + (i * y_padding)), (80, -1))
-        spin.SetRange(1,65535)
-        spin.SetValue(int(port))
+        self.spin = wx.SpinCtrl(panel, -1, "", (x_start + x_padding, y_start + (i * y_padding)), (80, -1))
+        self.spin.SetRange(1,65535)
+        self.spin.SetValue(int(port))
         
         while panel.Affirmed():
-            panel.SetResult(txt_ip.GetValue(), spin.GetValue())
+            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue())
+        
