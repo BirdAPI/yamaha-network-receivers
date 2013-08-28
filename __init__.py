@@ -1,6 +1,9 @@
 __author__ = 'Anthony Casagrande'
 
+import wx.lib.agw.floatspin as FS
+
 from client import *
+from yamaha import *
 
 # expose some information about the plugin through an eg.PluginInfo subclass
 
@@ -15,26 +18,6 @@ eg.RegisterPlugin(
 )
 
 ACTIONS = (   
-    ("VolumeUp", "Volume Up", "Increase the volume one step (0.5 dB)", "VolumeUp"),
-    ("VolumeDown", "Volume Down", "Decrease the volume one step (0.5 dB)", "VolumeDown"),
-    ("VolumeUp_1.0", "Volume Up 1.0dB", "Increase the volume 1.0 dB", "VolumeUp_1.0"),
-    ("VolumeDown_1.0", "Volume Down 1.0dB", "Decrease the volume 1.0 dB", "VolumeDown_1.0"),
-    ("VolumeUp_1.5", "Volume Up 1.5dB", "Increase the volume 1.5 dB", "VolumeUp_1.5"),
-    ("VolumeDown_1.5", "Volume Down 1.5dB", "Decrease the volume 1.5 dB", "VolumeDown_1.5"),
-    ("VolumeUp_2.0", "Volume Up 2.0dB", "Increase the volume 2.0 dB", "VolumeUp_2.0"),
-    ("VolumeDown_2.0", "Volume Down 2.0dB", "Decrease the volume 2.0 dB", "VolumeDown_2.0"),
-    ("VolumeUp_2.5", "Volume Up 2.5dB", "Increase the volume 2.5 dB", "VolumeUp_2.5"),
-    ("VolumeDown_2.5", "Volume Down 2.5dB", "Decrease the volume 2.5 dB", "VolumeDown_2.5"),
-    ("VolumeUp_3.0", "Volume Up 3.0dB", "Increase the volume 3.0 dB", "VolumeUp_3.0"),
-    ("VolumeDown_3.0", "Volume Down 3.0dB", "Decrease the volume 3.0 dB", "VolumeDown_3.0"),
-    ("VolumeUp_3.5", "Volume Up 3.5dB", "Increase the volume 3.5 dB", "VolumeUp_3.5"),
-    ("VolumeDown_3.5", "Volume Down 3.5dB", "Decrease the volume 3.5 dB", "VolumeDown_3.5"),
-    ("VolumeUp_4.0", "Volume Up 4.0dB", "Increase the volume 4.0 dB", "VolumeUp_4.0"),
-    ("VolumeDown_4.0", "Volume Down 4.0dB", "Decrease the volume 4.0 dB", "VolumeDown_4.0"),
-    ("VolumeUp_4.5", "Volume Up 4.5dB", "Increase the volume 4.5 dB", "VolumeUp_4.5"),
-    ("VolumeDown_4.5", "Volume Down 4.5dB", "Decrease the volume 4.5 dB", "VolumeDown_4.5"),
-    ("VolumeUp_5.0", "Volume Up 5.0dB", "Increase the volume 5.0 dB", "VolumeUp_5.0"),
-    ("VolumeDown_5.0", "Volume Down 5.0dB", "Decrease the volume 5.0 dB", "VolumeDown_5.0"),
     ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
     ("PowerOff", "Power Off", "Powers off machine", "PowerOff"),
     ("PowerStandby", "Power Standby", "Turns machine to standby", "PowerStandby"),
@@ -94,5 +77,37 @@ class ActionPrototype(eg.ActionClass):
 
 class YamahaRX(eg.PluginClass):
     def __init__(self):
+        self.AddAction(IncreaseVolume)
+        self.AddAction(DecreaseVolume)
         self.AddActionsFromList(ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
+
+class IncreaseVolume(eg.ActionBase):
+    def __call__(self, step):
+        print increase_volume(float(step))
+
+    def Configure(self, step=0.5):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 10))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(floatspin.GetValue())
+            
+class DecreaseVolume(eg.ActionBase):
+    def __call__(self, step):
+        print decrease_volume(float(step))
+
+    def Configure(self, step=0.5):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Decrease Amount (Step): ", pos=(10, 10))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(floatspin.GetValue())
