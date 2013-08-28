@@ -33,7 +33,7 @@ class YamahaRX(eg.PluginClass):
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
         
-    def __start__(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
         globals.ip_address = ip_address
         globals.port = port
         globals.ip_auto_detect = ip_auto_detect
@@ -41,29 +41,60 @@ class YamahaRX(eg.PluginClass):
         globals.auto_detect_timeout = auto_detect_timeout
         setup_ip()
 
-    def autoDetectChecked(self, event):
-        self.txt_ip.SetValue("N/A")
-        self.txt_ip.SetEditable(not self.cb.GetValue())
+    def autoDetectChanged(self, event):
+        if self.cb.GetValue():
+            self.txt_ip.Hide()
+            self.lbl_ip.Hide()
+            
+            self.lbl_model.Show()
+            self.combo.Show()
+        else:
+            self.txt_ip.Show()
+            self.lbl_ip.Show()
+            
+            self.lbl_model.Hide()
+            self.combo.Hide()
         
-    def Configure(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
         x_start = 10
         x_padding = 60
         y_start = 10
-        y_padding = 30
+        y_padding = 25
         label_padding = 3
         i = 0
         
         panel = eg.ConfigPanel()
         
+        lbl_net = wx.StaticText(panel, label="Network Settings: ", pos=(0, y_start + label_padding + (i * y_padding)))
+        font = lbl_net.GetFont()
+        font.SetPointSize(10)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        lbl_net.SetFont(font)
+        
+        i += 1
         # Auto Detect IP
         self.cb = wx.CheckBox(panel, -1, 'Auto Detect IP Address', (x_start, y_start + (i * y_padding)))
         self.cb.SetValue(ip_auto_detect)
-        wx.EVT_CHECKBOX(panel, self.cb.GetId(), self.autoDetectChecked)
+        self.cb.Bind(wx.EVT_CHECKBOX, self.autoDetectChanged)
         
         i += 1
         # IP Address
-        wx.StaticText(panel, label="Static IP Address: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        self.lbl_ip = wx.StaticText(panel, label="Static IP Address: ", pos=(x_start, y_start + label_padding + (i * y_padding)))
         self.txt_ip = wx.TextCtrl(panel, -1, ip_address, (x_start + (x_padding * 2), y_start + (i * y_padding)), (100, -1))
+        
+        # Do not add to index, so they go over top each other
+        # Models (Auto Detect)
+        models = [ 'ANY', '', 'RX-V867', 'RX-V473', 'RX-V775' ]
+        self.lbl_model = wx.StaticText(panel, label="AV Receiver Model (If you have multiple on network): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
+        self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4.5), y_start + (i * y_padding)), size=(100, -1), choices=models, style=wx.CB_DROPDOWN)
+        self.combo.SetValue(auto_detect_model)
+        
+        i += 2
+        lbl_adv = wx.StaticText(panel, label="Advanced Settings: ", pos=(0, y_start + label_padding + (i * y_padding)))
+        font = lbl_adv.GetFont()
+        font.SetPointSize(10)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        lbl_adv.SetFont(font)
         
         i += 1
         # Port
@@ -72,13 +103,9 @@ class YamahaRX(eg.PluginClass):
         self.spin.SetRange(1,65535)
         self.spin.SetValue(int(port))
         
-        i += 1
-        # Models (Auto Detect)
-        models = [ 'ANY', 'RX-V867', 'RX-V473', 'RX-V775' ]
-        wx.StaticText(panel, label="AV Receiver Model (For Auto Detect IP): ", pos=(x_start, y_start + label_padding + (i * y_padding)))
-        index = -1 if not auto_detect_model in models else models.index(auto_detect_model)
-        self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4), y_start + (i * y_padding)), size=(150, -1), choices=models, style=wx.CB_DROPDOWN)
+        # Call this once after setting everything up to change the visibility of things
+        self.autoDetectChanged(None)
         
         while panel.Affirmed():
-            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), self.combo.GetValue())
+            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), str(self.combo.GetValue()))
         

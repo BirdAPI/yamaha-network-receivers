@@ -1,5 +1,5 @@
 # settings
-ip_address="N/A"
+ip_address=""
 port=80
 ip_auto_detect=True
 auto_detect_model="ANY"
@@ -8,7 +8,7 @@ auto_detect_timeout=1.0
 # runtime
 FOUND_IP = None
 
-#static
+# static / constants
 ACTIONS = (   
     ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
     ("ToogleEnhancer", "Toggle Enhancer", "Toggles the enhancer on and off", "ToggleEnhancer"),
