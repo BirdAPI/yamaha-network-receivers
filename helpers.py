@@ -44,7 +44,7 @@ def auto_detect_ip():
     return found_ip
 
 def auto_detect_ip_threaded():
-    globals._FOUND_IP = None
+    globals.FOUND_IP = None
     threads = []
 
     # Get LAN IP in order to detect network prefix (eg 192.168.1)
@@ -57,12 +57,12 @@ def auto_detect_ip_threaded():
         threads.append(t)
         t.start()
     for t in threads:
-        if globals._FOUND_IP is not None:
+        if globals.FOUND_IP is not None:
             break
         else:
             t.join()
-    print "Found IP:", globals._FOUND_IP
-    return globals._FOUND_IP
+    print "Found IP:", globals.FOUND_IP
+    return globals.FOUND_IP
 
 def try_connect(ip):
     try:
@@ -73,8 +73,7 @@ def try_connect(ip):
                 or globals.auto_detect_model == "" \
                 or globals.auto_detect_model is None\
                 or model.lower() == globals.auto_detect_model.lower():
-            global _FOUND_IP
-            _FOUND_IP = ip
+            globals.FOUND_IP = ip
     except:
         #print '{0}: ...'.format(ip)
         pass

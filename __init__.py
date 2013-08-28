@@ -80,5 +80,5 @@ class YamahaRX(eg.PluginClass):
         self.combo = wx.ComboBox(panel, -1, pos=(x_start + (x_padding * 4), y_start + (i * y_padding)), size=(150, -1), choices=models, style=wx.CB_DROPDOWN)
         
         while panel.Affirmed():
-            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), self.combo.GetValue(), 1.0)
+            panel.SetResult(self.txt_ip.GetValue(), self.spin.GetValue(), self.cb.GetValue(), self.combo.GetValue())
         

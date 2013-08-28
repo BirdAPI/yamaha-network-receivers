@@ -6,7 +6,7 @@ auto_detect_model="ANY"
 auto_detect_timeout=1.0
 
 # runtime
-_FOUND_IP = None
+FOUND_IP = None
 
 #static
 ACTIONS = (   
