@@ -1,5 +1,7 @@
 __author__ = 'Anthony Casagrande'
 
+import wx.lib.agw.floatspin as FS
+
 import globals
 from client import *
 from yamaha import *
@@ -26,6 +28,7 @@ class YamahaRX(eg.PluginClass):
     def __init__(self):
         self.AddAction(IncreaseVolume)
         self.AddAction(DecreaseVolume)
+        self.AddAction(SetVolume)
         self.AddAction(SetScene)
         self.AddAction(SetSourceInput)
         self.AddAction(SetPowerStatus)
@@ -33,7 +36,7 @@ class YamahaRX(eg.PluginClass):
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
         
-    def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
         globals.ip_address = ip_address
         globals.port = port
         globals.ip_auto_detect = ip_auto_detect
@@ -55,7 +58,7 @@ class YamahaRX(eg.PluginClass):
             self.lbl_model.Hide()
             self.combo.Hide()
         
-    def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
         x_start = 10
         x_padding = 60
         y_start = 10

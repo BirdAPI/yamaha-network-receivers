@@ -87,6 +87,21 @@ class SetPowerStatus(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(statuses[choice.GetCurrentSelection()])
             
+class SetVolume(eg.ActionBase):
+    def __call__(self, vol):
+        set_volume(float(vol))
+
+    def Configure(self, vol=-50.0):
+        panel = eg.ConfigPanel()
+        
+        wx.StaticText(panel, label="Exact Volume (dB): ", pos=(10, 10))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=-100.0, max_val=50.0,
+                                 increment=0.5, value=float(vol), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(floatspin.GetValue())
+            
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):
         if mode == 'Toggle Straight/Surround Decode':

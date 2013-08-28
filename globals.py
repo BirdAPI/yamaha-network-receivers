@@ -4,6 +4,7 @@ port=80
 ip_auto_detect=True
 auto_detect_model="ANY"
 auto_detect_timeout=1.0
+default_timeout=3.0
 
 # runtime
 FOUND_IP = None
