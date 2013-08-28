@@ -12,3 +12,5 @@
 /.idea/testrunner.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
+
+/.idea/*.iml
