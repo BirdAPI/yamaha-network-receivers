@@ -1,8 +1,8 @@
 __author__ = 'Anthony Casagrande'
 
+import globals
 from client import *
 from yamaha import *
-import globals
 
 # expose some information about the plugin through an eg.PluginInfo subclass
 eg.RegisterPlugin(
@@ -15,25 +15,10 @@ eg.RegisterPlugin(
     description = "Adds actions to control Yamaha RX-*** network receiver.",
 )
 
-ACTIONS = (   
-    ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
-    ("Straight", "Straight", "Straight", "Straight"),
-    ("SurroundDecode", "Surround Decode", "Surround Decode", "SurroundDecode"),
-    ("ToggleStraightAndDecode", "Toggle Straight And Decode", "Toggles between Straight and Sourround Decode", "ToggleStraightAndDecode"),
-    ("ToogleEnhancer", "Toggle Enhancer", "Toggles the enhancer on and off", "ToggleEnhancer"),
-    ("NextRadioPreset", "Next Radio Preset", "Goes to next radio preset, or if radio is not on, it turns it on. Also wraps when you go past the last preset.", "NextRadioPreset"),
-    ("PreviousRadioPreset", "Previous Radio Preset", "Goes to previous radio preset, or if radio is not on, it turns it on. Also wraps to the end when you go past the first preset.", "PreviousRadioPreset"),
-    ("ToggleRadioAMFM", "Toggle Radio AM / FM", "Toggles radio between AM and FM", "ToggleRadioAMFM"),
-    ("RadioAutoFreqUp", "Radio Auto Freq Up", "Auto increases the radio frequency", "RadioAutoFreqUp"),
-    ("RadioAtuoFreqDown", "Radio Auto Freq Down", "Auto decreases the radio frequency", "RadioAutoFreqDown"),
-    ("RadioFreqUp", "Radio Freq Up", "Increases the radio frequency", "RadioFreqUp"),
-    ("RadioFreqDown", "Radio Freq Down", "Decreases the radio frequency", "RadioFreqDown")
-)    
-
 class ActionPrototype(eg.ActionClass):
     def __call__(self):
         try:
-            self.plugin.client.send_action(self.value, ACTION_BUTTON)
+            self.plugin.client.send_action(self.value, globals.ACTION_BUTTON)
         except:
             raise self.Exceptions.ProgramNotRunning
 
@@ -44,15 +29,21 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetScene)
         self.AddAction(SetSourceInput)
         self.AddAction(SetPowerStatus)
-        #self.AddActionsFromList(ACTIONS, ActionPrototype)
+        self.AddAction(SetSurroundMode)
+        self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
         
-    def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def __start__(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+        globals.ip_address = ip_address
+        globals.port = port
+        globals.ip_auto_detect = ip_auto_detect
+        globals.auto_detect_model = auto_detect_model
+        globals.auto_detect_timeout = auto_detect_timeout
         setup_ip()
 
-    def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
+    def Configure(self, ip_address="N/A", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0):
         panel = eg.ConfigPanel()
-        textControl = wx.TextCtrl(panel, -1, myString)
-        panel.sizer.Add(textControl, 1, wx.EXPAND)
+        wx.StaticText(panel, label="IP Address: ", pos=(10, 10))
+        txt_ip = wx.TextCtrl(panel, -1, ip_address, (70, 10), (100, -1))
         while panel.Affirmed():
-            panel.SetResult(textControl.GetValue())
+            panel.SetResult(txt_ip.GetValue())
