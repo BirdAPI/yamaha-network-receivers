@@ -31,16 +31,16 @@ def get_xml(XML, timeout=None, ip=None, port=None):
     conn.close()
     return rval
 
-def get_basic_status(timeout=-1):
+def get_basic_status(timeout=None):
     return get_xml(BASIC_STATUS_XML, timeout)
 
-def get_tuner_status(timeout=-1):
+def get_tuner_status(timeout=None):
     return get_xml(TUNER_STATUS_XML, timeout)
 
-def get_tuner_presets(timeout=-1):
+def get_tuner_presets(timeout=None):
     return get_xml(TUNER_PRESETS_XML, timeout)
 
-def get_config(timeout=-1, ip=None):
+def get_config(timeout=None, ip=None):
     return get_xml(CONFIG_XML, timeout, ip=ip)
 
 def send_xml(XML):
