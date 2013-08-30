@@ -8,13 +8,14 @@ from yamaha import *
 
 # expose some information about the plugin through an eg.PluginInfo subclass
 eg.RegisterPlugin(
-    name = "Yamaha RX Network Receiver",
-    author = "Anthony Casagrande",
+    name = "Yamaha RX-V Network Receiver",
+    author = "Anthony Casagrande (BirdAPI)",
     version = "0.9",
     kind = "external",
     createMacrosOnAdd = True,
-    url = "",
-    description = "Adds actions to control Yamaha RX-V network receiver.",
+    canMultiLoad = True,
+    url = "https://github.com/BirdAPI/yamaha-network-receivers",
+    description = "Control Yamaha RX-V network receivers."
 )
 
 class ActionPrototype(eg.ActionClass):
