@@ -26,4 +26,23 @@ RX-V473, RX-V573, RX-V673, RX-V773
 RX-V475, RX-V575, RX-V675, RX-V775
 ```
 
+Functions
+---------
+- Increase Volume (User defined increment)
+- Decrease Volume (User defined decrement)
+- Set Exact Volume (User defined)
+- Toggle Mute
+- Set Input Source (HDMI1, HDMI2, AV1, V-AUX, etc)
+- Set Scene # (User defined)
+- Power: On, Off, Standby, Toggle On/Standby
+- Toggle Surround Decode / Straight
+- Toggle Enhancer
+- Next Radio Preset
+- Previous Radio Preset
+- Toggle Radio AM/FM
+- Radio Auto Freq Up
+- Radio Auto Freq Down
+- Radio Freq Up
+- Radio Freq Down
+
 [EventGhost]: http://www.eventghost.org/
