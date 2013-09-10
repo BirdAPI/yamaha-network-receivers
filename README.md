@@ -1,9 +1,29 @@
-NOTICE:
+Yamaha Network Receivers
+=========
 
-config.ini:
+About
+-----
+This is a plugin for [EventGhost] which allows you to control your Yamaha AV Receivers over the internet (local network). It should work with most/all Yamaha RX-Vxxx models which contain either an ethernet connection or a wireless connection.  The computer running [EventGhost] should be on the same local network, or you will need to use port forwarding.
 
-The plugin will attempt to locate your network receiver automatically. If the program is unable to locate it, or you have multiple receivers, you will have to open it up and modify the settings yourself.
+Tested Models:
+------
+```
+RX-V867 [working]
+RX-V473 [working]
+RX-V775 [working]
+```
 
-ip_address: Use this option to set a manual ip address. you should only do this if you have a static one.
+Supported Models (Incomplete):
+------
+Typically, any `Yamaha RX-Vxxx` models are supported. Here is an incomplete list of (possibly) supported models.
+```
+RX-V867
 
-auto_detect_model: Use this option to set the model of your reciever. Only use this if you have multiple network receivers, and want to specify which one to control.
+RX-V671, RX-V871
+
+RX-V473, RX-V573, RX-V673, RX-V773
+
+RX-V475, RX-V575, RX-V675, RX-V775
+```
+
+[EventGhost]: http://www.eventghost.org/
