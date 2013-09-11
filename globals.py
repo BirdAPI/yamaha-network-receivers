@@ -8,6 +8,7 @@ default_timeout=3.0
 
 # runtime
 FOUND_IP = None
+MODEL = None
 
 # static / constants
 ACTIONS = (   

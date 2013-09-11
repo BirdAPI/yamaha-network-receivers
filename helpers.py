@@ -61,7 +61,7 @@ def auto_detect_ip_threaded():
             break
         else:
             t.join()
-    print "Found IP:", globals.FOUND_IP
+    print "Found IP: {0} [{1}]".format(globals.FOUND_IP, globals.MODEL)
     return globals.FOUND_IP
 
 def try_connect(ip):
@@ -74,6 +74,7 @@ def try_connect(ip):
                 or globals.auto_detect_model is None\
                 or model.lower() == globals.auto_detect_model.lower():
             globals.FOUND_IP = ip
+            globals.MODEL = model
     except:
         #print '{0}: ...'.format(ip)
         pass
