@@ -169,13 +169,86 @@ class CursorAction(eg.ActionBase):
                 code = '7A85A1DF'
             elif action == 'Pop_Up_Menu':
                 code = '7A85A5DB'
-        set_cursor(code)
+        send_code(code)
 
     def Configure(self, action="Up", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
         zones = [ 'Main Zone', 'Zone 2' ]
         actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top_Menu', 'Pop_Up_Menu' ]
+
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Action: ", pos=(10, 60))
+        choice_action = wx.Choice(panel, -1, (10, 80), choices=actions)
+        if action in actions:
+            choice_action.SetStringSelection(action)
+
+        while panel.Affirmed():
+            panel.SetResult(actions[choice_action.GetCurrentSelection()], zones[choice_zone.GetCurrentSelection()])
+
+class NumCharAction(eg.ActionBase):
+    def __call__(self, action, zone):
+        if zone == 'Main Zone':
+            if action == '1':
+                code = '7F0151AE'
+            elif action == '2':
+                code = '7F0152AD'
+            elif action == '3':
+                code = '7F0153AC'
+            elif action == '4':
+                code = '7F0154AB'
+            elif action == '5':
+                code = '7F0155AA'
+            elif action == '6':
+                code = '7F0156A9'
+            elif action == '7':
+                code = '7F0157A8'
+            elif action == '8':
+                code = '7F0158A7'
+            elif action == '9':
+                code = '7F0159A6'
+            elif action == '0':
+                code = '7F015AA5'
+            elif action == '+10':
+                code = '7F015BA4'
+            elif action == 'ENT':
+                code = '7F015CA3'
+        if zone == 'Zone 2':
+            if action == '1':
+                code = '7F01718F'
+            elif action == '2':
+                code = '7F01728C'
+            elif action == '3':
+                code = '7F01738D'
+            elif action == '4':
+                code = '7F01748A'
+            elif action == '5':
+                code = '7F01758B'
+            elif action == '6':
+                code = '7F017688'
+            elif action == '7':
+                code = '7F017789'
+            elif action == '8':
+                code = '7F017886'
+            elif action == '9':
+                code = '7F017986'
+            elif action == '0':
+                code = '7F017A84'
+            elif action == '+10':
+                code = '7F017B85'
+            elif action == 'ENT':
+                code = '7F017C82'
+        send_code(code)
+
+    def Configure(self, action="1", zone="Main Zone"):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Main Zone', 'Zone 2' ]
+        actions = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '+10', 'ENT' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
