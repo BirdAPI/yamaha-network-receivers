@@ -102,26 +102,32 @@ class SetSourceInput(eg.ActionBase):
             panel.SetResult(inputs[choice.GetCurrentSelection()])
             
 class SetPowerStatus(eg.ActionBase):
-    def __call__(self, status):
+    def __call__(self, zone, status):
         if status == 'Toggle On/Standby':
-            toggle_on_standby()
+            toggle_on_standby(convert_zone_to_int(zone))
         elif status == 'On':
-            power_on()
+            power_on(convert_zone_to_int(zone))
         elif status == 'Off':
-            power_off()
+            power_off(convert_zone_to_int(zone))
         elif status == 'Standby':
-            power_standby()
+            power_standby(convert_zone_to_int(zone))
 
-    def Configure(self, status="Toggle On/Standby"):
+    def Configure(self, zone="Main Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
-        
+
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
         statuses = [ 'Toggle On/Standby', 'On', 'Off', 'Standby' ]
-        wx.StaticText(panel, label="Power Status: ", pos=(10, 10))
-        choice = wx.Choice(panel, -1, (10, 30), choices=statuses)
+        wx.StaticText(panel, label="Power Status: ", pos=(10, 60))
+        choice = wx.Choice(panel, -1, (10, 80), choices=statuses)
         if status in statuses:
             choice.SetStringSelection(status)
         while panel.Affirmed():
-            panel.SetResult(statuses[choice.GetCurrentSelection()])
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], statuses[choice.GetCurrentSelection()])
             
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):

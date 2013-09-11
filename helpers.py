@@ -28,8 +28,7 @@ def auto_detect_ip():
     ip_range = create_ip_range(globals.ip_range_start, globals.ip_range_end)
     for ip in ip_range:
         try:
-            conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
-            model = yamaha.get_string_param('Model_Name', conf)
+            model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
             print '{0}: {1}'.format(ip, model)
             if model.upper() == "ANY" or model == "" or model is None \
                     or model.lower() == globals.auto_detect_model.lower():
@@ -66,8 +65,7 @@ def auto_detect_ip_threaded():
 
 def try_connect(ip):
     try:
-        conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
-        model = yamaha.get_string_param('Model_Name', conf)
+        model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
         print '{0}: {1}'.format(ip, model)
         if globals.auto_detect_model.upper() == "ANY" \
                 or globals.auto_detect_model == "" \

@@ -71,8 +71,8 @@ def get_tuner_presets(timeout=None, ip=None, port=None):
 def get_config(timeout=None, ip=None, port=None):
     return get_xml('<System><Config>GetParam</Config></System>', timeout, ip, port)
 
-def get_status_string(param, zone=0):
-    xml = get_basic_status(zone)
+def get_status_string(param, zone=0, timeout=None, ip=None, port=None):
+    xml = get_basic_status(zone, timeout, ip, port)
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
@@ -83,8 +83,8 @@ def get_status_param_is_on(param, zone=0):
 def get_status_int(param, zone=0):
     return int(get_status_string(param, zone))
 
-def get_config_string(param):
-    xml = get_basic_status()
+def get_config_string(param, timeout=None, ip=None, port=None):
+    xml = get_config(timeout, ip, port)
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
