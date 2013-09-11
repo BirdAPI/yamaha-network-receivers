@@ -79,7 +79,7 @@ class SetPowerStatus(eg.ActionBase):
         elif status == 'Standby':
             power_standby()
 
-    def Configure(self, status=""):
+    def Configure(self, status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
         
         statuses = [ 'Toggle On/Standby', 'On', 'Off', 'Standby' ]
@@ -114,7 +114,7 @@ class SetSurroundMode(eg.ActionBase):
         elif mode == 'Surround Decode':
             surround_decode()
 
-    def Configure(self, mode=""):
+    def Configure(self, mode='Toggle Straight/Surround Decode'):
         panel = eg.ConfigPanel()
         
         modes = [ 'Toggle Straight/Surround Decode', 'Straight', 'Surround Decode' ]
