@@ -146,9 +146,9 @@ class CursorAction(eg.ActionBase):
                 code = '7A85847B'
             elif action == 'Option':
                 code = '7A856B14'
-            elif action == 'Top_Menu':
+            elif action == 'Top Menu':
                 code = '7A85A0DF'
-            elif action == 'Pop_Up_Menu':
+            elif action == 'Pop Up Menu':
                 code = '7A85A4DB'
         if zone == 'Zone 2':
             if action == 'Up':
@@ -165,9 +165,9 @@ class CursorAction(eg.ActionBase):
                 code = '7A853C42'
             elif action == 'Option':
                 code = '7A856C12'
-            elif action == 'Top_Menu':
+            elif action == 'Top Menu':
                 code = '7A85A1DF'
-            elif action == 'Pop_Up_Menu':
+            elif action == 'Pop Up Menu':
                 code = '7A85A5DB'
         send_code(code)
 
@@ -175,7 +175,7 @@ class CursorAction(eg.ActionBase):
         panel = eg.ConfigPanel()
 
         zones = [ 'Main Zone', 'Zone 2' ]
-        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top_Menu', 'Pop_Up_Menu' ]
+        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top Menu', 'Pop Up Menu' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)

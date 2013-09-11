@@ -45,4 +45,40 @@ Functions
 - Radio Freq Up
 - Radio Freq Down
 
++ Cursor Actions (Choose Main Zone / Zone 2):
+    + Up
+    + Down
+    + Left
+    + Right
+    + Enter
+    + Return
+    + Option
+    + Top Menu
+    + Pop Up Menu
+
+- NumChar Actions (Choose Main Zone / Zone 2):
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - +10
+    - ENT
+
++ Operation Actions (Choose Main Zone / Zone 2):
+    + Play
+    + Stop
+    + Pause
+    + Search-
+    + Search+
+    + Skip-
+    + Skip+
+    + FM
+    + AM
+
+
 [EventGhost]: http://www.eventghost.org/
