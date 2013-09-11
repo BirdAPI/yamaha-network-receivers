@@ -55,9 +55,9 @@ def get_xml(xml, timeout=None, ip=None, port=None):
 
 def zone_get_xml(zone, xml, timeout=None, ip=None, port=None):
     if zone < 2:
-        get_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
+        return get_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
     else:
-        get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), timeout, ip, port)
+        return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), timeout, ip, port)
 
 def get_basic_status(zone=0, timeout=None, ip=None, port=None):
     return zone_get_xml(zone, '<Basic_Status>GetParam</Basic_Status>', timeout, ip, port)
