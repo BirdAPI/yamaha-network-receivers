@@ -59,7 +59,8 @@ class SetSourceInput(eg.ActionBase):
         
         inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
                    'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
-                   'V-AUX', 'TUNER' ]
+                   'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4'
+                   'DOCK', 'SIRIUS', 'PC' ]
         wx.StaticText(panel, label="Source Input: ", pos=(10, 10))
         index = -1 if not source in inputs else inputs.index(source)
         choice = wx.Choice(panel, index, (10, 30), choices=inputs)
