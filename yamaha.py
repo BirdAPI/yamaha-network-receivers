@@ -50,20 +50,26 @@ def send_xml(XML):
     conn.send(XML)
     conn.close()
 
-def increase_volume(inc = 0.5):
-    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Volume><Lvl><Val>%i</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>' % int(get_volume() + 10 * inc))
+def zone_put_xml(zone, xml):
+    if zone < 2:
+        send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone>{0}</Main_Zone></YAMAHA_AV>'.format(xml))
+    else:
+        send_xml('<YAMAHA_AV cmd="PUT"><Zone_{1}>{0}</Zone_{1}></YAMAHA_AV>'.format(xml, zone))
 
-def decrease_volume(dec = 0.5):
-    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Volume><Lvl><Val>%i</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>' % int(get_volume() - 10 * dec))
+def increase_volume(zone=0, inc=0.5):
+    zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() + 10 * inc)))
 
-def change_volume(diff):
-    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Volume><Lvl><Val>%i</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>' % int(get_volume() + 10 * diff))
+def decrease_volume(zone=0, dec=0.5):
+    zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() - 10 * dec)))
+
+def change_volume(zone=0, diff=0.0):
+    zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() + 10 * diff)))
 
 def get_volume():
     return get_int_param('Val')
 
-def set_volume(value):
-    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Volume><Lvl><Val>%i</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Main_Zone></YAMAHA_AV>' % int(value * 10.0))
+def set_volume(zone=0, value=-25.0):
+    zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
 
 def mute_on():
     send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Volume><Mute>On</Mute></Volume></Main_Zone></YAMAHA_AV>')

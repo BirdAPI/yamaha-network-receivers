@@ -5,36 +5,69 @@ import wx.lib.agw.floatspin as FS
 import globals
 from yamaha import *
 from helpers import *
-    
-class IncreaseVolume(eg.ActionBase):
-    def __call__(self, step):
-        increase_volume(float(step))
 
-    def Configure(self, step=0.5):
+class IncreaseVolume(eg.ActionBase):
+    def __call__(self, zone, step):
+        increase_volume(convert_zone_to_int(zone), float(step))
+
+    def Configure(self, zone='Main Zone', step=0.5):
         panel = eg.ConfigPanel()
-        
-        wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 10))
-        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
                                  increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
         floatspin.SetFormat("%f")
         floatspin.SetDigits(1)
         while panel.Affirmed():
-            panel.SetResult(floatspin.GetValue())
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
             
 class DecreaseVolume(eg.ActionBase):
-    def __call__(self, step):
-        decrease_volume(float(step))
+    def __call__(self, zone, step):
+        decrease_volume(convert_zone_to_int(zone), float(step))
 
-    def Configure(self, step=0.5):
+    def Configure(self, zone='Main Zone', step=0.5):
         panel = eg.ConfigPanel()
-        
-        wx.StaticText(panel, label="Decrease Amount (Step): ", pos=(10, 10))
-        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=0.5, max_val=10,
+
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Decrease Amount (Step): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
                                  increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
         floatspin.SetFormat("%f")
         floatspin.SetDigits(1)
         while panel.Affirmed():
-            panel.SetResult(floatspin.GetValue())
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
+
+class SetVolume(eg.ActionBase):
+    def __call__(self, zone, vol):
+        set_volume(convert_zone_to_int(zone), float(vol))
+
+    def Configure(self, zone='Main Zone', vol=-50.0):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Exact Volume (dB): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=-100.0, max_val=50.0,
+            increment=0.5, value=float(vol), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
             
 class SetScene(eg.ActionBase):
     def __call__(self, scene):
@@ -89,21 +122,6 @@ class SetPowerStatus(eg.ActionBase):
             choice.SetStringSelection(status)
         while panel.Affirmed():
             panel.SetResult(statuses[choice.GetCurrentSelection()])
-            
-class SetVolume(eg.ActionBase):
-    def __call__(self, vol):
-        set_volume(float(vol))
-
-    def Configure(self, vol=-50.0):
-        panel = eg.ConfigPanel()
-        
-        wx.StaticText(panel, label="Exact Volume (dB): ", pos=(10, 10))
-        floatspin = FS.FloatSpin(panel, -1, pos=(10, 30), min_val=-100.0, max_val=50.0,
-                                 increment=0.5, value=float(vol), agwStyle=FS.FS_LEFT)
-        floatspin.SetFormat("%f")
-        floatspin.SetDigits(1)
-        while panel.Affirmed():
-            panel.SetResult(floatspin.GetValue())
             
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):

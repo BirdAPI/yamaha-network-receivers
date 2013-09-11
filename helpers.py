@@ -87,3 +87,9 @@ def create_ip_range(range_start, range_end):
         ip = range_start[:range_start.rfind('.')+1] + str(i)
         ip_range.append(ip)
     return ip_range
+
+def convert_zone_to_int(zone):
+    if zone == 'Main Zone' or zone == 'Main_Zone' or zone == 'MZ':
+        return 0
+    else:
+        return float(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
