@@ -62,8 +62,9 @@ class SetSourceInput(eg.ActionBase):
                    'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4'
                    'DOCK', 'SIRIUS', 'PC' ]
         wx.StaticText(panel, label="Source Input: ", pos=(10, 10))
-        index = -1 if not source in inputs else inputs.index(source)
-        choice = wx.Choice(panel, index, (10, 30), choices=inputs)
+        choice = wx.Choice(panel, -1, (10, 30), choices=inputs)
+        if source in inputs:
+            choice.SetStringSelection(source)
         while panel.Affirmed():
             panel.SetResult(inputs[choice.GetCurrentSelection()])
             
@@ -83,8 +84,9 @@ class SetPowerStatus(eg.ActionBase):
         
         statuses = [ 'Toggle On/Standby', 'On', 'Off', 'Standby' ]
         wx.StaticText(panel, label="Power Status: ", pos=(10, 10))
-        index = -1 if not status in statuses else statuses.index(status)
-        choice = wx.Choice(panel, index, (10, 30), choices=statuses)
+        choice = wx.Choice(panel, -1, (10, 30), choices=statuses)
+        if status in statuses:
+            choice.SetStringSelection(status)
         while panel.Affirmed():
             panel.SetResult(statuses[choice.GetCurrentSelection()])
             
@@ -117,8 +119,9 @@ class SetSurroundMode(eg.ActionBase):
         
         modes = [ 'Toggle Straight/Surround Decode', 'Straight', 'Surround Decode' ]
         wx.StaticText(panel, label="Surround Mode: ", pos=(10, 10))
-        index = -1 if not mode in modes else modes.index(mode)
-        choice = wx.Choice(panel, index, (10, 30), choices=modes)
+        choice = wx.Choice(panel, -1, (10, 30), choices=modes)
+        if mode in modes:
+            choice.SetStringSelection(mode)
         while panel.Affirmed():
             panel.SetResult(modes[choice.GetCurrentSelection()])
 
@@ -168,22 +171,24 @@ class CursorAction(eg.ActionBase):
                 code = '7A85A5DB'
         set_cursor(code)
 
-    def Configure(self, action="", zone="Main Zone"):
+    def Configure(self, action="Up", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
         zones = [ 'Main Zone', 'Zone 2' ]
         actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top_Menu', 'Pop_Up_Menu' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
-        index = -1 if not zone in zones else zones.index(zone)
-        choice = wx.Choice(panel, index, (10, 30), choices=zones)
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
 
         wx.StaticText(panel, label="Action: ", pos=(10, 60))
-        index2 = -1 if not zone in zones else zones.index(zone)
-        choice2 = wx.Choice(panel, index2, (10, 80), choices=actions)
+        choice_action = wx.Choice(panel, -1, (10, 80), choices=actions)
+        if action in actions:
+            choice_action.SetStringSelection(action)
 
         while panel.Affirmed():
-            panel.SetResult(actions[choice2.GetCurrentSelection()], zones[choice.GetCurrentSelection()])
+            panel.SetResult(actions[choice_action.GetCurrentSelection()], zones[choice_zone.GetCurrentSelection()])
 
 class YamahaRXClient:
     def __init__(self):
