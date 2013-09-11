@@ -230,5 +230,5 @@ def get_radio_preset_count():
     return count
 
 def set_scene(scene_num):
-    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Scene><Scene_Load>Scene %i</Scene_Load></Scene></Main_Zone></YAMAHA_AV>' % scene_num)
+    send_xml('<YAMAHA_AV cmd="PUT"><Main_Zone><Scene><Scene_Sel>Scene %i</Scene_Sel></Scene></Main_Zone></YAMAHA_AV>' % scene_num)
 
