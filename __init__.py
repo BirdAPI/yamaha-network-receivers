@@ -35,6 +35,8 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetPowerStatus)
         self.AddAction(SetSurroundMode)
         self.AddAction(CursorAction)
+        self.AddAction(NumCharAction)
+        self.AddAction(OperationAction)
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
         
