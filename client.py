@@ -121,7 +121,70 @@ class SetSurroundMode(eg.ActionBase):
         choice = wx.Choice(panel, index, (10, 30), choices=modes)
         while panel.Affirmed():
             panel.SetResult(modes[choice.GetCurrentSelection()])
-    
+
+class CursorAction(eg.ActionBase):
+    def __call__(self, action, zone):
+        if zone == 'Main Zone':
+            if action == 'Up':
+                code = '7A859D62'
+            elif action == 'Down':
+                code = '7A859C63'
+            elif action == 'Left':
+                code = '7A859F60'
+            elif action == 'Right':
+                code = '7A859E61'
+            elif action == 'Enter':
+                code = '7A85DE21'
+            elif action == 'Return':
+                code = '7A85AA55'
+            elif action == 'Level':
+                code = '7A858679'
+            elif action == 'On_Screen':
+                code = '7A85847B'
+            elif action == 'Option':
+                code = '7A856B14'
+            elif action == 'Top_Menu':
+                code = '7A85A0DF'
+            elif action == 'Pop_Up_Menu':
+                code = '7A85A4DB'
+        if zone == 'Zone 2':
+            if action == 'Up':
+                code = '7A852B55'
+            elif action == 'Down':
+                code = '7A852C52'
+            elif action == 'Left':
+                code = '7A852D53'
+            elif action == 'Right':
+                code = '7A852E50'
+            elif action == 'Enter':
+                code = '7A852F51'
+            elif action == 'Return':
+                code = '7A853C42'
+            elif action == 'Option':
+                code = '7A856C12'
+            elif action == 'Top_Menu':
+                code = '7A85A1DF'
+            elif action == 'Pop_Up_Menu':
+                code = '7A85A5DB'
+        set_cursor(code)
+
+    def Configure(self, action="", zone="Main Zone"):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Main Zone', 'Zone 2' ]
+        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top_Menu', 'Pop_Up_Menu' ]
+
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        index = -1 if not zone in zones else zones.index(zone)
+        choice = wx.Choice(panel, index, (10, 30), choices=zones)
+
+        wx.StaticText(panel, label="Action: ", pos=(10, 60))
+        index2 = -1 if not zone in zones else zones.index(zone)
+        choice2 = wx.Choice(panel, index2, (10, 80), choices=actions)
+
+        while panel.Affirmed():
+            panel.SetResult(actions[choice2.GetCurrentSelection()], zones[choice.GetCurrentSelection()])
+
 class YamahaRXClient:
     def __init__(self):
         pass

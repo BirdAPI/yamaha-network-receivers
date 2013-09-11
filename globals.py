@@ -24,7 +24,7 @@ ACTIONS = (
 
 ALL_MODELS = [ 'ANY', 
                '', 
-               'RX-V867',
+               'RX-V867', 'RX-V1067', 'RX-V2067',
                '',
                'RX-V671', 'RX-V871',
                '',
