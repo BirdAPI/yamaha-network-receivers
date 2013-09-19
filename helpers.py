@@ -2,6 +2,7 @@ import traceback
 from threading import Thread
 from datetime import datetime
 import socket
+from collections import *
 
 import globals
 import yamaha
@@ -28,7 +29,8 @@ def auto_detect_ip():
     ip_range = create_ip_range(globals.ip_range_start, globals.ip_range_end)
     for ip in ip_range:
         try:
-            model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
+            conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
+            model = yamaha.get_string_param('Model_Name', conf)
             print '{0}: {1}'.format(ip, model)
             if model.upper() == "ANY" or model == "" or model is None \
                     or model.lower() == globals.auto_detect_model.lower():
@@ -65,7 +67,8 @@ def auto_detect_ip_threaded():
 
 def try_connect(ip):
     try:
-        model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
+        conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
+        model = yamaha.get_string_param('Model_Name', conf)
         print '{0}: {1}'.format(ip, model)
         if globals.auto_detect_model.upper() == "ANY" \
                 or globals.auto_detect_model == "" \
@@ -91,3 +94,40 @@ def convert_zone_to_int(zone):
         return 0
     else:
         return float(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
+
+def close_xml_tags(xml):
+    output = []
+    stack = []
+    xml_chars = deque(list(xml))
+    c = None
+
+    while len(xml_chars) > 0:
+        while len(xml_chars) > 0 and c != '<':
+            c = xml_chars.popleft()
+            if c != '<':
+                output.append(c)
+        if c == '<':
+            temp = [ '<' ]
+            c = xml_chars.popleft()
+            end_tag = c == '/'
+            while c != '>':
+                temp.append(c)
+                c = xml_chars.popleft()
+            temp.append('>')
+            tag = ''.join(temp)
+            if not end_tag:
+                stack.append(tag)
+            else:
+                other_tag = stack.pop()
+                other_close_tag = other_tag.replace('<', '</')
+                while other_close_tag != tag:
+                    output.append(other_close_tag)
+                    other_tag = stack.pop()
+                    other_close_tag = other_tag.replace('<', '</')
+            output.append(tag)
+
+    while len(stack) > 0:
+        tag = stack.pop()
+        output.append(tag.replace('<', '</'))
+
+    return ''.join(output)
