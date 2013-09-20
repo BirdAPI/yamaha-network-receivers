@@ -13,7 +13,7 @@ class IncreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -34,7 +34,7 @@ class DecreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -55,7 +55,7 @@ class SetVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', vol=-50.0):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -75,7 +75,7 @@ class SetActiveZone(eg.ActionBase):
 
     def Configure(self, zone='Main Zone'):
         panel = eg.ConfigPanel()
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -130,7 +130,7 @@ class SetPowerStatus(eg.ActionBase):
     def Configure(self, zone="Active Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:

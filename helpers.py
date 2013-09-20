@@ -94,7 +94,10 @@ def convert_zone_to_int(zone):
         # -1 means active zone
         return -1
     else:
-        return int(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
+        z = zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip()
+        if z in [ 'A', 'B', 'C', 'D' ]:
+            return -1 * ord(z)
+        return int(z)
 
 def open_to_close_tag(tag):
     index = tag.find(' ')

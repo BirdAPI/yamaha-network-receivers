@@ -46,6 +46,8 @@ def zone_put_xml(zone, xml, timeout=None, ip=None, port=None):
         zone = globals.active_zone
     if zone < 2:
         put_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
+    elif zone < -1:
+        put_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), timeout, ip, port)
     else:
         put_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), timeout, ip, port)
 
@@ -60,6 +62,8 @@ def zone_get_xml(zone, xml, timeout=None, ip=None, port=None):
         zone = globals.active_zone
     if zone < 2:
         return get_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
+    elif zone < -1:
+        return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), timeout, ip, port)
     else:
         return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), timeout, ip, port)
 

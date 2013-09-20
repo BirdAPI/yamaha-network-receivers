@@ -170,4 +170,4 @@ def send_code(code):
 
 def set_active_zone(zone):
     globals.active_zone = zone
-    print "Active Zone:", zone
+    print "Active Zone: Zone", zone if zone > -1 else chr(-1 * zone)
