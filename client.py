@@ -166,7 +166,11 @@ class SetSurroundMode(eg.ActionBase):
 
 class CursorAction(eg.ActionBase):
     def __call__(self, action, zone):
-        if zone == 'Main Zone':
+        code = None
+        izone = convert_zone_to_int(zone)
+        if izone == -1:
+            izone = globals.active_zone
+        if izone in [0,1]:
             if action == 'Up':
                 code = '7A859D62'
             elif action == 'Down':
@@ -189,7 +193,7 @@ class CursorAction(eg.ActionBase):
                 code = '7A85A0DF'
             elif action == 'Pop Up Menu':
                 code = '7A85A4DB'
-        if zone == 'Zone 2':
+        if izone == 2:
             if action == 'Up':
                 code = '7A852B55'
             elif action == 'Down':
@@ -208,7 +212,8 @@ class CursorAction(eg.ActionBase):
                 code = '7A85A1DF'
             elif action == 'Pop Up Menu':
                 code = '7A85A5DB'
-        send_code(code)
+        if code is not None:
+            send_code(code)
 
     def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
@@ -231,7 +236,11 @@ class CursorAction(eg.ActionBase):
 
 class NumCharAction(eg.ActionBase):
     def __call__(self, action, zone):
-        if zone == 'Main Zone':
+        code = None
+        izone = convert_zone_to_int(zone)
+        if izone == -1:
+            izone = globals.active_zone
+        if izone in [0,1]:
             if action == '1':
                 code = '7F0151AE'
             elif action == '2':
@@ -256,7 +265,7 @@ class NumCharAction(eg.ActionBase):
                 code = '7F015BA4'
             elif action == 'ENT':
                 code = '7F015CA3'
-        if zone == 'Zone 2':
+        if izone == 2:
             if action == '1':
                 code = '7F01718F'
             elif action == '2':
@@ -281,7 +290,8 @@ class NumCharAction(eg.ActionBase):
                 code = '7F017B85'
             elif action == 'ENT':
                 code = '7F017C82'
-        send_code(code)
+        if code is not None:
+            send_code(code)
 
     def Configure(self, action="1", zone="Active Zone"):
         panel = eg.ConfigPanel()
@@ -304,7 +314,11 @@ class NumCharAction(eg.ActionBase):
 
 class OperationAction(eg.ActionBase):
     def __call__(self, action, zone):
-        if zone == 'Main Zone':
+        code = None
+        izone = convert_zone_to_int(zone)
+        if izone == -1:
+            izone = globals.active_zone
+        if izone in [0,1]:
             if action == 'Play':
                 code = '7F016897'
             elif action == 'Stop':
@@ -323,7 +337,7 @@ class OperationAction(eg.ActionBase):
                 code = '7F015827'
             elif action == 'AM':
                 code = '7F01552A'
-        if zone == 'Zone 2':
+        if izone == 2:
             if action == 'Play':
                 code = '7F018876'
             elif action == 'Stop':
@@ -342,7 +356,8 @@ class OperationAction(eg.ActionBase):
                 code = '7F015927'
             elif action == 'AM':
                 code = '7F015628'
-        send_code(code)
+        if code is not None:
+            send_code(code)
 
     def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()
@@ -365,7 +380,11 @@ class OperationAction(eg.ActionBase):
 
 class NumCharAction(eg.ActionBase):
     def __call__(self, action, zone):
-        if zone == 'Main Zone':
+        code = None
+        izone = convert_zone_to_int(zone)
+        if izone == -1:
+            izone = globals.active_zone
+        if izone in [0,1]:
             if action == '1':
                 code = '7F0151AE'
             elif action == '2':
@@ -390,7 +409,7 @@ class NumCharAction(eg.ActionBase):
                 code = '7F015BA4'
             elif action == 'ENT':
                 code = '7F015CA3'
-        if zone == 'Zone 2':
+        if izone == 2:
             if action == '1':
                 code = '7F01718F'
             elif action == '2':
@@ -415,7 +434,8 @@ class NumCharAction(eg.ActionBase):
                 code = '7F017B85'
             elif action == 'ENT':
                 code = '7F017C82'
-        send_code(code)
+        if code is not None:
+            send_code(code)
 
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()
