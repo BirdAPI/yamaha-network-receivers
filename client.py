@@ -10,10 +10,10 @@ class IncreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
         increase_volume(convert_zone_to_int(zone), float(step))
 
-    def Configure(self, zone='Main Zone', step=0.5):
+    def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -31,10 +31,10 @@ class DecreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
         decrease_volume(convert_zone_to_int(zone), float(step))
 
-    def Configure(self, zone='Main Zone', step=0.5):
+    def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -52,10 +52,10 @@ class SetVolume(eg.ActionBase):
     def __call__(self, zone, vol):
         set_volume(convert_zone_to_int(zone), float(vol))
 
-    def Configure(self, zone='Main Zone', vol=-50.0):
+    def Configure(self, zone='Active Zone', vol=-50.0):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -68,7 +68,21 @@ class SetVolume(eg.ActionBase):
         floatspin.SetDigits(1)
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
-            
+
+class SetActiveZone(eg.ActionBase):
+    def __call__(self, zone):
+        set_active_zone(convert_zone_to_int(zone))
+
+    def Configure(self, zone='Main Zone'):
+        panel = eg.ConfigPanel()
+        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()])
+
 class SetScene(eg.ActionBase):
     def __call__(self, scene):
         set_scene(int(scene))
@@ -113,10 +127,10 @@ class SetPowerStatus(eg.ActionBase):
         elif status == 'Standby':
             power_standby(izone)
 
-    def Configure(self, zone="Main Zone", status="Toggle On/Standby"):
+    def Configure(self, zone="Active Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4' ]
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -196,10 +210,10 @@ class CursorAction(eg.ActionBase):
                 code = '7A85A5DB'
         send_code(code)
 
-    def Configure(self, action="Up", zone="Main Zone"):
+    def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
         actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top Menu', 'Pop Up Menu' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -269,10 +283,10 @@ class NumCharAction(eg.ActionBase):
                 code = '7F017C82'
         send_code(code)
 
-    def Configure(self, action="1", zone="Main Zone"):
+    def Configure(self, action="1", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
         actions = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '+10', 'ENT' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -330,10 +344,10 @@ class OperationAction(eg.ActionBase):
                 code = '7F015628'
         send_code(code)
 
-    def Configure(self, action="Play", zone="Main Zone"):
+    def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
         actions = [ 'Play', 'Stop', 'Pause', 'Search-', 'Search+', 'Skip-', 'Skip+', 'FM', 'AM' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -406,7 +420,7 @@ class NumCharAction(eg.ActionBase):
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Main Zone', 'Zone 2' ]
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
         actions = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '+10', 'ENT' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))

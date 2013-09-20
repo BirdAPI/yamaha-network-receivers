@@ -42,6 +42,8 @@ def put_xml(xml, timeout=None, ip=None, port=None):
     send_xml('<YAMAHA_AV cmd="PUT">{0}</YAMAHA_AV>'.format(xml), timeout, ip, port)
 
 def zone_put_xml(zone, xml, timeout=None, ip=None, port=None):
+    if zone == -1:
+        zone = globals.active_zone
     if zone < 2:
         put_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
     else:
@@ -54,12 +56,14 @@ def get_xml(xml, timeout=None, ip=None, port=None):
     return receive_xml('<YAMAHA_AV cmd="GET">{0}</YAMAHA_AV>'.format(xml), timeout, ip, port)
 
 def zone_get_xml(zone, xml, timeout=None, ip=None, port=None):
+    if zone == -1:
+        zone = globals.active_zone
     if zone < 2:
         return get_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), timeout, ip, port)
     else:
         return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), timeout, ip, port)
 
-def get_basic_status(zone=0, timeout=None, ip=None, port=None):
+def get_basic_status(zone=-1, timeout=None, ip=None, port=None):
     return zone_get_xml(zone, '<Basic_Status>GetParam</Basic_Status>', timeout, ip, port)
 
 def get_tuner_status(timeout=None, ip=None, port=None):
@@ -71,16 +75,16 @@ def get_tuner_presets(timeout=None, ip=None, port=None):
 def get_config(timeout=None, ip=None, port=None):
     return get_xml('<System><Config>GetParam</Config></System>', timeout, ip, port)
 
-def get_status_string(param, zone=0, timeout=None, ip=None, port=None):
+def get_status_string(param, zone=-1, timeout=None, ip=None, port=None):
     xml = get_basic_status(zone, timeout, ip, port)
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
 
-def get_status_param_is_on(param, zone=0):
+def get_status_param_is_on(param, zone=-1):
     return get_status_string(param, zone) == "On"
 
-def get_status_int(param, zone=0):
+def get_status_int(param, zone=-1):
     return int(get_status_string(param, zone))
 
 def get_config_string(param, timeout=None, ip=None, port=None):

@@ -8,70 +8,70 @@ import globals
 from helpers import *
 from yamaha_xml import *
 
-def increase_volume(zone=0, inc=0.5):
+def increase_volume(zone=-1, inc=0.5):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() + 10.0 * inc)))
 
-def decrease_volume(zone=0, dec=0.5):
+def decrease_volume(zone=-1, dec=0.5):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() - 10.0 * dec)))
 
-def change_volume(zone=0, diff=0.0):
+def change_volume(zone=-1, diff=0.0):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(get_volume() + 10.0 * diff)))
 
 def get_volume():
     return get_status_int('Val')
 
-def set_volume(zone=0, value=-25.0):
+def set_volume(zone=-1, value=-25.0):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
 
-def mute_on(zone=0):
+def mute_on(zone=-1):
     zone_put_xml(zone, '<Volume><Mute>On</Mute></Volume>')
 
-def mute_off(zone=0):
+def mute_off(zone=-1):
     zone_put_xml(zone, '<Volume><Mute>Off</Mute></Volume>')
 
-def get_mute(zone=0):
+def get_mute(zone=-1):
     return get_status_param_is_on('Mute', zone)
 
-def power_on(zone=0):
+def power_on(zone=-1):
     zone_put_xml(zone, '<Power_Control><Power>On</Power></Power_Control>')
 
-def power_off(zone=0):
+def power_off(zone=-1):
     zone_put_xml(zone, '<Power_Control><Power>Off</Power></Power_Control>')
 
-def power_standby(zone=0):
+def power_standby(zone=-1):
     zone_put_xml(zone, '<Power_Control><Power>Standby</Power></Power_Control>')
 
-def toggle_on_standby(zone=0):
+def toggle_on_standby(zone=-1):
     zone_put_xml(zone, '<Power_Control><Power>On/Standby</Power></Power_Control>')
 
-def toggle_mute(zone=0):
+def toggle_mute(zone=-1):
     if get_mute(zone):
         mute_off(zone)
     else:
         mute_on(zone)
 
-def change_source(source, zone=0):
+def change_source(source, zone=-1):
     zone_put_xml(zone, '<Input><Input_Sel>{0}</Input_Sel></Input>'.format(source))
 
-def straight(zone=0):
+def straight(zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>On</Straight><Sound_Program>Straight</Sound_Program></Current></Program_Sel></Surround>')
 
-def surround_decode(zone=0):
+def surround_decode(zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>Off</Straight><Sound_Program>Surround Decoder</Sound_Program></Current></Program_Sel></Surround>')
 
-def toggle_straight_decode(zone=0):
+def toggle_straight_decode(zone=-1):
     if get_straight(zone):
         surround_decode(zone)
     else:
         straight(zone)
 
-def get_straight(zone=0):
+def get_straight(zone=-1):
     return get_status_param_is_on('Straight', zone)
 
-def set_enhancer(arg, zone=0):
+def set_enhancer(arg, zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Enhancer>{0}</Enhancer></Current></Program_Sel></Surround>'.format(arg))
 
-def get_enhancer(zone=0):
+def get_enhancer(zone=-1):
     return get_status_param_is_on('Enhancer', zone)
 
 def get_sound_program_name():
@@ -92,13 +92,13 @@ def next_source():
 def previous_source():
     set_source_number(get_source_number() - 1)
 
-def set_source_number(num, zone=0):
+def set_source_number(num, zone=-1):
     zone_put_xml(zone, '<Input><Current_Input_Sel_Item><Src_Number>{0}</Src_Number></Current_Input_Sel_Item></Input>'.format(num))
 
-def set_sleep(arg, zone=0):
+def set_sleep(arg, zone=-1):
     zone_put_xml(zone, '<Power_Control><Sleep>On</Sleep></Power_Control>')
 
-def toggle_sleep(zone=0):
+def toggle_sleep(zone=-1):
     if (get_status_param_is_on('Sleep', zone)):
         set_sleep('Off')
     else:
@@ -162,8 +162,12 @@ def manual_radio_freq(updown):
 def set_radio_freq(freq):
     print "Not implemented!"
 
-def set_scene(scene_num, zone=0):
+def set_scene(scene_num, zone=-1):
     zone_put_xml(zone, '<Scene><Scene_Sel>Scene {0}</Scene_Sel></Scene>'.format(scene_num))
 
 def send_code(code):
     put_xml('<System><Misc><Remote_Signal><Receive><Code>{0}</Code></Receive></Remote_Signal></Misc></System>'.format(code))
+
+def set_active_zone(zone):
+    globals.active_zone = zone
+    print "Active Zone:", zone

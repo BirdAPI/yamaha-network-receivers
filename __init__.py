@@ -37,6 +37,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(CursorAction)
         self.AddAction(NumCharAction)
         self.AddAction(OperationAction)
+        self.AddAction(SetActiveZone)
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.client = YamahaRXClient()
         

@@ -90,6 +90,9 @@ def create_ip_range(range_start, range_end):
 def convert_zone_to_int(zone):
     if zone == 'Main Zone' or zone == 'Main_Zone' or zone == 'MZ':
         return 0
+    elif 'active' in zone.lower():
+        # -1 means active zone
+        return -1
     else:
         return int(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
 

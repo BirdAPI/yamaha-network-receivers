@@ -10,6 +10,8 @@ default_timeout=3.0
 FOUND_IP = None
 MODEL = None
 
+active_zone = 0
+
 # static / constants
 ACTIONS = (   
     ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
