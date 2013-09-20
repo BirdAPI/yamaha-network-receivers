@@ -29,8 +29,7 @@ def auto_detect_ip():
     ip_range = create_ip_range(globals.ip_range_start, globals.ip_range_end)
     for ip in ip_range:
         try:
-            conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
-            model = yamaha.get_string_param('Model_Name', conf)
+            model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
             print '{0}: {1}'.format(ip, model)
             if model.upper() == "ANY" or model == "" or model is None \
                     or model.lower() == globals.auto_detect_model.lower():
@@ -67,8 +66,7 @@ def auto_detect_ip_threaded():
 
 def try_connect(ip):
     try:
-        conf = yamaha.get_config(float(globals.auto_detect_timeout), ip=ip)
-        model = yamaha.get_string_param('Model_Name', conf)
+        model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
         print '{0}: {1}'.format(ip, model)
         if globals.auto_detect_model.upper() == "ANY" \
                 or globals.auto_detect_model == "" \
@@ -95,6 +93,12 @@ def convert_zone_to_int(zone):
     else:
         return float(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
 
+def open_to_close_tag(tag):
+    index = tag.find(' ')
+    if index == -1:
+        index = len(tag) - 1
+    return '</' + tag[1:index] + '>'
+
 def close_xml_tags(xml):
     output = []
     stack = []
@@ -115,19 +119,20 @@ def close_xml_tags(xml):
                 c = xml_chars.popleft()
             temp.append('>')
             tag = ''.join(temp)
-            if not end_tag:
-                stack.append(tag)
-            else:
+            if end_tag:
                 other_tag = stack.pop()
-                other_close_tag = other_tag.replace('<', '</')
+                other_close_tag = open_to_close_tag(other_tag)
                 while other_close_tag != tag:
                     output.append(other_close_tag)
                     other_tag = stack.pop()
-                    other_close_tag = other_tag.replace('<', '</')
+                    other_close_tag = open_to_close_tag(other_tag)
+            elif not tag.endswith('/>'):
+                # Only add to stack if not self-closing
+                stack.append(tag)
             output.append(tag)
 
     while len(stack) > 0:
         tag = stack.pop()
-        output.append(tag.replace('<', '</'))
+        output.append(open_to_close_tag(tag))
 
     return ''.join(output)
