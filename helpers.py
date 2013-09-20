@@ -91,7 +91,7 @@ def convert_zone_to_int(zone):
     if zone == 'Main Zone' or zone == 'Main_Zone' or zone == 'MZ':
         return 0
     else:
-        return float(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
+        return int(zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip())
 
 def open_to_close_tag(tag):
     index = tag.find(' ')

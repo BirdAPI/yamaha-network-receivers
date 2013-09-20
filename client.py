@@ -105,14 +105,13 @@ class SetSourceInput(eg.ActionBase):
             
 class SetPowerStatus(eg.ActionBase):
     def __call__(self, zone, status):
+        izone = convert_zone_to_int(zone)
         if status == 'Toggle On/Standby':
-            toggle_on_standby(convert_zone_to_int(zone))
+            toggle_on_standby(izone)
         elif status == 'On':
-            power_on(convert_zone_to_int(zone))
-        elif status == 'Off':
-            power_off(convert_zone_to_int(zone))
+            power_on(izone)
         elif status == 'Standby':
-            power_standby(convert_zone_to_int(zone))
+            power_standby(izone)
 
     def Configure(self, zone="Main Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
@@ -123,7 +122,7 @@ class SetPowerStatus(eg.ActionBase):
         if zone in zones:
             choice_zone.SetStringSelection(zone)
 
-        statuses = [ 'Toggle On/Standby', 'On', 'Off', 'Standby' ]
+        statuses = [ 'Toggle On/Standby', 'On', 'Standby' ]
         wx.StaticText(panel, label="Power Status: ", pos=(10, 60))
         choice = wx.Choice(panel, -1, (10, 80), choices=statuses)
         if status in statuses:
