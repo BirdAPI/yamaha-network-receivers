@@ -5,12 +5,14 @@ ip_auto_detect=True
 auto_detect_model="ANY"
 auto_detect_timeout=1.0
 default_timeout=3.0
+use_current_volume = True
 
 # runtime
 FOUND_IP = None
 MODEL = None
 
 active_zone = 0
+current_volume = None
 
 # static / constants
 ACTIONS = (   
