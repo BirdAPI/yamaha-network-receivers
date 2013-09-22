@@ -98,24 +98,30 @@ class SetScene(eg.ActionBase):
             panel.SetResult(spin.GetValue())
             
 class SetSourceInput(eg.ActionBase):
-    def __call__(self, source):
-        change_source(source)
+	def __call__(self, zone, source):
+		izone = convert_zone_to_int(zone)
+		change_source(source, izone)
 
-    def Configure(self, source="HDMI1"):
-        panel = eg.ConfigPanel()
-        
-        inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
-                   'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
-                   'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
-                   'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
-                   'UAW', 'NET', 'Rhapsody', 'SIRIUSInternetRadio', 'Pandora', 'Napster',
-                   'NET RADIO', 'USB', 'iPod (USB)' ]
-        wx.StaticText(panel, label="Source Input: ", pos=(10, 10))
-        choice = wx.Choice(panel, -1, (10, 30), choices=inputs)
-        if source in inputs:
-            choice.SetStringSelection(source)
-        while panel.Affirmed():
-            panel.SetResult(inputs[choice.GetCurrentSelection()])
+	def Configure(self, zone="Active Zone", source="HDMI1"):
+		panel = eg.ConfigPanel()
+		
+		zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+		wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+		choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+		if zone in zones:
+			choice_zone.SetStringSelection(zone)
+		inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
+					'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
+					'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
+					'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
+					'UAW', 'NET', 'Rhapsody', 'SIRIUSInternetRadio', 'Pandora', 'Napster',
+					'NET RADIO', 'USB', 'iPod (USB)' ]
+		wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
+		choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
+		if source in inputs:
+			choice_input.SetStringSelection(source)
+		while panel.Affirmed():
+			panel.SetResult(zones[choice_zone.GetCurrentSelection()], inputs[choice_input.GetCurrentSelection()])
             
 class SetPowerStatus(eg.ActionBase):
     def __call__(self, zone, status):
