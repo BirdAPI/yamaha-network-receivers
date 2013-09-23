@@ -1,9 +1,8 @@
-from globals import use_current_volume
-
 __author__ = 'Anthony Casagrande'
 
 # Python Imports
 from xml.dom import minidom
+from threading import Thread, Timer
 
 # Local Imports
 import globals
@@ -11,21 +10,18 @@ from helpers import *
 from yamaha_xml import *
 
 def increase_volume(zone=-1, inc=0.5):
-    return change_volume(zone, inc)
+    change_volume(zone, inc)
 
 def decrease_volume(zone=-1, dec=0.5):
-    return change_volume(zone, -1 * dec)
+    change_volume(zone, -1 * dec)
 
 def change_volume(zone=-1, diff=0.0):
-    if not globals.use_current_volume or globals.current_volume is None:
-        globals.current_volume = get_volume() / 10.0
-    set_volume(zone, globals.current_volume + diff)
+    set_volume(zone, (get_volume() / 10.0) + diff)
 
 def get_volume():
     return get_status_int('Val')
 
 def set_volume(zone=-1, value=-25.0):
-    globals.current_volume = value
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
 
 def mute_on(zone=-1):

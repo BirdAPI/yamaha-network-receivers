@@ -27,6 +27,9 @@ class ActionPrototype(eg.ActionClass):
 
 class YamahaRX(eg.PluginClass):
     def __init__(self):
+        self.AddAction(SmartVolumeUp)
+        self.AddAction(SmartVolumeDown)
+        self.AddAction(SmartVolumeFinished)
         self.AddAction(IncreaseVolume)
         self.AddAction(DecreaseVolume)
         self.AddAction(SetVolume)

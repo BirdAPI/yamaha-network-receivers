@@ -1,10 +1,100 @@
 # Python Imports
 import wx.lib.agw.floatspin as FS
+from datetime import datetime
 
 # Local Imports
 import globals
 from yamaha import *
 from helpers import *
+
+class SmartVolumeFinished(eg.ActionBase):
+    def __call__(self):
+        globals.smart_vol_up_start = None
+        globals.smart_vol_down_start = None
+
+class SmartVolumeUp(eg.ActionBase):
+    def __call__(self, zone, step1, step2, wait):
+        izone = convert_zone_to_int(zone)
+        if globals.smart_vol_up_start is None:
+            globals.smart_vol_up_start = datetime.now()
+        diff = datetime.now() - globals.smart_vol_up_start
+        if diff.seconds < float(wait):
+            print "Volume Up:", step1
+            increase_volume(izone, step1)
+        else:
+            print "Volume Up:", step2
+            increase_volume(izone, step2)
+
+    def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Increase Amount (Step 1): ", pos=(10, 60))
+        fs_step1 = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
+            increment=0.5, value=float(step1), agwStyle=FS.FS_LEFT)
+        fs_step1.SetFormat("%f")
+        fs_step1.SetDigits(1)
+
+        wx.StaticText(panel, label="Time between Step 1 to Step 2 (seconds): ", pos=(10, 110))
+        fs_wait = FS.FloatSpin(panel, -1, pos=(10, 130), min_val=0.5, max_val=999,
+            increment=0.1, value=float(wait), agwStyle=FS.FS_LEFT)
+        fs_wait.SetFormat("%f")
+        fs_wait.SetDigits(1)
+
+        wx.StaticText(panel, label="Increase Amount (Step 2): ", pos=(10, 160))
+        fs_step2 = FS.FloatSpin(panel, -1, pos=(10, 180), min_val=0.5, max_val=10,
+            increment=0.5, value=float(step2), agwStyle=FS.FS_LEFT)
+        fs_step2.SetFormat("%f")
+        fs_step2.SetDigits(1)
+
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], fs_step1.GetValue(), fs_step2.GetValue(), fs_wait.GetValue())
+
+class SmartVolumeDown(eg.ActionBase):
+    def __call__(self, zone, step1, step2, wait):
+        izone = convert_zone_to_int(zone)
+        if globals.smart_vol_down_start is None:
+            globals.smart_vol_down_start = datetime.now()
+        diff = datetime.now() - globals.smart_vol_down_start
+        if diff.seconds < float(wait):
+            decrease_volume(izone, step1)
+        else:
+            decrease_volume(izone, step2)
+
+    def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Decrease Amount (Step 1): ", pos=(10, 60))
+        fs_step1 = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
+            increment=0.5, value=float(step1), agwStyle=FS.FS_LEFT)
+        fs_step1.SetFormat("%f")
+        fs_step1.SetDigits(1)
+
+        wx.StaticText(panel, label="Time between Step 1 to Step 2 (seconds): ", pos=(10, 110))
+        fs_wait = FS.FloatSpin(panel, -1, pos=(10, 130), min_val=0.5, max_val=999,
+            increment=0.1, value=float(wait), agwStyle=FS.FS_LEFT)
+        fs_wait.SetFormat("%f")
+        fs_wait.SetDigits(1)
+
+        wx.StaticText(panel, label="Decrease Amount (Step 2): ", pos=(10, 160))
+        fs_step2 = FS.FloatSpin(panel, -1, pos=(10, 180), min_val=0.5, max_val=10,
+            increment=0.5, value=float(step2), agwStyle=FS.FS_LEFT)
+        fs_step2.SetFormat("%f")
+        fs_step2.SetDigits(1)
+
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], fs_step1.GetValue(), fs_step2.GetValue(), fs_wait.GetValue())
 
 class IncreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
