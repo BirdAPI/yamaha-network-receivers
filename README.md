@@ -5,7 +5,7 @@ About
 -----
 This is a plugin for [EventGhost] which allows you to control your Yamaha AV Receivers over the internet (local network). It should work with most/all Yamaha RX-Vxxx models which contain either an ethernet connection or a wireless connection.  The computer running [EventGhost] should be on the same local network, or you will need to use port forwarding.
 
-Tested Models:
+Tested Models
 ------
 ```
 RX-V867 [working]
@@ -13,7 +13,7 @@ RX-V473 [working]
 RX-V775 [working]
 ```
 
-Supported Models (Incomplete):
+Supported Models (Incomplete)
 ------
 Typically, any `Yamaha RX-Vxxx` models are supported. Here is an incomplete list of (possibly) supported models.
 ```
@@ -80,5 +80,9 @@ Functions
     + FM
     + AM
 
+Smart Volume Usage
+--------
+<br />
+<img src="images/smart_volume.png" />
 
 [EventGhost]: http://www.eventghost.org/
