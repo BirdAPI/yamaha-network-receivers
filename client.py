@@ -111,12 +111,12 @@ class IncreaseVolume(eg.ActionBase):
 
         wx.StaticText(panel, label="Increase Amount (Step): ", pos=(10, 60))
         floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
-                                 increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
+            increment=0.5, value=float(step), agwStyle=FS.FS_LEFT)
         floatspin.SetFormat("%f")
         floatspin.SetDigits(1)
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
-            
+
 class DecreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
         decrease_volume(convert_zone_to_int(zone), float(step))
@@ -179,40 +179,40 @@ class SetScene(eg.ActionBase):
 
     def Configure(self, scene=1):
         panel = eg.ConfigPanel()
-        
+
         wx.StaticText(panel, label="Scene Number: ", pos=(10, 10))
         spin = wx.SpinCtrl(panel, -1, "", (10, 30), (80, -1))
         spin.SetRange(1,12)
         spin.SetValue(int(scene))
         while panel.Affirmed():
             panel.SetResult(spin.GetValue())
-            
-class SetSourceInput(eg.ActionBase):
-	def __call__(self, zone, source):
-		izone = convert_zone_to_int(zone)
-		change_source(source, izone)
 
-	def Configure(self, zone="Active Zone", source="HDMI1"):
-		panel = eg.ConfigPanel()
-		
-		zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
-		wx.StaticText(panel, label="Zone: ", pos=(10, 10))
-		choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
-		if zone in zones:
-			choice_zone.SetStringSelection(zone)
-		inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
-					'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
-					'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
-					'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
-					'UAW', 'NET', 'Rhapsody', 'SIRIUSInternetRadio', 'Pandora', 'Napster',
-					'NET RADIO', 'USB', 'iPod (USB)' ]
-		wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
-		choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
-		if source in inputs:
-			choice_input.SetStringSelection(source)
-		while panel.Affirmed():
-			panel.SetResult(zones[choice_zone.GetCurrentSelection()], inputs[choice_input.GetCurrentSelection()])
-            
+class SetSourceInput(eg.ActionBase):
+    def __call__(self, zone, source):
+        izone = convert_zone_to_int(zone)
+        change_source(source, izone)
+
+    def Configure(self, zone="Active Zone", source="HDMI1"):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+        inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
+                   'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
+                   'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
+                   'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
+                   'UAW', 'NET', 'Rhapsody', 'SIRIUSInternetRadio', 'Pandora', 'Napster',
+                   'NET RADIO', 'USB', 'iPod (USB)' ]
+        wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
+        choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
+        if source in inputs:
+            choice_input.SetStringSelection(source)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], inputs[choice_input.GetCurrentSelection()])
+
 class SetPowerStatus(eg.ActionBase):
     def __call__(self, zone, status):
         izone = convert_zone_to_int(zone)
@@ -239,7 +239,7 @@ class SetPowerStatus(eg.ActionBase):
             choice.SetStringSelection(status)
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], statuses[choice.GetCurrentSelection()])
-            
+
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):
         if mode == 'Toggle Straight/Surround Decode':
@@ -251,7 +251,7 @@ class SetSurroundMode(eg.ActionBase):
 
     def Configure(self, mode='Toggle Straight/Surround Decode'):
         panel = eg.ConfigPanel()
-        
+
         modes = [ 'Toggle Straight/Surround Decode', 'Straight', 'Surround Decode' ]
         wx.StaticText(panel, label="Surround Mode: ", pos=(10, 10))
         choice = wx.Choice(panel, -1, (10, 30), choices=modes)
@@ -555,7 +555,7 @@ class NumCharAction(eg.ActionBase):
 class YamahaRXClient:
     def __init__(self):
         pass
-        
+
     def send_action(self, msg = '', type=globals.ACTION_EXECBUILTIN):
         if msg == 'ToggleMute':
             toggle_mute()
@@ -572,7 +572,7 @@ class YamahaRXClient:
         elif msg == 'PreviousRadioPreset':
             modify_radio_preset(-1, True, True)
         elif msg == 'ToggleRadioAMFM':
-            toggle_radio_amfm();
+            toggle_radio_amfm()
         elif msg == 'RadioAutoFeqUp':
             auto_radio_freq('Up')
         elif msg == 'RadioAutoFreqDown':
