@@ -11,13 +11,17 @@ def do_xml(xml, **kwargs):
     Base function to send/receive xml using either GET or POST
 
     Optional Parameters:
-    timeout, ip, port, return_result, print_error
+    timeout, ip, port, return_result, print_error, close_xml
     """
     timeout = float(kwargs.get('timeout', globals.default_timeout))
     ip = kwargs.get('ip', globals.ip_address)
     port = kwargs.get('port', globals.port)
     return_result = kwargs.get('return_result', False)
     print_error = kwargs.get('print_error', True)
+    close_xml = kwargs.get('close_xml', False)
+
+    if close_xml:
+        xml = close_xml_tags(xml)
 
     conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port), timeout=float(timeout))
     headers = { "Content-type": "text/xml" }
