@@ -15,37 +15,20 @@ def setup_ip():
             globals.ip_address = ip
     else:
         try:
-            model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=globals.ip_address)
+            model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=globals.ip_address, print_error=False)
             print "Found Yamaha Receiver: {0} [{1}]".format(globals.ip_address, model)
         except:
             eg.PrintError("Yamaha Receiver Not Found [{0}]!".format(globals.ip_address))
 
 def get_lan_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8",80))
-    ip = s.getsockname()[0]
-    s.close()
-    return ip
-
-def auto_detect_ip():
-    start = datetime.now()
-    found_ip = None
-    ip_range = create_ip_range(globals.ip_range_start, globals.ip_range_end)
-    for ip in ip_range:
-        try:
-            model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
-            print '{0}: {1}'.format(ip, model)
-            if model.upper() == "ANY" or model == "" or model is None \
-                    or model.lower() == globals.auto_detect_model.lower():
-                found_ip = ip
-                break
-        except:
-            print '{0}: ...'.format(ip)
-            #print traceback.format_exc()
-    end = datetime.now()
-    delta = end-start
-    print "finished in", delta.total_seconds(), "seconds"
-    return found_ip
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8",80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except:
+        return "192.168.1.1"
 
 def auto_detect_ip_threaded():
     globals.FOUND_IP = None
@@ -73,7 +56,7 @@ def auto_detect_ip_threaded():
 
 def try_connect(ip):
     try:
-        model = yamaha.get_config_string('Model_Name', float(globals.auto_detect_timeout), ip=ip)
+        model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=ip, print_error=False)
         print '{0}: {1}'.format(ip, model)
         if globals.auto_detect_model.upper() == "ANY" \
                 or globals.auto_detect_model == "" \
