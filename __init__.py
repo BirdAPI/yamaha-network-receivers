@@ -63,6 +63,9 @@ class YamahaRX(eg.PluginClass):
             
             self.lbl_model.Hide()
             self.combo.Hide()
+
+            self.txt_ip.SetFocus()
+            self.txt_ip.SetInsertionPoint(len(self.txt_ip.GetValue()))
         
     def Configure(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
         x_start = 10
@@ -71,6 +74,12 @@ class YamahaRX(eg.PluginClass):
         y_padding = 22
         label_padding = 3
         i = 0
+
+        if ip_address == "":
+            # Get LAN IP in order to detect network prefix (eg 192.168.1)
+            lan_ip = get_lan_ip()
+            # Default ip address to network prefix to save typing
+            ip_address = lan_ip[:lan_ip.rfind('.')+1]
         
         panel = eg.ConfigPanel()
         
