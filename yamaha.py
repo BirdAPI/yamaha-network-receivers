@@ -1,5 +1,3 @@
-__author__ = 'Anthony Casagrande'
-
 # Python Imports
 from xml.dom import minidom
 from threading import Thread, Timer
