@@ -1,5 +1,7 @@
+# Python Imports
 import wx.lib.agw.floatspin as FS
 
+# Local Imports
 import globals
 from client import *
 from yamaha import *

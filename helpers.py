@@ -1,13 +1,20 @@
+# Python Imports
 import traceback
 from threading import Thread
 from datetime import datetime
 import socket
 from collections import *
 
+# Local Imports
 import globals
 import yamaha
 
 def setup_ip():
+    """
+    If auto detect ip is enabled, this function will attempt to configure the ip
+    address, otherwise if static ip is enabled, this function will
+    verify whether a yamaha receiver can be found at the given static ip.
+    """
     if globals.ip_auto_detect:
         print "Searching for Yamaha Recievers ({0})...".format(globals.auto_detect_model)
         ip = auto_detect_ip_threaded()
@@ -21,6 +28,11 @@ def setup_ip():
             eg.PrintError("Yamaha Receiver Not Found [{0}]!".format(globals.ip_address))
 
 def get_lan_ip():
+    """
+    Attempts to open a socket connection to Google's DNS
+    servers in order to determine the local IP address
+    of this computer. Eg, 192.168.1.100
+    """
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8",80))
@@ -28,15 +40,31 @@ def get_lan_ip():
         s.close()
         return ip
     except:
-        return "192.168.1.1"
+        return "192.168.1.100"
+
+def get_network_prefix():
+    """
+    Returns the network prefix, which is the local IP address
+    without the last segment, Eg: 192.168.1.100 -> 192.168.1
+    """
+    lan_ip = get_lan_ip()
+    return lan_ip[:lan_ip.rfind('.')]
 
 def auto_detect_ip_threaded():
+    """
+    Blasts the network with requests, attempting to find any and all yamaha receivers
+    on the local network. First it detects the user's local ip address, eg 192.168.1.100.
+    Then, it converts that to the network prefix, eg 192.168.1, and then sends a request
+    to every ip on that subnet, eg 192.168.1.1 -> 192.168.1.254. It does each request on
+    a separate thread in order to avoid waiting for the timeout for every 254 requests
+    one by one.
+    """
     globals.FOUND_IP = None
     threads = []
 
-    # Get LAN IP in order to detect network prefix (eg 192.168.1)
-    lan_ip = get_lan_ip()
-    ip_range = create_ip_range(lan_ip[:lan_ip.rfind('.')] + '.1', lan_ip[:lan_ip.rfind('.')] + '.254')
+    # Get network prefix (eg 192.168.1)
+    net_prefix = get_network_prefix()
+    ip_range = create_ip_range(net_prefix + '.1', net_prefix + '.254')
 
     for ip in ip_range:
         t = Thread(target=try_connect, kwargs={'ip':ip})
@@ -55,20 +83,25 @@ def auto_detect_ip_threaded():
     return globals.FOUND_IP
 
 def try_connect(ip):
+    """
+    Used with the auto-detect-ip functions, determines if a yamaha receiver is
+    waiting at the other end of the given ip address.
+    """
     try:
         model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=ip, print_error=False)
         print '{0}: {1}'.format(ip, model)
-        if globals.auto_detect_model.upper() == "ANY" \
-                or globals.auto_detect_model == "" \
-                or globals.auto_detect_model is None\
-                or model.lower() == globals.auto_detect_model.lower():
+        if globals.auto_detect_model in ["ANY", "", None] or model.upper() == globals.auto_detect_model.upper():
             globals.FOUND_IP = ip
             globals.MODEL = model
     except:
-        #print '{0}: ...'.format(ip)
         pass
 
 def create_ip_range(range_start, range_end):
+    """
+    Given a start ip, eg 192.168.1.1, and an end ip, eg 192.168.1.254,
+    generate a list of all of the ips within that range, including
+    the start and end ips.
+    """
     ip_range = []
     start = int(range_start[range_start.rfind('.')+1:])
     end = int(range_end[range_end.rfind('.')+1:])
@@ -78,6 +111,14 @@ def create_ip_range(range_start, range_end):
     return ip_range
 
 def convert_zone_to_int(zone):
+    """
+    Convert a zone name into the integer value that it represents:
+    Examples:
+    Active Zone: -1
+    Main Zone: 0
+    Zone 2: 2
+    Zone A: -65 (this is the negative version of the integer that represents this letter: 'A' -> 65, thus -65)
+    """
     if zone == 'Main Zone' or zone == 'Main_Zone' or zone == 'MZ':
         return 0
     elif 'active' in zone.lower():
@@ -90,12 +131,21 @@ def convert_zone_to_int(zone):
         return int(z)
 
 def open_to_close_tag(tag):
+    """
+    Given an opening xml tag, return the matching close tag
+    eg. '<YAMAHA_AV cmd="PUT"> becomes </YAMAHA_AV>
+    """
     index = tag.find(' ')
     if index == -1:
         index = len(tag) - 1
     return '</' + tag[1:index] + '>'
 
 def close_xml_tags(xml):
+    """
+    Automagically takes an input xml string and returns that string
+    with all of the xml tags properly closed. It can even handle when
+    the open tag is in the middle of the string and not the end.
+    """
     output = []
     stack = []
     xml_chars = deque(list(xml))
