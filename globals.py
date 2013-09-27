@@ -87,6 +87,30 @@ OPERATION_CODES = {
          'AM': '7F015628' }
 }
 
+# CURSOR_CODES[zone][action]
+CURSOR_CODES = {
+    1: { 'Up': '7A859D62',
+         'Down': '7A859C63',
+         'Left': '7A859F60',
+         'Right': '7A859E61',
+         'Enter': '7A85DE21',
+         'Return': '7A85AA55',
+         'Level': '7A858679',
+         'On Screen': '7A85847B',
+         'Option': '7A856B14',
+         'Top Menu': '7A85A0DF',
+         'Pop Up Menu': '7A85A4DB' },
+    2: { 'Up': '7A852B55',
+         'Down': '7A852C52',
+         'Left': '7A852D53',
+         'Right': '7A852E50',
+         'Enter': '7A852F51',
+         'Return': '7A853C42',
+         'Option': '7A856C12',
+         'Top Menu': '7A85A1DF',
+         'Pop Up Menu': '7A85A5DB' },
+    }
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02

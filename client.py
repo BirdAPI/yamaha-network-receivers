@@ -264,59 +264,24 @@ class SetSurroundMode(eg.ActionBase):
 class CursorAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone)
-        if izone == -1:
-            izone = globals.active_zone
+        izone = convert_zone_to_int(zone, convert_active=True)
         if izone in [0,1]:
-            if action == 'Up':
-                code = '7A859D62'
-            elif action == 'Down':
-                code = '7A859C63'
-            elif action == 'Left':
-                code = '7A859F60'
-            elif action == 'Right':
-                code = '7A859E61'
-            elif action == 'Enter':
-                code = '7A85DE21'
-            elif action == 'Return':
-                code = '7A85AA55'
-            elif action == 'Level':
-                code = '7A858679'
-            elif action == 'On_Screen':
-                code = '7A85847B'
-            elif action == 'Option':
-                code = '7A856B14'
-            elif action == 'Top Menu':
-                code = '7A85A0DF'
-            elif action == 'Pop Up Menu':
-                code = '7A85A4DB'
+            code = globals.CURSOR_CODES[1][action]
         if izone == 2:
-            if action == 'Up':
-                code = '7A852B55'
-            elif action == 'Down':
-                code = '7A852C52'
-            elif action == 'Left':
-                code = '7A852D53'
-            elif action == 'Right':
-                code = '7A852E50'
-            elif action == 'Enter':
-                code = '7A852F51'
-            elif action == 'Return':
-                code = '7A853C42'
-            elif action == 'Option':
-                code = '7A856C12'
-            elif action == 'Top Menu':
-                code = '7A85A1DF'
-            elif action == 'Pop Up Menu':
-                code = '7A85A5DB'
+            # Not all of the actions are supported for zone 2
+            code = globals.CURSOR_CODES[2].get(action, None)
+
         if code is not None:
             send_code(code)
+        else:
+            # It is possible the user's active zone is not yet supported
+            eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
 
     def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
         zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
-        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Option', 'Top Menu', 'Pop Up Menu' ]
+        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Level', 'On Screen', 'Option', 'Top Menu', 'Pop Up Menu' ]
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
