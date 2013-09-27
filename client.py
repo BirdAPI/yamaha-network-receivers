@@ -552,6 +552,143 @@ class NumCharAction(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(actions[choice_action.GetCurrentSelection()], zones[choice_zone.GetCurrentSelection()])
 
+class GetInfo(eg.ActionBase):
+    def __call__(self, object, cat):
+        zone = 0
+        #zone specific objects
+        if object == "Input Selection":
+            object = "Input_Sel"
+        if object == "Scene":
+            return "not complete"
+        if object == "Sound Program":
+            object = "Sound_Program"
+        if cat == "Main Zone":
+            zone = 1
+        if cat[:4] == "Zone":
+            zone = cat[5]
+        if object == "Volume Level":
+            return str(float(get_status_string("Val",zone))/10) + " " + get_status_string("Unit",zone)
+        if zone > 0:
+            return get_status_string(object,zone)
+
+        #all the rest are zone agnostic
+        #object, input, location to get_device_string
+        section = "List_Info"
+        if object == "Menu Layer":
+            object = "Menu_Layer"
+        elif object == "Menu Name":
+            object = "Menu_Name"
+        elif object == "Line 1":
+            object = "Line_1"
+        elif object == "Line 2":
+            object = "Line_2"
+        elif object == "Line 3":
+            object = "Line_3"
+        elif object == "Line 4":
+            object = "Line_4"
+        elif object == "Line 5":
+            object = "Line_5"
+        elif object == "Line 6":
+            object = "Line_6"
+        elif object == "Line 7":
+            object = "Line_7"
+        elif object == "Line 8":
+            object = "Line_8"
+        elif object == "Current Line":
+            object = "Current_Line"
+        elif object == "Max Line":
+            object = "Max_Line"
+        else:
+            section = "Play_Info"
+        if object == "FM Mode":
+            object = "FM_Mode"
+        elif object == "Frequency":
+            if get_device_string("Band", cat, section) == "FM":
+                return str(float(get_device_string("Val", cat, section))/100) + " " + get_device_string("Unit", cat, section)
+            else:
+                return get_device_string("Val", cat, section) + " " + get_device_string("Unit", cat, section)
+        elif object == "Audio Mode":
+            object = "Current"
+        elif object == "Antenna Strength":
+            object = "Antenna_Lvl"
+        elif object == "Channel Number":
+            object = "Ch_Number"
+        elif object == "Channel Name":
+            object = "Ch_Name"
+        elif object == "Playback Info":
+            object = "Playback_Info"
+        elif object == "Repeat Mode":
+            object = "Repeat"
+        elif object == "Connect Information":
+            object = "Connect_Info"
+
+        try:
+            return get_device_string(object, cat, section)
+        except:
+            print "Input not active or unavailable with your model."
+
+
+    def Configure(self, object="Power", cat="Main Zone"):
+        panel = eg.ConfigPanel()
+
+        self.cats = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D', 'Tuner', 'HD Radio', 'SIRIUS', 'iPod', 'Bluetooth', 'Rhapsody', 'SIRIUS IR', 'Pandora', 'PC', 'NET RADIO', 'Napster', 'USB', 'USB iPod']
+
+
+        wx.StaticText(panel, label="Category: ", pos=(10, 10))
+        self.choice_cat = wx.Choice(panel, -1, (10, 30), choices=self.cats)
+        if cat in self.cats:
+            self.choice_cat.SetStringSelection(cat)
+        self.choice_cat.Bind(wx.EVT_CHOICE, self.CategoryChanged)
+
+        self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene', 'Straight', 'Enhancer', 'Sound Program']
+        wx.StaticText(panel, label="Object: ", pos=(10, 60))
+        self.choice_object = wx.Choice(panel, -1, (10, 80), choices=self.objects)
+        self.CategoryChanged()
+        if object in self.objects:
+            self.choice_object.SetStringSelection(object)
+
+            
+        while panel.Affirmed():
+            panel.SetResult(self.objects[self.choice_object.GetCurrentSelection()], self.cats[self.choice_cat.GetCurrentSelection()])
+
+    def CategoryChanged(self, event=None):
+        cat = self.cats[self.choice_cat.GetCurrentSelection()]
+        if cat == "Main Zone":
+            self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene', 'Straight', 'Enhancer', 'Sound Program']
+        elif cat[:4] == "Zone":
+            self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene']
+        elif cat == "Tuner":
+            self.objects = [ 'Band', 'Frequency', 'FM Mode']
+        elif cat == "HD Radio":
+            self.objects = [ 'Band', 'Frequency', 'Audio Mode']
+        elif cat == "SIRIUS":
+            self.objects = [ 'Antenna Strength', 'Category', 'Channel Number', 'Channel Name', 'Artist', 'Song', 'Composer']
+        elif cat == "iPod":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "Bluetooth":
+            self.objects = [ 'Connect Information']
+        elif cat == "Rhapsody":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "SIRIUS IR":
+            self.objects = [ 'Playback Info', 'Artist', 'Channel', 'Title', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "Pandora":
+            self.objects = [ 'Playback Info', 'Station', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat ==  "PC":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "NET RADIO":
+            self.objects = [ 'Playback Info', 'Station', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "Napster":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "USB":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        elif cat == "USB Ipod":
+            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+        else:
+            print "error"
+        self.choice_object.Clear()
+        self.choice_object.AppendItems(self.objects)
+        self.choice_object.SetSelection(0) 
+           
 class YamahaRXClient:
     def __init__(self):
         pass
