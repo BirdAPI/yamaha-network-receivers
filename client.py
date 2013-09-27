@@ -1,6 +1,7 @@
 # Python Imports
 import wx.lib.agw.floatspin as FS
 from datetime import datetime
+import re
 
 # Local Imports
 import globals
@@ -19,10 +20,10 @@ class SmartVolumeUp(eg.ActionBase):
             globals.smart_vol_up_start = datetime.now()
         diff = datetime.now() - globals.smart_vol_up_start
         if diff.seconds < float(wait):
-            print "Volume Up:", step1
+            #print "Volume Up:", step1
             increase_volume(izone, step1)
         else:
-            print "Volume Up:", step2
+            #print "Volume Up:", step2
             increase_volume(izone, step2)
 
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
@@ -554,7 +555,7 @@ class NumCharAction(eg.ActionBase):
 
 class GetInfo(eg.ActionBase):
     def __call__(self, object, cat):
-        zone = 0
+        zone = None
         #zone specific objects
         if object == "Input Selection":
             object = "Input_Sel"
@@ -564,49 +565,32 @@ class GetInfo(eg.ActionBase):
             object = "Sound_Program"
         if cat == "Main Zone":
             zone = 1
-        if cat[:4] == "Zone":
-            zone = cat[5]
+        if cat.startswith("Zone"):
+            zone = convert_zone_to_int(cat)
         if object == "Volume Level":
-            return str(float(get_status_string("Val",zone))/10) + " " + get_status_string("Unit",zone)
-        if zone > 0:
+            val, unit = get_status_strings(["Val", "Unit"], zone)
+            return "{0} {1}".format(float(val) / 10.0, unit)
+        if zone is not None:
             return get_status_string(object,zone)
 
         #all the rest are zone agnostic
         #object, input, location to get_device_string
         section = "List_Info"
-        if object == "Menu Layer":
-            object = "Menu_Layer"
-        elif object == "Menu Name":
-            object = "Menu_Name"
-        elif object == "Line 1":
-            object = "Line_1"
-        elif object == "Line 2":
-            object = "Line_2"
-        elif object == "Line 3":
-            object = "Line_3"
-        elif object == "Line 4":
-            object = "Line_4"
-        elif object == "Line 5":
-            object = "Line_5"
-        elif object == "Line 6":
-            object = "Line_6"
-        elif object == "Line 7":
-            object = "Line_7"
-        elif object == "Line 8":
-            object = "Line_8"
-        elif object == "Current Line":
-            object = "Current_Line"
-        elif object == "Max Line":
-            object = "Max_Line"
+        if object in ["Menu Layer", "Menu Name", "Current Line", "Max Line"] \
+                or object in ['Line {0}'.format(i) for i in range(9)]:
+            object = object.replace(' ', '_')
         else:
             section = "Play_Info"
+
         if object == "FM Mode":
             object = "FM_Mode"
         elif object == "Frequency":
-            if get_device_string("Band", cat, section) == "FM":
-                return str(float(get_device_string("Val", cat, section))/100) + " " + get_device_string("Unit", cat, section)
-            else:
-                return get_device_string("Val", cat, section) + " " + get_device_string("Unit", cat, section)
+            try:
+                val, unit, band = get_device_strings(["Val", "Unit", "Band"], cat, section)
+                return "{0} {1}".format(float(val) / 100.0 if band == "FM" else val, unit)
+            except:
+                eg.PrintError("Input not active or unavailable with your model.")
+                return None
         elif object == "Audio Mode":
             object = "Current"
         elif object == "Antenna Strength":
