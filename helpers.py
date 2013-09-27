@@ -20,12 +20,15 @@ def setup_ip():
         ip = auto_detect_ip_threaded()
         if ip is not None:
             globals.ip_address = ip
+            return ip
     else:
         try:
             model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=globals.ip_address, print_error=False)
             print "Found Yamaha Receiver: {0} [{1}]".format(globals.ip_address, model)
+            return globals.ip_address
         except:
             eg.PrintError("Yamaha Receiver Not Found [{0}]!".format(globals.ip_address))
+    return None
 
 def get_lan_ip():
     """

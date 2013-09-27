@@ -625,14 +625,13 @@ class GetInfo(eg.ActionBase):
         try:
             return get_device_string(object, cat, section)
         except:
-            print "Input not active or unavailable with your model."
+            eg.PrintError("Input not active or unavailable with your model.")
 
 
     def Configure(self, object="Power", cat="Main Zone"):
         panel = eg.ConfigPanel()
 
-        self.cats = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D', 'Tuner', 'HD Radio', 'SIRIUS', 'iPod', 'Bluetooth', 'Rhapsody', 'SIRIUS IR', 'Pandora', 'PC', 'NET RADIO', 'Napster', 'USB', 'USB iPod']
-
+        self.cats = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D', 'Tuner', 'HD Radio', 'SIRIUS', 'iPod', 'Bluetooth', 'Rhapsody', 'SIRIUS IR', 'Pandora', 'PC', 'NET RADIO', 'Napster', 'USB', 'USB iPod']
 
         wx.StaticText(panel, label="Category: ", pos=(10, 10))
         self.choice_cat = wx.Choice(panel, -1, (10, 30), choices=self.cats)
@@ -646,7 +645,6 @@ class GetInfo(eg.ActionBase):
         self.CategoryChanged()
         if object in self.objects:
             self.choice_object.SetStringSelection(object)
-
             
         while panel.Affirmed():
             panel.SetResult(self.objects[self.choice_object.GetCurrentSelection()], self.cats[self.choice_cat.GetCurrentSelection()])
@@ -673,7 +671,7 @@ class GetInfo(eg.ActionBase):
             self.objects = [ 'Playback Info', 'Artist', 'Channel', 'Title', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
         elif cat == "Pandora":
             self.objects = [ 'Playback Info', 'Station', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
-        elif cat ==  "PC":
+        elif cat == "PC":
             self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
         elif cat == "NET RADIO":
             self.objects = [ 'Playback Info', 'Station', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
@@ -681,14 +679,26 @@ class GetInfo(eg.ActionBase):
             self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
         elif cat == "USB":
             self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
-        elif cat == "USB Ipod":
+        elif cat == "USB iPod":
             self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
         else:
-            print "error"
+            eg.PrintError("Unknown Category!")
         self.choice_object.Clear()
         self.choice_object.AppendItems(self.objects)
         self.choice_object.SetSelection(0) 
-           
+
+class AutoDetectIP(eg.ActionBase):
+    def __call__(self):
+        eg.result = auto_detect_ip_threaded()
+
+class VerifyStaticIP(eg.ActionBase):
+    def __call__(self):
+        if globals.ip_auto_detect:
+            eg.PrintError('Static IP is not enabled!')
+            return False
+        else:
+            return setup_ip() is not None
+
 class YamahaRXClient:
     def __init__(self):
         pass
@@ -718,4 +728,5 @@ class YamahaRXClient:
             manual_radio_freq('Up')
         elif msg == 'RadioFreqDown':
             manual_radio_freq('Down')
+
            

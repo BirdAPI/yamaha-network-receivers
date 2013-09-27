@@ -22,7 +22,7 @@ ACTIONS = (
     ("PreviousRadioPreset", "Previous Radio Preset", "Goes to previous radio preset, or if radio is not on, it turns it on. Also wraps to the end when you go past the first preset.", "PreviousRadioPreset"),
     ("ToggleRadioAMFM", "Toggle Radio AM / FM", "Toggles radio between AM and FM", "ToggleRadioAMFM"),
     ("RadioAutoFreqUp", "Radio Auto Freq Up", "Auto increases the radio frequency", "RadioAutoFreqUp"),
-    ("RadioAtuoFreqDown", "Radio Auto Freq Down", "Auto decreases the radio frequency", "RadioAutoFreqDown"),
+    ("RadioAutoFreqDown", "Radio Auto Freq Down", "Auto decreases the radio frequency", "RadioAutoFreqDown"),
     ("RadioFreqUp", "Radio Freq Up", "Increases the radio frequency", "RadioFreqUp"),
     ("RadioFreqDown", "Radio Freq Down", "Decreases the radio frequency", "RadioFreqDown")
 )  

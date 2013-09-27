@@ -43,6 +43,9 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetActiveZone)
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.AddAction(GetInfo)
+        self.grp1 = self.AddGroup('Config', 'General configuration actions')
+        self.grp1.AddAction(AutoDetectIP)
+        self.grp1.AddAction(VerifyStaticIP)
         self.client = YamahaRXClient()
         
     def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
@@ -79,10 +82,8 @@ class YamahaRX(eg.PluginClass):
         i = 0
 
         if ip_address == "":
-            # Get LAN IP in order to detect network prefix (eg 192.168.1)
-            lan_ip = get_lan_ip()
             # Default ip address to network prefix to save typing
-            ip_address = lan_ip[:lan_ip.rfind('.')+1]
+            ip_address = get_network_prefix() + '.'
         
         panel = eg.ConfigPanel()
         
