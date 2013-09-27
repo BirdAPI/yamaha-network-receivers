@@ -17,7 +17,7 @@ Supported Models (Incomplete)
 ------
 Typically, any `Yamaha RX-Vxxx` models are supported. Here is an incomplete list of (possibly) supported models.
 ```
-RX-V867
+RX-V867, RX-V1067, RX-V2067
 
 RX-V671, RX-V871
 
@@ -84,5 +84,10 @@ Smart Volume Usage
 --------
 <br />
 <img src="images/smart_volume.png" />
+
+Credits
+--------
++ Anthony Casagrande (BirdAPI)
++ Jason Kloepping (Dragon470)
 
 [EventGhost]: http://www.eventghost.org/
