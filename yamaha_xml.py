@@ -73,6 +73,9 @@ def get_basic_status(zone=-1, timeout=None, ip=None, port=None):
 def get_tuner_status(timeout=None, ip=None, port=None):
     return get_xml('<Tuner><Play_Info>GetParam</Play_Info></Tuner>', timeout, ip, port)
 
+def get_device_status(param, input, section, timeout=None, ip=None, port=None):
+    return get_xml('<{0}><{1}>GetParam</{1}></{0}>'.format(input, section), timeout, ip, port)
+
 def get_tuner_presets(timeout=None, ip=None, port=None):
     return get_xml('<Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner>', timeout, ip, port)
 
@@ -107,6 +110,15 @@ def get_tuner_string(param):
     xml = get_tuner_status()
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
+    return value
+
+def get_device_string(param, input, section):
+    xml = get_device_status(param, input, section)
+    xmldoc = minidom.parseString(xml)
+    if param[:4] == "Line":
+        value = xmldoc.getElementsByTagName('Txt')[int(param[5])-1].firstChild.data
+    else:
+        value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
 
 def get_tuner_param_is_on(param):

@@ -40,6 +40,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(OperationAction)
         self.AddAction(SetActiveZone)
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
+        self.AddAction(GetInfo)
         self.client = YamahaRXClient()
         
     def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
