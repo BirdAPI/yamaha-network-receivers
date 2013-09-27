@@ -12,7 +12,8 @@ eg.RegisterPlugin(
     author = "Anthony Casagrande (BirdAPI), Jason Kloepping (Dragon470)",
     version = "1.0",
     kind = "external",
-    createMacrosOnAdd = True,
+    # We don't auto load macros because they are not configured yet.
+    createMacrosOnAdd = False,
     canMultiLoad = True,
     url = "http://www.eventghost.net/forum/viewtopic.php?f=9&t=3382",
     description = "Control Yamaha RX-V network receivers."
