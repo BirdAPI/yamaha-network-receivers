@@ -412,49 +412,17 @@ class NumCharAction(eg.ActionBase):
 class OperationAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone)
-        if izone == -1:
-            izone = globals.active_zone
+        izone = convert_zone_to_int(zone, convert_active=True)
         if izone in [0,1]:
-            if action == 'Play':
-                code = '7F016897'
-            elif action == 'Stop':
-                code = '7F016996'
-            elif action == 'Pause':
-                code = '7F016798'
-            elif action == 'Search-':
-                code = '7F016A95'
-            elif action == 'Search+':
-                code = '7F016E94'
-            elif action == 'Skip-':
-                code = '7F016C93'
-            elif action == 'Skip+':
-                code = '7F016D92'
-            elif action == 'FM':
-                code = '7F015827'
-            elif action == 'AM':
-                code = '7F01552A'
+            code = globals.OPERATION_CODES[1][action]
         if izone == 2:
-            if action == 'Play':
-                code = '7F018876'
-            elif action == 'Stop':
-                code = '7F018977'
-            elif action == 'Pause':
-                code = '7F018779'
-            elif action == 'Search-':
-                code = '7F018A74'
-            elif action == 'Search+':
-                code = '7F018B75'
-            elif action == 'Skip-':
-                code = '7F018C72'
-            elif action == 'Skip+':
-                code = '7F018D73'
-            elif action == 'FM':
-                code = '7F015927'
-            elif action == 'AM':
-                code = '7F015628'
+            code = globals.OPERATION_CODES[2][action]
+
         if code is not None:
             send_code(code)
+        else:
+            # It is possible the user's active zone is not yet supported
+            eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
 
     def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()

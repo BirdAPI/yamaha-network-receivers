@@ -65,6 +65,28 @@ NUMCHAR_CODES = {
        'ENT': '7F017C82' }
 }
 
+# OPERATION_CODES[zone][action]
+OPERATION_CODES = {
+    1: { 'Play': '7F016897',
+         'Stop': '7F016996',
+         'Pause': '7F016798',
+         'Search-': '7F016A95',
+         'Search+': '7F016E94',
+         'Skip-': '7F016C93',
+         'Skip+': '7F016D92',
+         'FM': '7F015827',
+         'AM': '7F01552A' },
+    2: { 'Play': '7F018876',
+         'Stop': '7F018977',
+         'Pause': '7F018779',
+         'Search-': '7F018A74',
+         'Search+': '7F018B75',
+         'Skip-': '7F018C72',
+         'Skip+': '7F018D73',
+         'FM': '7F015927',
+         'AM': '7F015628' }
+}
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02
