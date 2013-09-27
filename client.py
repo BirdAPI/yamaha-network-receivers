@@ -478,61 +478,17 @@ class OperationAction(eg.ActionBase):
 class NumCharAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone)
-        if izone == -1:
-            izone = globals.active_zone
+        izone = convert_zone_to_int(zone, convert_active=True)
         if izone in [0,1]:
-            if action == '1':
-                code = '7F0151AE'
-            elif action == '2':
-                code = '7F0152AD'
-            elif action == '3':
-                code = '7F0153AC'
-            elif action == '4':
-                code = '7F0154AB'
-            elif action == '5':
-                code = '7F0155AA'
-            elif action == '6':
-                code = '7F0156A9'
-            elif action == '7':
-                code = '7F0157A8'
-            elif action == '8':
-                code = '7F0158A7'
-            elif action == '9':
-                code = '7F0159A6'
-            elif action == '0':
-                code = '7F015AA5'
-            elif action == '+10':
-                code = '7F015BA4'
-            elif action == 'ENT':
-                code = '7F015CA3'
+            code = globals.NUMCHAR_CODES[1][action]
         if izone == 2:
-            if action == '1':
-                code = '7F01718F'
-            elif action == '2':
-                code = '7F01728C'
-            elif action == '3':
-                code = '7F01738D'
-            elif action == '4':
-                code = '7F01748A'
-            elif action == '5':
-                code = '7F01758B'
-            elif action == '6':
-                code = '7F017688'
-            elif action == '7':
-                code = '7F017789'
-            elif action == '8':
-                code = '7F017886'
-            elif action == '9':
-                code = '7F017986'
-            elif action == '0':
-                code = '7F017A84'
-            elif action == '+10':
-                code = '7F017B85'
-            elif action == 'ENT':
-                code = '7F017C82'
+            code = globals.NUMCHAR_CODES[2][action]
+
         if code is not None:
             send_code(code)
+        else:
+            # It is possible the user's active zone is not yet supported
+            eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
 
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()

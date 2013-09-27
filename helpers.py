@@ -113,7 +113,7 @@ def create_ip_range(range_start, range_end):
         ip_range.append(ip)
     return ip_range
 
-def convert_zone_to_int(zone):
+def convert_zone_to_int(zone, convert_active=False):
     """
     Convert a zone name into the integer value that it represents:
     Examples:
@@ -126,7 +126,10 @@ def convert_zone_to_int(zone):
         return 0
     elif 'active' in zone.lower():
         # -1 means active zone
-        return -1
+        if convert_active:
+            return globals.active_zone
+        else:
+            return -1
     else:
         z = zone.replace('Zone_', '').replace('Zone', '').replace('Z', '').strip()
         if z in [ 'A', 'B', 'C', 'D' ]:
