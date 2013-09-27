@@ -8,7 +8,7 @@ from yamaha import *
 eg.RegisterPlugin(
     name = "Yamaha RX-V Network Receiver",
     author = "Anthony Casagrande (BirdAPI), Jason Kloepping (Dragon470)",
-    version = "0.9",
+    version = "1.0",
     kind = "external",
     createMacrosOnAdd = True,
     canMultiLoad = True,
