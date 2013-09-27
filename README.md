@@ -52,6 +52,8 @@ Functions
     + Right
     + Enter
     + Return
+    + Level
+    + On Screen
     + Option
     + Top Menu
     + Pop Up Menu
@@ -66,6 +68,7 @@ Functions
     - 7
     - 8
     - 9
+    - 0
     - +10
     - ENT
 
