@@ -123,7 +123,7 @@ def modify_radio_preset(diff, turn_on, wrap):
     preset = oldpreset + diff
     set_radio_preset(preset)
     if turn_on:
-        is_on = is_radio_on
+        is_on = is_radio_on()
         if not is_on:
             change_source('TUNER')
     if wrap and (not turn_on or is_on):

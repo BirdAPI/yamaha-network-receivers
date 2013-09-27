@@ -397,8 +397,12 @@ class GetInfo(eg.ActionBase):
             object = "FM_Mode"
         elif object == "Frequency":
             try:
-                val, unit, band = get_device_strings(["Val", "Unit", "Band"], cat, section)
-                return "{0} {1}".format(float(val) / 100.0 if band == "FM" else val, unit)
+                val, unit, band, exp = get_device_strings(["Val", "Unit", "Band", "Exp"], cat, section)
+                if int(exp) == 0:
+                    real_val = int(val)
+                else:
+                    real_val = float(val) / pow(10, int(exp))
+                print "{0} {1}".format(real_val, unit)
             except:
                 eg.PrintError("Input not active or unavailable with your model.")
                 return None

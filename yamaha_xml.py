@@ -19,9 +19,12 @@ def do_xml(xml, **kwargs):
     return_result = kwargs.get('return_result', False)
     print_error = kwargs.get('print_error', True)
     close_xml = kwargs.get('close_xml', False)
+    print_xml = kwargs.get('print_xml', False)
 
     if close_xml:
         xml = close_xml_tags(xml)
+    if print_xml:
+        print xml
 
     conn = httplib.HTTPConnection('{0}:{1}'.format(ip, port), timeout=float(timeout))
     headers = { "Content-type": "text/xml" }
@@ -97,6 +100,8 @@ def get_config(**kwargs):
 
 def get_status_string(param, zone=-1, **kwargs):
     xml = get_basic_status(zone, **kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
@@ -106,6 +111,8 @@ def get_status_strings(params, zone=-1, **kwargs):
     Return multiple values as to to not query the receiver over the network more than once
     """
     xml = get_basic_status(zone, **kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     values = []
     for param in params:
@@ -120,6 +127,8 @@ def get_status_int(param, zone=-1, **kwargs):
 
 def get_config_string(param, **kwargs):
     xml = get_config(**kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
@@ -132,6 +141,8 @@ def get_config_int(param, **kwargs):
 
 def get_tuner_string(param, **kwargs):
     xml = get_tuner_status(**kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
@@ -144,6 +155,8 @@ def get_tuner_int(param, **kwargs):
     
 def get_device_string(param, input, section, **kwargs):
     xml = get_device_status(input, section, **kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     if param[:4] == "Line":
         value = xmldoc.getElementsByTagName('Txt')[int(param[5])-1].firstChild.data
@@ -156,6 +169,8 @@ def get_device_strings(params, input, section, **kwargs):
     Return multiple values as to to not query the receiver over the network more than once
     """
     xml = get_device_status(input, section, **kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     values = []
     for param in params:
