@@ -447,35 +447,35 @@ class GetInfo(eg.ActionBase):
     def CategoryChanged(self, event=None):
         cat = self.cats[self.choice_cat.GetCurrentSelection()]
         if cat == "Main Zone":
-            self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene', 'Straight', 'Enhancer', 'Sound Program']
-        elif cat[:4] == "Zone":
-            self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene']
+            self.objects = globals.MAIN_ZONE_OBJECTS
+        elif cat.startswith("Zone"):
+            self.objects = globals.ZONE_OBJECTS
         elif cat == "Tuner":
             self.objects = [ 'Band', 'Frequency', 'FM Mode']
         elif cat == "HD Radio":
             self.objects = [ 'Band', 'Frequency', 'Audio Mode']
         elif cat == "SIRIUS":
-            self.objects = [ 'Antenna Strength', 'Category', 'Channel Number', 'Channel Name', 'Artist', 'Song', 'Composer']
+            self.objects = globals.SIRIUS_OBJECTS
         elif cat == "iPod":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "Bluetooth":
             self.objects = [ 'Connect Information']
         elif cat == "Rhapsody":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "SIRIUS IR":
-            self.objects = [ 'Playback Info', 'Artist', 'Channel', 'Title', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.SIRIUS_IR_OBJECTS
         elif cat == "Pandora":
-            self.objects = [ 'Playback Info', 'Station', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.PANDORA_OBJECTS
         elif cat == "PC":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "NET RADIO":
-            self.objects = [ 'Playback Info', 'Station', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.NET_RADIO_OBJECTS
         elif cat == "Napster":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "USB":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "USB iPod":
-            self.objects = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song', 'Menu Layer', 'Menu Name', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line']
+            self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         else:
             eg.PrintError("Unknown Category!")
         self.choice_object.Clear()

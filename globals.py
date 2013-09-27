@@ -111,6 +111,17 @@ CURSOR_CODES = {
          'Pop Up Menu': '7A85A5DB' },
     }
 
+# Objects used in the GetInfo action
+MENU_OBJECTS = [ 'Menu Layer', 'Menu Name' ]
+LINE_OBJECTS = [ 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line' ]
+GENERIC_PLAYBACK_OBJECTS = [ 'Playback Info', 'Repeat Mode', 'Shuffle', 'Artist', 'Album', 'Song' ] + MENU_OBJECTS + LINE_OBJECTS
+ZONE_OBJECTS = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene' ]
+MAIN_ZONE_OBJECTS = ZONE_OBJECTS + [ 'Straight', 'Enhancer', 'Sound Program' ]
+NET_RADIO_OBJECTS = [ 'Playback Info', 'Station' ] + MENU_OBJECTS + LINE_OBJECTS
+PANDORA_OBJECTS = [ 'Playback Info', 'Station', 'Album', 'Song' ] + MENU_OBJECTS + LINE_OBJECTS
+SIRIUS_IR_OBJECTS = [ 'Playback Info', 'Artist', 'Channel', 'Title' ] + MENU_OBJECTS + LINE_OBJECTS
+SIRIUS_OBJECTS = [ 'Antenna Strength', 'Category', 'Channel Number', 'Channel Name', 'Artist', 'Song', 'Composer' ]
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02
