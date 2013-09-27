@@ -86,7 +86,7 @@ def get_basic_status(zone=-1, **kwargs):
 def get_tuner_status(**kwargs):
     return get_xml('<Tuner><Play_Info>GetParam</Play_Info></Tuner>', **kwargs)
 
-def get_device_status(param, input, section, **kwargs):
+def get_device_status(input, section, **kwargs):
     return get_xml('<{0}><{1}>GetParam</{1}></{0}>'.format(input, section), **kwargs)
     
 def get_tuner_presets(**kwargs):
@@ -100,6 +100,17 @@ def get_status_string(param, zone=-1, **kwargs):
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
+
+def get_status_strings(params, zone=-1, **kwargs):
+    """
+    Return multiple values as to to not query the receiver over the network more than once
+    """
+    xml = get_basic_status(zone, **kwargs)
+    xmldoc = minidom.parseString(xml)
+    values = []
+    for param in params:
+        values.append(xmldoc.getElementsByTagName(param)[0].firstChild.data)
+    return tuple(values)
 
 def get_status_param_is_on(param, zone=-1, **kwargs):
     return get_status_string(param, zone, **kwargs) == "On"
@@ -132,10 +143,24 @@ def get_tuner_int(param, **kwargs):
     return int(get_tuner_string(param, **kwargs))
     
 def get_device_string(param, input, section, **kwargs):
-    xml = get_device_status(param, input, section, **kwargs)
+    xml = get_device_status(input, section, **kwargs)
     xmldoc = minidom.parseString(xml)
     if param[:4] == "Line":
         value = xmldoc.getElementsByTagName('Txt')[int(param[5])-1].firstChild.data
     else:
         value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
+
+def get_device_strings(params, input, section, **kwargs):
+    """
+    Return multiple values as to to not query the receiver over the network more than once
+    """
+    xml = get_device_status(input, section, **kwargs)
+    xmldoc = minidom.parseString(xml)
+    values = []
+    for param in params:
+        if param.startswith("Line"):
+            values.append(xmldoc.getElementsByTagName('Txt')[int(param[5])-1].firstChild.data)
+        else:
+            values.append(xmldoc.getElementsByTagName(param)[0].firstChild.data)
+    return tuple(values)
