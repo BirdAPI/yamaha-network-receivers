@@ -112,7 +112,16 @@ def toggle_radio_amfm():
 def set_radio_band(band):
     put_xml('<Tuner><Play_Control><Tuning><Band>{0}</Band></Tuning></Play_Control></Tuner>'.format(band))
 
+def next_radio_preset():
+    put_xml('<Tuner><Play_Control><Preset><Preset_Sel>Up', close_xml=True)
+
+def prev_radio_preset():
+    put_xml('<Tuner><Play_Control><Preset><Preset_Sel>Down', close_xml=True)
+
 def modify_radio_preset(diff, turn_on, wrap):
+    """
+    Deprecated
+    """
     oldpreset = get_tuner_int('Preset_Sel')
     preset = oldpreset + diff
     set_radio_preset(preset)
@@ -129,8 +138,13 @@ def modify_radio_preset(diff, turn_on, wrap):
             preset = count
             set_radio_preset(preset)
 
-def get_radio_preset_count():
-    xml = get_tuner_presets()
+def get_radio_preset_count(**kwargs):
+    """
+    Currently broken
+    """
+    xml = get_tuner_presets(**kwargs)
+    if kwargs.get('print_xml', False):
+        print xml
     xmldoc = minidom.parseString(xml)
     count = 0
     done = False

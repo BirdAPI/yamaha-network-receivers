@@ -667,9 +667,9 @@ class YamahaRXClient:
         elif msg == 'NextSource':
             previous_source()
         elif msg == 'NextRadioPreset':
-            modify_radio_preset(1, True, True)
+            next_radio_preset()
         elif msg == 'PreviousRadioPreset':
-            modify_radio_preset(-1, True, True)
+            prev_radio_preset()
         elif msg == 'ToggleRadioAMFM':
             toggle_radio_amfm()
         elif msg == 'RadioAutoFeqUp':
