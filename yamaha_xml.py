@@ -50,7 +50,8 @@ def send_xml(xml, **kwargs):
     """
     Communicate with the receiver, but do not wait or return the results
     """
-    kwargs['return_result'] = False
+    if not 'return_result' in kwargs:
+        kwargs['return_result'] = False
     do_xml(xml, **kwargs)
 
 def put_xml(xml, **kwargs):

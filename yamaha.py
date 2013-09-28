@@ -1,6 +1,7 @@
 # Python Imports
 from xml.dom import minidom
 from threading import Thread, Timer
+import time
 
 # Local Imports
 import globals
@@ -14,7 +15,16 @@ def decrease_volume(zone=-1, dec=0.5):
     change_volume(zone, -1 * dec)
 
 def change_volume(zone=-1, diff=0.0):
-    set_volume(zone, (get_volume() / 10.0) + diff)
+    if abs(diff) == 0.5 or int(abs(diff)) in [1, 2, 5]:
+        # Faster volume method which uses the built in methods
+        param1 = 'Up' if diff > 0 else 'Down'
+        param2 = ' {0} dB'.format(int(abs(diff))) if abs(diff) != 0.5 else ''
+        zone_put_xml(zone, '<Volume><Lvl><Val>{0}{1}</Val><Exp></Exp><Unit></Unit></Lvl></Volume>'.format(param1, param2))
+        # Sleep for a little amount of time to ensure we do not get "stuck" sending too many calls in short succession
+        time.sleep(0.03)
+    else:
+        # Slower method that relies on get_volume() first
+        set_volume(zone, (get_volume() / 10.0) + diff)
 
 def get_volume():
     return get_status_int('Val')
