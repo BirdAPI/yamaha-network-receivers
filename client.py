@@ -31,7 +31,7 @@ class SmartVolumeUp(eg.ActionBase):
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -72,7 +72,7 @@ class SmartVolumeDown(eg.ActionBase):
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -106,7 +106,7 @@ class IncreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -127,7 +127,7 @@ class DecreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -148,7 +148,7 @@ class SetVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', vol=-50.0):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -168,7 +168,7 @@ class SetActiveZone(eg.ActionBase):
 
     def Configure(self, zone='Main Zone'):
         panel = eg.ConfigPanel()
-        zones = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES # Don't include active zone!
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -198,7 +198,7 @@ class SetSourceInput(eg.ActionBase):
     def Configure(self, zone="Active Zone", source="HDMI1"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -224,7 +224,7 @@ class SetPowerStatus(eg.ActionBase):
     def Configure(self, zone="Active Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -246,7 +246,7 @@ class SetSleepStatus(eg.ActionBase):
     def Configure(self, zone="Active Zone", status="Off"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -299,8 +299,8 @@ class CursorAction(eg.ActionBase):
     def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
-        actions = [ 'Up', 'Down', 'Left', 'Right', 'Enter', 'Return', 'Level', 'On Screen', 'Option', 'Top Menu', 'Pop Up Menu' ]
+        zones = globals.TWO_ZONES_PLUS_ACTIVE
+        actions = globals.CURSOR_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
@@ -333,8 +333,8 @@ class OperationAction(eg.ActionBase):
     def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
-        actions = [ 'Play', 'Stop', 'Pause', 'Search-', 'Search+', 'Skip-', 'Skip+', 'FM', 'AM' ]
+        zones = globals.TWO_ZONES_PLUS_ACTIVE
+        actions = globals.OPERATION_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
@@ -367,8 +367,8 @@ class NumCharAction(eg.ActionBase):
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2' ]
-        actions = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '+10', 'ENT' ]
+        zones = globals.TWO_ZONES_PLUS_ACTIVE
+        actions = globals.NUMCHAR_CODES[0].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
@@ -521,7 +521,7 @@ class NextInput(eg.ActionBase):
     def __call__(self, zone, inputs):
         izone = convert_zone_to_int(zone, convert_active=True)
         src = get_source_name(izone)
-        index = inputs.index(src)
+        index = inputs.index(src) if src in inputs else -1
         self._next_input(izone, index, inputs)
 
     def _next_input(self, izone, cur_index, inputs):
@@ -552,7 +552,7 @@ class NextInput(eg.ActionBase):
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -589,7 +589,7 @@ class PreviousInput(eg.ActionBase):
     def __call__(self, zone, inputs):
         izone = convert_zone_to_int(zone, convert_active=True)
         src = get_source_name(izone)
-        index = inputs.index(src)
+        index = inputs.index(src) if src in inputs else -1
         self._prev_input(izone, index, inputs)
 
     def _prev_input(self, izone, cur_index, inputs):
@@ -620,7 +620,7 @@ class PreviousInput(eg.ActionBase):
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
 
-        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        zones = globals.ALL_ZONES_PLUS_ACTIVE
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -666,8 +666,6 @@ class YamahaRXClient:
             next_source()
         elif msg == 'NextSource':
             previous_source()
-        elif msg == 'ToggleSleep':
-            toggle_sleep()
         elif msg == 'NextRadioPreset':
             modify_radio_preset(1, True, True)
         elif msg == 'PreviousRadioPreset':

@@ -130,6 +130,12 @@ ALL_SOURCES = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', '
                 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
                 'NET RADIO', 'USB', 'iPod (USB)', 'SIRIUSInternetRadio' ]
 
+# Supported zone definitions
+ALL_ZONES = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+ALL_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + ALL_ZONES
+TWO_ZONES = [ 'Main Zone', 'Zone 2' ]
+TWO_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + TWO_ZONES
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02
