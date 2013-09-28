@@ -2,6 +2,8 @@
 import wx.lib.agw.floatspin as FS
 from datetime import datetime
 import re
+import time
+from threading import Thread
 
 # Local Imports
 import globals
@@ -519,18 +521,33 @@ class NextInput(eg.ActionBase):
     def __call__(self, zone, inputs):
         izone = convert_zone_to_int(zone, convert_active=True)
         src = get_source_name(izone)
+        index = inputs.index(src)
+        self._next_input(izone, index, inputs)
+
+    def _next_input(self, izone, cur_index, inputs):
         next_index = 0
-        if src in inputs:
-            index = inputs.index(src)
-            if index < len(inputs) - 1:
-                next_index = index + 1
+        if cur_index != -1:
+            if cur_index < len(inputs) - 1:
+                next_index = cur_index + 1
             else:
                 next_index = 0
         else:
             # Current source not in the user's list. Change to the first item?
             next_index = 0
-            print "Waring: Current source was not in the list of sources. Changing to first source in list."
+            print "Warning: Current source was not in the list of sources. Changing to first source in list."
+        print "Switching input to", inputs[next_index]
         change_source(inputs[next_index], izone)
+
+        t = Thread(target=self._verify_input, args=[izone, next_index, inputs])
+        t.start()
+
+    def _verify_input(self, izone, index, inputs, wait=0.3):
+        time.sleep(wait)
+        src = get_source_name(izone)
+        if src != inputs[index]:
+            eg.PrintError("Source input did not change! Your receiver may not have this input.")
+            print "Skipping to next input."
+            self._next_input(izone, index, inputs)
 
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
@@ -572,18 +589,33 @@ class PreviousInput(eg.ActionBase):
     def __call__(self, zone, inputs):
         izone = convert_zone_to_int(zone, convert_active=True)
         src = get_source_name(izone)
+        index = inputs.index(src)
+        self._prev_input(izone, index, inputs)
+
+    def _prev_input(self, izone, cur_index, inputs):
         prev_index = 0
-        if src in inputs:
-            index = inputs.index(src)
-            if index > 0:
-                prev_index = index - 1
+        if cur_index != -1:
+            if cur_index > 0:
+                prev_index = cur_index - 1
             else:
                 prev_index = len(inputs) - 1
         else:
             # Current source not in the user's list. Change to the first item?
             prev_index = 0
-            print "Waring: Current source was not in the list of sources. Changing to first source in list."
+            print "Warning: Current source was not in the list of sources. Changing to first source in list."
+        print "Switching input to", inputs[prev_index]
         change_source(inputs[prev_index], izone)
+
+        t = Thread(target=self._verify_input, args=[izone, prev_index, inputs])
+        t.start()
+
+    def _verify_input(self, izone, index, inputs, wait=0.3):
+        time.sleep(wait)
+        src = get_source_name(izone)
+        if src != inputs[index]:
+            eg.PrintError("Source input did not change! Your receiver may not have this input.")
+            print "Skipping to previous input."
+            self._prev_input(izone, index, inputs)
 
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
