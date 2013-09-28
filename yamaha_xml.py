@@ -92,7 +92,7 @@ def get_tuner_status(**kwargs):
 
 def get_device_status(input, section, **kwargs):
     return get_xml('<{0}><{1}>GetParam</{1}></{0}>'.format(input, section), **kwargs)
-    
+
 def get_tuner_presets(**kwargs):
     return get_xml('<Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner>', **kwargs)
     

@@ -47,6 +47,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetActiveZone, clsName="Set Active Zone", description="Sets which zone is currently active. This affects any action that is based on 'Active Zone'.")
         self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
         self.AddAction(GetInfo, clsName="Get Info", description="Gets various info from the receiver.")
+        self.AddAction(GetAvailability)
         self.grp1 = self.AddGroup('Config', 'General configuration actions')
         self.grp1.AddAction(AutoDetectIP, clsName="Auto Detect IP", description="Runs the IP Address auto detection in case your receiver's ip address has changed since starting EventGhost.")
         self.grp1.AddAction(VerifyStaticIP, clsName="Verify Static IP", description="Checks whether there is a Yamaha AV Receiver at the other end of the static ip specified in the configuration.")

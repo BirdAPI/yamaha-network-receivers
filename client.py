@@ -505,6 +505,15 @@ class GetInfo(eg.ActionBase):
         self.choice_object.AppendItems(self.objects)
         self.choice_object.SetSelection(0) 
 
+class GetAvailability(eg.ActionBase):
+    def __call__(self):
+        for i in globals.ALL_AVAILABLE:
+            print i + " is"
+            try:
+                print get_device_string(i, "System", "Config")
+            except:
+                eg.PrintError("Unavailable with your model.")
+
 class AutoDetectIP(eg.ActionBase):
     def __call__(self):
         eg.result = auto_detect_ip_threaded()

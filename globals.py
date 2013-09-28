@@ -130,6 +130,14 @@ ALL_SOURCES = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', '
                 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
                 'NET RADIO', 'USB', 'iPod (USB)', 'SIRIUSInternetRadio' ]
 
+# A list of every single source or zone for availability checking
+ALL_AVAILABLE = [ 'HDMI_1', 'HDMI_2', 'HDMI_3', 'HDMI_4', 'HDMI_5', 'HDMI_6', 'HDMI_7', 'HDMI_8', 'HDMI_9',
+                'AV_1', 'AV_2', 'AV_3', 'AV_4', 'AV_5', 'AV_6', 'AV_7', 'AV_8', 'AV_9',
+                'V-AUX', 'TUNER', 'AUDIO', 'AUDIO_1', 'AUDIO_2', 'AUDIO_3', 'AUDIO_4',
+                'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
+                'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
+                'NET RADIO', 'USB', 'iPod_USB', 'SIRIUS_IR' ]
+
 # Supported zone definitions
 ALL_ZONES = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
 ALL_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + ALL_ZONES
