@@ -97,12 +97,6 @@ def set_source_number(num, zone=-1):
 def set_sleep(arg, zone=-1):
     zone_put_xml(zone, '<Power_Control><Sleep>{0}</Sleep></Power_Control>'.format(arg))
 
-def toggle_sleep(zone=-1):
-    if (get_status_param_is_on('Sleep', zone)):
-        set_sleep('Off')
-    else:
-        set_sleep('On')
-
 def set_radio_preset(preset):
     put_xml('<Tuner><Play_Control><Preset><Preset_Sel>{0}</Preset_Sel></Preset></Play_Control></Tuner>'.format(preset))
 
