@@ -201,12 +201,7 @@ class SetSourceInput(eg.ActionBase):
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
             choice_zone.SetStringSelection(zone)
-        inputs = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
-                   'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
-                   'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
-                   'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
-                   'UAW', 'NET', 'Rhapsody', 'SIRIUSInternetRadio', 'Pandora', 'Napster',
-                   'NET RADIO', 'USB', 'iPod (USB)' ]
+        inputs = globals.ALL_SOURCES
         wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
         choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
         if source in inputs:
@@ -497,6 +492,112 @@ class VerifyStaticIP(eg.ActionBase):
             return False
         else:
             return setup_ip() is not None
+
+class NextInput(eg.ActionBase):
+    def __call__(self, zone, inputs):
+        izone = convert_zone_to_int(zone, convert_active=True)
+        src = get_source_name(izone)
+        next_index = 0
+        if src in inputs:
+            index = inputs.index(src)
+            if index < len(inputs) - 1:
+                next_index = index + 1
+            else:
+                next_index = 0
+        else:
+            # Current source not in the user's list. Change to the first item?
+            next_index = 0
+            print "Waring: Current source was not in the list of sources. Changing to first source in list."
+        change_source(inputs[next_index], izone)
+
+    def Configure(self, zone='Active Zone', inputs=['HDMI1']):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        y = 45
+        x_start = 10
+        x = x_start
+        num_per_row = 5
+        x_padding = 80
+        y_padding = 20
+
+        self.cbs = []
+        for i in range(len(globals.ALL_SOURCES)):
+            if i > 0 and i % num_per_row == 0:
+                x = x_start
+                y += y_padding
+            cb = wx.CheckBox(panel, -1, globals.ALL_SOURCES[i], (x, y))
+            cb.SetValue(globals.ALL_SOURCES[i] in inputs)
+            self.cbs.append(cb)
+            x += x_padding
+
+        # Futile attempt at setting a scrollbar, not working
+        # panel.SetScrollbar(wx.VERTICAL, 0, 95, 100)
+
+        while panel.Affirmed():
+            res = []
+            for i in range(len(self.cbs)):
+                if self.cbs[i].GetValue():
+                    res.append(globals.ALL_SOURCES[i])
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
+
+class PreviousInput(eg.ActionBase):
+    def __call__(self, zone, inputs):
+        izone = convert_zone_to_int(zone, convert_active=True)
+        src = get_source_name(izone)
+        prev_index = 0
+        if src in inputs:
+            index = inputs.index(src)
+            if index > 0:
+                prev_index = index - 1
+            else:
+                prev_index = len(inputs) - 1
+        else:
+            # Current source not in the user's list. Change to the first item?
+            prev_index = 0
+            print "Waring: Current source was not in the list of sources. Changing to first source in list."
+        change_source(inputs[prev_index], izone)
+
+    def Configure(self, zone='Active Zone', inputs=['HDMI1']):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        y = 45
+        x_start = 10
+        x = x_start
+        num_per_row = 5
+        x_padding = 80
+        y_padding = 20
+
+        self.cbs = []
+        for i in range(len(globals.ALL_SOURCES)):
+            if i > 0 and i % num_per_row == 0:
+                x = x_start
+                y += y_padding
+            cb = wx.CheckBox(panel, -1, globals.ALL_SOURCES[i], (x, y))
+            cb.SetValue(globals.ALL_SOURCES[i] in inputs)
+            self.cbs.append(cb)
+            x += x_padding
+
+        # Futile attempt at setting a scrollbar, not working
+        # panel.SetScrollbar(wx.VERTICAL, 0, 95, 100)
+
+        while panel.Affirmed():
+            res = []
+            for i in range(len(self.cbs)):
+                if self.cbs[i].GetValue():
+                    res.append(globals.ALL_SOURCES[i])
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class YamahaRXClient:
     def __init__(self):

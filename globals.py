@@ -122,6 +122,14 @@ PANDORA_OBJECTS = [ 'Playback Info', 'Station', 'Album', 'Song' ] + MENU_OBJECTS
 SIRIUS_IR_OBJECTS = [ 'Playback Info', 'Artist', 'Channel', 'Title' ] + MENU_OBJECTS + LINE_OBJECTS
 SIRIUS_OBJECTS = [ 'Antenna Strength', 'Category', 'Channel Number', 'Channel Name', 'Artist', 'Song', 'Composer' ]
 
+# A list of every single source we support
+ALL_SOURCES = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
+                'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
+                'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
+                'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
+                'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
+                'NET RADIO', 'USB', 'iPod (USB)', 'SIRIUSInternetRadio' ]
+
 # EventGhost Constants
 ACTION_EXECBUILTIN = 0x01
 ACTION_BUTTON = 0x02

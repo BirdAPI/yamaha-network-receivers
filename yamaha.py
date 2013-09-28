@@ -170,3 +170,6 @@ def send_code(code):
 def set_active_zone(zone):
     globals.active_zone = zone
     print "Active Zone: Zone", zone if zone > -1 else chr(-1 * zone)
+
+def get_source_name(zone=-1):
+    return get_status_string("Input_Sel", zone)
