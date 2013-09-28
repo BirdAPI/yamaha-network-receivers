@@ -41,6 +41,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetPowerStatus, clsName="Set Power Status", description="Set the power status for the receiver (Main Zone), or turn on/off additional zones.")
         self.AddAction(SetSurroundMode, clsName="Set Surround Mode", description="Choose between Surround Decode and Straight, or toggle between the two.")
         self.AddAction(CursorAction, clsName="Cursor Action", description="Generic cursor action: Up, Down, Left, Right, Enter, Return, Level, On Screen, Option, Top Menu, Pop Up Menu")
+        self.AddAction(SetSleepStatus, clsName="Set Sleep Status", description= "Set the sleep state for the receiver (Main Zone), or additional zones.")
         self.AddAction(NumCharAction, clsName="NumChar Action", description="Generic NumChar action: 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, +10, ENT")
         self.AddAction(OperationAction, clsName="Operation Action", description="Generic Operation action: Play, Stop, Pause, Search-, Search+, Skip-, Skip+, FM, AM")
         self.AddAction(SetActiveZone, clsName="Set Active Zone", description="Sets which zone is currently active. This affects any action that is based on 'Active Zone'.")

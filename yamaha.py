@@ -95,7 +95,7 @@ def set_source_number(num, zone=-1):
     zone_put_xml(zone, '<Input><Current_Input_Sel_Item><Src_Number>{0}</Src_Number></Current_Input_Sel_Item></Input>'.format(num))
 
 def set_sleep(arg, zone=-1):
-    zone_put_xml(zone, '<Power_Control><Sleep>On</Sleep></Power_Control>')
+    zone_put_xml(zone, '<Power_Control><Sleep>{0}</Sleep></Power_Control>'.format(arg))
 
 def toggle_sleep(zone=-1):
     if (get_status_param_is_on('Sleep', zone)):

@@ -236,6 +236,28 @@ class SetPowerStatus(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], statuses[choice.GetCurrentSelection()])
 
+class SetSleepStatus(eg.ActionBase):
+    def __call__(self, zone, status):
+        izone = convert_zone_to_int(zone)
+        set_sleep(status, izone)
+
+    def Configure(self, zone="Active Zone", status="Off"):
+        panel = eg.ConfigPanel()
+
+        zones = [ 'Active Zone', 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        statuses = [ 'Off', '30 min', '60 min', '90 min', '120 min', 'Last' ]
+        wx.StaticText(panel, label="Sleep Status: ", pos=(10, 60))
+        choice = wx.Choice(panel, -1, (10, 80), choices=statuses)
+        if status in statuses:
+            choice.SetStringSelection(status)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], statuses[choice.GetCurrentSelection()])
+            
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):
         if mode == 'Toggle Straight/Surround Decode':
@@ -397,7 +419,7 @@ class GetInfo(eg.ActionBase):
                     real_val = int(val)
                 else:
                     real_val = float(val) / pow(10, int(exp))
-                print "{0} {1}".format(real_val, unit)
+                return "{0} {1}".format(real_val, unit)
             except:
                 eg.PrintError("Input not active or unavailable with your model.")
                 return None
