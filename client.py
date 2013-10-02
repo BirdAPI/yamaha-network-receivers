@@ -368,7 +368,7 @@ class NumCharAction(eg.ActionBase):
         panel = eg.ConfigPanel()
 
         zones = get_available_zones(True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
-        actions = globals.NUMCHAR_CODES[1].keys()
+        actions = sorted(globals.NUMCHAR_CODES[1].keys(), key=lambda k: int(k) if len(k) == 1 else 10 + len(k))
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
