@@ -208,3 +208,24 @@ def setup_availability():
 
     globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
     globals.AVAILABLE_SOURCES = [ globals.INPUT_MAPPINGS[input] for input in inputs ]
+
+def get_available_zones(include_active, fallback_zones, limit=None):
+    """
+    Returns the zones that are marked as available based on availability, and
+    optionally includes an active zone. If zone availability info is not present,
+    this will return fallback_zones. Optionally a limit can be imposed to only show
+    a certain amount of zones if the code does not support the extra zones yet.
+    """
+    if len(globals.AVAILABLE_ZONES) > 0:
+        if limit is not None and limit < len(globals.AVAILABLE_ZONES):
+            # For example, limit to only 2 zones
+            zones = [ globals.AVAILABLE_ZONES[i] for i in range(limit) ]
+        else:
+            # Must use list() to create a copy
+            zones = list(globals.AVAILABLE_ZONES)
+        if include_active:
+            return ['Active Zone'] + zones
+        else:
+            return zones
+    else:
+        return fallback_zones
