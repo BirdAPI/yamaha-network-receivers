@@ -507,24 +507,28 @@ class GetInfo(eg.ActionBase):
 
 class GetAvailability(eg.ActionBase):
     def __call__(self):
-        for i in globals.ALL_AVAILABLE:
-            print i + " is"
-            try:
-                print get_device_string(i, "System", "Config")
-            except:
-                eg.PrintError("Unavailable with your model.")
+        setup_availability()
+        print 'Zones:', globals.AVAILABLE_ZONES
+        print 'Inputs:', globals.AVAILABLE_SOURCES
+        eg.result = list(globals.AVAILABLE_SOURCES)
 
 class AutoDetectIP(eg.ActionBase):
     def __call__(self):
-        eg.result = auto_detect_ip_threaded()
+        ip = auto_detect_ip_threaded()
+        if ip is not None:
+            setup_availability()
+        eg.result = ip
 
 class VerifyStaticIP(eg.ActionBase):
     def __call__(self):
         if globals.ip_auto_detect:
             eg.PrintError('Static IP is not enabled!')
-            return False
+            eg.result = False
         else:
-            return setup_ip() is not None
+            ip = setup_ip()
+            if ip is not None:
+                setup_availability()
+            eg.result = ip is not None
 
 class NextInput(eg.ActionBase):
     def __call__(self, zone, inputs):
@@ -574,13 +578,14 @@ class NextInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
+        sources = globals.AVAILABLE_SOURCES if len(globals.AVAILABLE_SOURCES) > 0 else globals.ALL_SOURCES
         self.cbs = []
-        for i in range(len(globals.ALL_SOURCES)):
+        for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
                 x = x_start
                 y += y_padding
-            cb = wx.CheckBox(panel, -1, globals.ALL_SOURCES[i], (x, y))
-            cb.SetValue(globals.ALL_SOURCES[i] in inputs)
+            cb = wx.CheckBox(panel, -1, sources[i], (x, y))
+            cb.SetValue(sources[i] in inputs)
             self.cbs.append(cb)
             x += x_padding
 
@@ -591,7 +596,7 @@ class NextInput(eg.ActionBase):
             res = []
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
-                    res.append(globals.ALL_SOURCES[i])
+                    res.append(sources[i])
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class PreviousInput(eg.ActionBase):
@@ -642,13 +647,14 @@ class PreviousInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
+        sources = globals.AVAILABLE_SOURCES if len(globals.AVAILABLE_SOURCES) > 0 else globals.ALL_SOURCES
         self.cbs = []
-        for i in range(len(globals.ALL_SOURCES)):
+        for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
                 x = x_start
                 y += y_padding
-            cb = wx.CheckBox(panel, -1, globals.ALL_SOURCES[i], (x, y))
-            cb.SetValue(globals.ALL_SOURCES[i] in inputs)
+            cb = wx.CheckBox(panel, -1, sources[i], (x, y))
+            cb.SetValue(sources[i] in inputs)
             self.cbs.append(cb)
             x += x_padding
 
@@ -659,7 +665,7 @@ class PreviousInput(eg.ActionBase):
             res = []
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
-                    res.append(globals.ALL_SOURCES[i])
+                    res.append(sources[i])
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class YamahaRXClient:

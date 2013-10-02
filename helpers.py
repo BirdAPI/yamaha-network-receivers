@@ -188,3 +188,23 @@ def close_xml_tags(xml):
         output.append(open_to_close_tag(tag))
 
     return ''.join(output)
+
+def setup_availability():
+    """
+    Query the receiver to see which zones and inputs it supports.
+    Should be called after a successful ip check.
+    """
+    res = yamaha.get_availability_dict(globals.INPUT_CHECK + globals.ZONE_CHECK)
+
+    zones = []
+    for zone in globals.ZONE_CHECK:
+        if res[zone] is not None and res[zone] != '0':
+            zones.append(zone)
+
+    inputs = []
+    for input in globals.INPUT_CHECK:
+        if res[input] is not None and res[input] != '0':
+            inputs.append(input)
+
+    globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
+    globals.AVAILABLE_SOURCES = [ globals.INPUT_MAPPINGS[input] for input in inputs ]

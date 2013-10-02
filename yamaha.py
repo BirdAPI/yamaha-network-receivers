@@ -191,3 +191,15 @@ def set_active_zone(zone):
 
 def get_source_name(zone=-1):
     return get_status_string("Input_Sel", zone)
+
+def get_availability_dict(items_to_check):
+    xml = get_config()
+    xmldoc = minidom.parseString(xml)
+    res = {}
+    for item in items_to_check:
+        try:
+            value = xmldoc.getElementsByTagName(item)[0].firstChild.data
+        except:
+            value = None
+        res[item] = value
+    return res

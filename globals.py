@@ -14,6 +14,10 @@ active_zone = 0
 smart_vol_up_start = None
 smart_vol_down_start = None
 
+# EventGhost Constants
+ACTION_EXECBUILTIN = 0x01
+ACTION_BUTTON = 0x02
+
 # static / constants
 ACTIONS = (   
     ("ToggleMute", "Toggle Mute", "Toggles mute state", "ToggleMute"),
@@ -130,20 +134,49 @@ ALL_SOURCES = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', '
                 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
                 'NET RADIO', 'USB', 'iPod (USB)', 'SIRIUSInternetRadio' ]
 
-# A list of every single source or zone for availability checking
-ALL_AVAILABLE = [ 'HDMI_1', 'HDMI_2', 'HDMI_3', 'HDMI_4', 'HDMI_5', 'HDMI_6', 'HDMI_7', 'HDMI_8', 'HDMI_9',
-                'AV_1', 'AV_2', 'AV_3', 'AV_4', 'AV_5', 'AV_6', 'AV_7', 'AV_8', 'AV_9',
-                'V-AUX', 'TUNER', 'AUDIO', 'AUDIO_1', 'AUDIO_2', 'AUDIO_3', 'AUDIO_4',
-                'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
-                'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
-                'NET RADIO', 'USB', 'iPod_USB', 'SIRIUS_IR' ]
-
 # Supported zone definitions
 ALL_ZONES = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
 ALL_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + ALL_ZONES
 TWO_ZONES = [ 'Main Zone', 'Zone 2' ]
 TWO_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + TWO_ZONES
 
-# EventGhost Constants
-ACTION_EXECBUILTIN = 0x01
-ACTION_BUTTON = 0x02
+# All zones to check availability for
+ZONE_CHECK = [ 'Main_Zone', 'Zone_2', 'Zone_3', 'Zone_4', 'Zone_A', 'Zone_B', 'Zone_C', 'Zone_D' ]
+# All inputs to check availability for
+INPUT_CHECK = [ 'HDMI_1', 'HDMI_2', 'HDMI_3', 'HDMI_4', 'HDMI_5', 'HDMI_6', 'HDMI_7', 'HDMI_8', 'HDMI_9',
+                'AV_1', 'AV_2', 'AV_3', 'AV_4', 'AV_5', 'AV_6', 'AV_7', 'AV_8', 'AV_9',
+                'V_AUX', 'Tuner', 'AUDIO', 'AUDIO_1', 'AUDIO_2', 'AUDIO_3', 'AUDIO_4',
+                'DOCK', 'SIRIUS', 'PC', 'MULTI_CH', 'PHONO', 'iPod', 'Bluetooth',
+                'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster', 'SERVER',
+                'NET RADIO', 'USB', 'iPod_USB', 'SIRIUS_IR' ]
+
+# A dict of mappings to go from INPUT_CHECK -> AVAILABLE_SOURCES
+INPUT_MAPPINGS = { 'SERVER': 'PC',
+                   'V_AUX': 'V-AUX',
+                   'Tuner': 'TUNER',
+                   'MULTI_CH': 'MULTICH',
+                   'iPod_USB':'iPod (USB)',
+                   'SIRIUS_IR': 'SIRIUSInternetRadio' }
+
+# Setup generic input mappings for HDMI, AV, and AUDIO
+for i in range(1,10):
+    INPUT_MAPPINGS['HDMI_{0}'.format(i)] = 'HDMI{0}'.format(i)
+    INPUT_MAPPINGS['AV_{0}'.format(i)] = 'AV{0}'.format(i)
+    if i <= 4:
+        INPUT_MAPPINGS['AUDIO_{0}'.format(i)] = 'AUDIO{0}'.format(i)
+
+# sources to directly copy over in mappings, because their names are the exact same
+direct_copy = [ 'PHONO', 'iPod', 'Bluetooth', 'AUDIO', 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster', 'NET RADIO', 'USB', 'DOCK', 'SIRIUS', 'PC' ]
+for item in direct_copy:
+    INPUT_MAPPINGS[item] = item
+
+# Sanity check for mappings, to ensure we have a mapping for every item
+if len(INPUT_MAPPINGS.keys()) != len(INPUT_CHECK):
+    print "Error, missing mappings for:"
+    for key in INPUT_CHECK:
+        if key not in INPUT_MAPPINGS:
+            print '\t', key
+
+# Available zones/sources. These are to be generated based on availability
+AVAILABLE_ZONES = []
+AVAILABLE_SOURCES = []
