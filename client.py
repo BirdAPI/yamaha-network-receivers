@@ -449,7 +449,7 @@ class GetInfo(eg.ActionBase):
     def Configure(self, object="Power", cat="Main Zone"):
         panel = eg.ConfigPanel()
 
-        self.cats = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D', 'Tuner', 'HD Radio', 'SIRIUS', 'iPod', 'Bluetooth', 'Rhapsody', 'SIRIUS IR', 'Pandora', 'PC', 'NET RADIO', 'Napster', 'USB', 'USB iPod']
+        self.cats = globals.AVAILABLE_ZONES + globals.AVAILABLE_INFO_SOURCES
 
         wx.StaticText(panel, label="Category: ", pos=(10, 10))
         self.choice_cat = wx.Choice(panel, -1, (10, 30), choices=self.cats)
@@ -485,7 +485,7 @@ class GetInfo(eg.ActionBase):
             self.objects = [ 'Connect Information']
         elif cat == "Rhapsody":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
-        elif cat == "SIRIUS IR":
+        elif cat == "SIRIUSInternetRadio":
             self.objects = globals.SIRIUS_IR_OBJECTS
         elif cat == "Pandora":
             self.objects = globals.PANDORA_OBJECTS
@@ -497,7 +497,7 @@ class GetInfo(eg.ActionBase):
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "USB":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
-        elif cat == "USB iPod":
+        elif cat == "iPod (USB)":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         else:
             eg.PrintError("Unknown Category!")

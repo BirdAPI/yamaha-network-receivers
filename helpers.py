@@ -209,6 +209,13 @@ def setup_availability():
     globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
     globals.AVAILABLE_SOURCES = [ globals.INPUT_MAPPINGS[input] for input in inputs ]
 
+    #now strips out sources that cannot provide GetInfo
+    toberemoved = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9', 'HDMI10', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4', 'AUDIO5', 'V-AUX', 'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9', 'AV10' ]
+    globals.AVAILABLE_INFO_SOURCES = list(globals.AVAILABLE_SOURCES)
+    for item in toberemoved:
+        if item in globals.AVAILABLE_INFO_SOURCES:
+            globals.AVAILABLE_INFO_SOURCES.remove(item)
+
 def get_available_zones(include_active, fallback_zones, limit=None):
     """
     Returns the zones that are marked as available based on availability, and

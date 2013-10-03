@@ -115,6 +115,10 @@ CURSOR_CODES = {
          'Pop Up Menu': '7A85A5DB' },
     }
 
+# Categories available in the GetInfo Action
+    #populated by the Setup Availability function
+AVAILABLE_INFO_SOURCES = []
+
 # Objects used in the GetInfo action
 MENU_OBJECTS = [ 'Menu Layer', 'Menu Name' ]
 LINE_OBJECTS = [ 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Current Line', 'Max Line' ]
