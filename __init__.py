@@ -51,6 +51,28 @@ class YamahaRX(eg.PluginClass):
         self.grp1 = self.AddGroup('Config', 'General configuration actions')
         self.grp1.AddAction(AutoDetectIP, clsName="Auto Detect IP", description="Runs the IP Address auto detection in case your receiver's ip address has changed since starting EventGhost.")
         self.grp1.AddAction(VerifyStaticIP, clsName="Verify Static IP", description="Checks whether there is a Yamaha AV Receiver at the other end of the static ip specified in the configuration.")
+        #Add all actions again but hidden so they can be exposed for eg python scripts (not sure why adding clsName removes the ability to call the action outside the plugin)
+        self.AddAction(SmartVolumeUp, hidden=True)
+        self.AddAction(SmartVolumeDown, hidden=True)
+        self.AddAction(SmartVolumeFinished, hidden=True)
+        self.AddAction(IncreaseVolume, hidden=True)
+        self.AddAction(DecreaseVolume, hidden=True)
+        self.AddAction(SetVolume, hidden=True)
+        self.AddAction(SetScene, hidden=True)
+        self.AddAction(SetSourceInput, hidden=True)
+        self.AddAction(NextInput, hidden=True)
+        self.AddAction(PreviousInput, hidden=True)
+        self.AddAction(SetPowerStatus, hidden=True)
+        self.AddAction(SetSurroundMode, hidden=True)
+        self.AddAction(CursorAction, hidden=True)
+        self.AddAction(SetSleepStatus, hidden=True)
+        self.AddAction(NumCharAction, hidden=True)
+        self.AddAction(OperationAction, hidden=True)
+        self.AddAction(SetActiveZone, hidden=True)
+        self.AddAction(GetInfo, hidden=True)
+        self.AddAction(GetAvailability, hidden=True)
+        self.grp1.AddAction(AutoDetectIP, hidden=True)
+        self.grp1.AddAction(VerifyStaticIP, hidden=True)
         self.client = YamahaRXClient()
         
     def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
@@ -93,7 +115,7 @@ class YamahaRX(eg.PluginClass):
             ip_address = get_network_prefix() + '.'
         
         panel = eg.ConfigPanel()
-        
+
         lbl_net = wx.StaticText(panel, label="Network Settings: ", pos=(0, y_start + label_padding + (i * y_padding)))
         font = lbl_net.GetFont()
         font.SetPointSize(10)
