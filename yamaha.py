@@ -77,6 +77,13 @@ def toggle_straight_decode(zone=-1):
 def get_straight(zone=-1):
     return get_status_param_is_on('Straight', zone)
 
+def channel7_on(zone=-1): # McB 1/11/2014 - Turn 7-channel mode on and off
+    zone_put_xml(zone, '<Surround><Program_Sel><Current><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel></Surround>')
+
+def channel7_off(zone=-1):
+    zone_put_xml(zone, '<Surround><Program_Sel><Current><Sound_Program>Standard</Sound_Program></Current></Program_Sel></Surround>')
+
+
 def set_enhancer(arg, zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Enhancer>{0}</Enhancer></Current></Program_Sel></Surround>'.format(arg))
 
