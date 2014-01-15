@@ -280,6 +280,24 @@ class SetSurroundMode(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(modes[choice.GetCurrentSelection()])
 
+class Set7ChannelMode(eg.ActionBase): # McB 1/11/2014 - Turn 7-channel mode on and off
+    def __call__(self, mode):
+        if mode == 'On':
+            channel7_on()
+        elif mode == 'Off':
+            channel7_off()
+
+    def Configure(self, mode='On'):
+        panel = eg.ConfigPanel()
+
+        modes = [ 'On', 'Off' ]
+        wx.StaticText(panel, label="7-Channel Mode: ", pos=(10, 10))
+        choice = wx.Choice(panel, -1, (10, 30), choices=modes)
+        if mode in modes:
+            choice.SetStringSelection(mode)
+        while panel.Affirmed():
+            panel.SetResult(modes[choice.GetCurrentSelection()])
+
 class CursorAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
