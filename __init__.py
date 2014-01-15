@@ -40,6 +40,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(PreviousInput, clsName="Previous Input", description="Set the source input on the specified zone to the previous input in the specified list of inputs.")
         self.AddAction(SetPowerStatus, clsName="Set Power Status", description="Set the power status for the receiver (Main Zone), or turn on/off additional zones.")
         self.AddAction(SetSurroundMode, clsName="Set Surround Mode", description="Choose between Surround Decode and Straight, or toggle between the two.")
+        self.AddAction(Set7ChannelMode, clsName="Set 7 Channel Mode", description="Turn 7 Channel Stereo mode on and off. Usually turned 'On' after setting 'Surround Mode' to 'Surround Decode'.")  # McB 1/11/2014 - Turn 7-channel mode on and off
         self.AddAction(CursorAction, clsName="Cursor Action", description="Generic cursor action: Up, Down, Left, Right, Enter, Return, Level, On Screen, Option, Top Menu, Pop Up Menu")
         self.AddAction(SetSleepStatus, clsName="Set Sleep Status", description= "Set the sleep state for the receiver (Main Zone), or additional zones.")
         self.AddAction(NumCharAction, clsName="NumChar Action", description="Generic NumChar action: 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, +10, ENT")
@@ -64,6 +65,7 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(PreviousInput, hidden=True)
         self.AddAction(SetPowerStatus, hidden=True)
         self.AddAction(SetSurroundMode, hidden=True)
+        self.AddAction(Set7ChannelMode, hidden=True) # McB 1/11/2014 - Turn 7-channel mode on and off
         self.AddAction(CursorAction, hidden=True)
         self.AddAction(SetSleepStatus, hidden=True)
         self.AddAction(NumCharAction, hidden=True)
