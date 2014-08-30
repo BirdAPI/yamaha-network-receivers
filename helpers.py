@@ -194,27 +194,41 @@ def setup_availability():
     Query the receiver to see which zones and inputs it supports.
     Should be called after a successful ip check.
     """
-    res = yamaha.get_availability_dict(globals.INPUT_CHECK + globals.ZONE_CHECK)
+    xmldoc = yamaha.get_system_config()
 
     zones = []
-    for zone in globals.ZONE_CHECK:
-        if res[zone] is not None and res[zone] != '0':
-            zones.append(zone)
-
     inputs = []
-    for input in globals.INPUT_CHECK:
-        if res[input] is not None and res[input] != '0':
-            inputs.append(input)
+    
+    for node in xmldoc.getElementsByTagName("Feature_Existence"): #just in case there are multiple "Feature" sections
+        x = 0
+        stop = False
+        while stop==False:
+            try:
+                if node.childNodes[x].firstChild.data != "0":
+                    if node.childNodes[x].tagName != "Main_Zone" and node.childNodes[x].tagName[:4] != "Zone":
+                        inputs.append(str(node.childNodes[x].tagName))
+                    else:
+                        zones.append(str(node.childNodes[x].tagName))
+            except:
+                stop=True
+            x = x + 1
 
+    globals.AVAILABLE_FEATURE_SOURCES = list(inputs)
+    globals.AVAILABLE_INFO_SOURCES = list(inputs)
+       
+    for node in xmldoc.getElementsByTagName("Input"):
+        x = 0
+        stop = False
+        while stop==False:
+            try:
+                globals.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.data))
+                inputs.append(str(node.childNodes[x].firstChild.data))
+            except:
+                stop=True
+            x = x + 1
+            
     globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
-    globals.AVAILABLE_SOURCES = [ globals.INPUT_MAPPINGS[input] for input in inputs ]
-
-    #now strips out sources that cannot provide GetInfo
-    toberemoved = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9', 'HDMI10', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4', 'AUDIO5', 'V-AUX', 'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9', 'AV10', 'MULTICH', 'PHONO' ]
-    globals.AVAILABLE_INFO_SOURCES = list(globals.AVAILABLE_SOURCES)
-    for item in toberemoved:
-        if item in globals.AVAILABLE_INFO_SOURCES:
-            globals.AVAILABLE_INFO_SOURCES.remove(item)
+    globals.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]
 
 def get_available_zones(include_active, fallback_zones, limit=None):
     """

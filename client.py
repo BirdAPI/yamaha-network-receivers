@@ -31,27 +31,31 @@ class SmartVolumeUp(eg.ActionBase):
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
             choice_zone.SetStringSelection(zone)
 
         wx.StaticText(panel, label="Increase Amount (Step 1): ", pos=(10, 60))
-        fs_step1 = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
+        fs_step1 = FS.FloatSpin(panel, -1, pos=(170, 57), min_val=0.5, max_val=10,
             increment=0.5, value=float(step1), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="dB", pos=(270, 60))
         fs_step1.SetFormat("%f")
         fs_step1.SetDigits(1)
 
-        wx.StaticText(panel, label="Time between Step 1 to Step 2 (seconds): ", pos=(10, 110))
-        fs_wait = FS.FloatSpin(panel, -1, pos=(10, 130), min_val=0.5, max_val=999,
+        wx.StaticText(panel, label="Time between Step 1 to Step 2: ", pos=(10, 100))
+        fs_wait = FS.FloatSpin(panel, -1, pos=(170, 97), min_val=0.5, max_val=999,
             increment=0.1, value=float(wait), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="Seconds", pos=(270, 100))
         fs_wait.SetFormat("%f")
         fs_wait.SetDigits(1)
 
-        wx.StaticText(panel, label="Increase Amount (Step 2): ", pos=(10, 160))
-        fs_step2 = FS.FloatSpin(panel, -1, pos=(10, 180), min_val=0.5, max_val=10,
+        wx.StaticText(panel, label="Increase Amount (Step 2): ", pos=(10, 140))
+        fs_step2 = FS.FloatSpin(panel, -1, pos=(170, 137), min_val=0.5, max_val=10,
             increment=0.5, value=float(step2), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="dB", pos=(270, 140))
+
         fs_step2.SetFormat("%f")
         fs_step2.SetDigits(1)
 
@@ -72,27 +76,30 @@ class SmartVolumeDown(eg.ActionBase):
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
             choice_zone.SetStringSelection(zone)
 
         wx.StaticText(panel, label="Decrease Amount (Step 1): ", pos=(10, 60))
-        fs_step1 = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=0.5, max_val=10,
+        fs_step1 = FS.FloatSpin(panel, -1, pos=(170, 57), min_val=0.5, max_val=10,
             increment=0.5, value=float(step1), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="dB", pos=(270, 60))
         fs_step1.SetFormat("%f")
         fs_step1.SetDigits(1)
 
-        wx.StaticText(panel, label="Time between Step 1 to Step 2 (seconds): ", pos=(10, 110))
-        fs_wait = FS.FloatSpin(panel, -1, pos=(10, 130), min_val=0.5, max_val=999,
+        wx.StaticText(panel, label="Time between Step 1 to Step 2: ", pos=(10, 100))
+        fs_wait = FS.FloatSpin(panel, -1, pos=(170, 97), min_val=0.5, max_val=999,
             increment=0.1, value=float(wait), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="Seconds", pos=(270, 100))
         fs_wait.SetFormat("%f")
         fs_wait.SetDigits(1)
 
-        wx.StaticText(panel, label="Decrease Amount (Step 2): ", pos=(10, 160))
-        fs_step2 = FS.FloatSpin(panel, -1, pos=(10, 180), min_val=0.5, max_val=10,
+        wx.StaticText(panel, label="Decrease Amount (Step 2): ", pos=(10, 140))
+        fs_step2 = FS.FloatSpin(panel, -1, pos=(170, 137), min_val=0.5, max_val=10,
             increment=0.5, value=float(step2), agwStyle=FS.FS_LEFT)
+        wx.StaticText(panel, label="dB", pos=(270, 140))
         fs_step2.SetFormat("%f")
         fs_step2.SetDigits(1)
 
@@ -106,7 +113,7 @@ class IncreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -127,7 +134,7 @@ class DecreaseVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -148,7 +155,7 @@ class SetVolume(eg.ActionBase):
     def Configure(self, zone='Active Zone', vol=-50.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -168,7 +175,7 @@ class SetActiveZone(eg.ActionBase):
 
     def Configure(self, zone='Main Zone'):
         panel = eg.ConfigPanel()
-        zones = get_available_zones(False, globals.ALL_ZONES) # Don't include active zone!
+        zones = get_available_zones(False, globals.AVAILABLE_ZONES) # Don't include active zone!
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -193,17 +200,19 @@ class SetScene(eg.ActionBase):
 class SetSourceInput(eg.ActionBase):
     def __call__(self, zone, source):
         izone = convert_zone_to_int(zone)
+        if source =="Tuner":        #special case.  I don't know why
+            source = "TUNER"
         change_source(source, izone)
 
     def Configure(self, zone="Active Zone", source="HDMI1"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
             choice_zone.SetStringSelection(zone)
-        inputs = globals.ALL_SOURCES
+        inputs = globals.AVAILABLE_SOURCES
         wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
         choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
         if source in inputs:
@@ -224,7 +233,7 @@ class SetPowerStatus(eg.ActionBase):
     def Configure(self, zone="Active Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -246,7 +255,7 @@ class SetSleepStatus(eg.ActionBase):
     def Configure(self, zone="Active Zone", status="Off"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -429,7 +438,6 @@ class GetInfo(eg.ActionBase):
             object = object.replace(' ', '_')
         else:
             section = "Play_Info"
-
         if object == "FM Mode":
             object = "FM_Mode"
         elif object == "Frequency":
@@ -491,11 +499,11 @@ class GetInfo(eg.ActionBase):
             self.objects = globals.MAIN_ZONE_OBJECTS
         elif cat.startswith("Zone"):
             self.objects = globals.ZONE_OBJECTS
-        elif cat == "Tuner":
+        elif cat == "Tuner" or cat == "TUNER":
             self.objects = [ 'Band', 'Frequency', 'FM Mode']
         elif cat == "HD Radio":
             self.objects = [ 'Band', 'Frequency', 'Audio Mode']
-        elif cat == "SIRIUS":
+        elif cat == "SIRIUS" or cat == "SiriusXM" or cat == "Spotify":
             self.objects = globals.SIRIUS_OBJECTS
         elif cat == "iPod":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
@@ -507,15 +515,15 @@ class GetInfo(eg.ActionBase):
             self.objects = globals.SIRIUS_IR_OBJECTS
         elif cat == "Pandora":
             self.objects = globals.PANDORA_OBJECTS
-        elif cat == "PC":
+        elif cat == "PC" or "SERVER":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
-        elif cat == "NET RADIO":
+        elif cat == "NET RADIO" or cat == "NET_RADIO":
             self.objects = globals.NET_RADIO_OBJECTS
         elif cat == "Napster":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         elif cat == "USB":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
-        elif cat == "iPod (USB)":
+        elif cat == "iPod (USB)" or cat == "iPod_USB" or cat == "Airplay":
             self.objects = globals.GENERIC_PLAYBACK_OBJECTS
         else:
             eg.PrintError("Unknown Category!")
@@ -528,25 +536,25 @@ class GetAvailability(eg.ActionBase):
         setup_availability()
         print 'Zones:', globals.AVAILABLE_ZONES
         print 'Inputs:', globals.AVAILABLE_SOURCES
-        eg.result = list(globals.AVAILABLE_SOURCES)
+        return list(globals.AVAILABLE_SOURCES)
 
 class AutoDetectIP(eg.ActionBase):
     def __call__(self):
         ip = auto_detect_ip_threaded()
         if ip is not None:
             setup_availability()
-        eg.result = ip
+        return ip
 
 class VerifyStaticIP(eg.ActionBase):
     def __call__(self):
         if globals.ip_auto_detect:
             eg.PrintError('Static IP is not enabled!')
-            eg.result = False
+            return False
         else:
             ip = setup_ip()
             if ip is not None:
                 setup_availability()
-            eg.result = ip is not None
+            return ip is not None
 
 class NextInput(eg.ActionBase):
     def __call__(self, zone, inputs):
@@ -583,7 +591,7 @@ class NextInput(eg.ActionBase):
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -596,7 +604,7 @@ class NextInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
-        sources = globals.AVAILABLE_SOURCES if len(globals.AVAILABLE_SOURCES) > 0 else globals.ALL_SOURCES
+        sources = globals.AVAILABLE_SOURCES
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -652,7 +660,7 @@ class PreviousInput(eg.ActionBase):
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.ALL_ZONES_PLUS_ACTIVE)
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -665,7 +673,7 @@ class PreviousInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
-        sources = globals.AVAILABLE_SOURCES if len(globals.AVAILABLE_SOURCES) > 0 else globals.ALL_SOURCES
+        sources = globals.AVAILABLE_SOURCES
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -714,4 +722,55 @@ class YamahaRXClient:
         elif msg == 'RadioFreqDown':
             manual_radio_freq('Down')
 
-           
+class SetFeatureVideoOut(eg.ActionBase):
+
+    def __call__(self, Feature, Source):
+        feature_video_out(Feature, Source)
+        
+    def Configure(self, Feature="Tuner", Source="Off"):
+        panel = eg.ConfigPanel()
+        self.Source = Source
+
+        wx.StaticText(panel, label="Feature Input: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (95, 7), choices=globals.AVAILABLE_INFO_SOURCES)
+        if Feature in globals.AVAILABLE_INFO_SOURCES:
+            choice_zone.SetStringSelection(Feature)
+
+        y = 45
+        x_start = 10
+        x = x_start
+        num_per_row = 5
+        x_padding = 80
+        y_padding = 20
+
+        sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
+        self.cbs = []
+        for i in range(len(sources)):
+            if i > 0 and i % num_per_row == 0:
+                x = x_start
+                y += y_padding
+            cb = wx.CheckBox(panel, -1, sources[i], (x, y))
+            if Source == sources[i]:
+                cb.SetValue(True)
+            else:
+                cb.SetValue(False)
+            cb.Bind(wx.EVT_CHECKBOX, lambda evt, temp=i: self.SourceChanged(evt, temp))
+            self.cbs.append(cb)
+            x += x_padding
+
+        while panel.Affirmed():
+            for i in range(len(self.cbs)):
+                if self.cbs[i].GetValue():
+                    res = sources[i]
+            panel.SetResult(globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()], res)
+
+    def SourceChanged(self, event, item):
+        sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
+        self.Source = sources[item]
+        for i in range(len(sources)):
+            if i == item:
+                self.cbs[i].SetValue(True)
+            else:
+                self.cbs[i].SetValue(False)
+    
+    

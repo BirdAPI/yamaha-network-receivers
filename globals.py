@@ -115,9 +115,13 @@ CURSOR_CODES = {
          'Pop Up Menu': '7A85A5DB' },
     }
 
-# Categories available in the GetInfo Action
-    #populated by the Setup Availability function
+#populated by the Setup Availability function
+# Available zones/sources. These are to be generated based on availability
+AVAILABLE_ZONES = []
+AVAILABLE_SOURCES = []
 AVAILABLE_INFO_SOURCES = []
+AVAILABLE_FEATURE_SOURCES = []
+AVAILABLE_INPUT_SOURCES = []
 
 # Objects used in the GetInfo action
 MENU_OBJECTS = [ 'Menu Layer', 'Menu Name' ]
@@ -130,25 +134,34 @@ PANDORA_OBJECTS = [ 'Playback Info', 'Station', 'Album', 'Song' ] + MENU_OBJECTS
 SIRIUS_IR_OBJECTS = [ 'Playback Info', 'Artist', 'Channel', 'Title' ] + MENU_OBJECTS + LINE_OBJECTS
 SIRIUS_OBJECTS = [ 'Antenna Strength', 'Category', 'Channel Number', 'Channel Name', 'Artist', 'Song', 'Composer' ]
 
+"""
 # A list of every single source we support
 ALL_SOURCES = [ 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9',
                 'AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9',
+                'OPTICAL1', 'OPTICAL2', 'COAXIAL1', 'COAXIAL2', 'CD', 'LINE1', 'LINE2', 'LINE3',
                 'V-AUX', 'TUNER', 'AUDIO', 'AUDIO1', 'AUDIO2', 'AUDIO3', 'AUDIO4',
                 'DOCK', 'SIRIUS', 'PC', 'MULTICH', 'PHONO', 'iPod', 'Bluetooth',
                 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster',
                 'NET RADIO', 'USB', 'iPod (USB)', 'SIRIUSInternetRadio' ]
-
+"""
 # Supported zone definitions
 ALL_ZONES = [ 'Main Zone', 'Zone 2', 'Zone 3', 'Zone 4', 'Zone A', 'Zone B', 'Zone C', 'Zone D' ]
 ALL_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + ALL_ZONES
 TWO_ZONES = [ 'Main Zone', 'Zone 2' ]
 TWO_ZONES_PLUS_ACTIVE = [ 'Active Zone' ] + TWO_ZONES
 
+"""
 # All zones to check availability for
 ZONE_CHECK = [ 'Main_Zone', 'Zone_2', 'Zone_3', 'Zone_4', 'Zone_A', 'Zone_B', 'Zone_C', 'Zone_D' ]
+"""
+
+"""
+DEFUNCT
+
 # All inputs to check availability for
 INPUT_CHECK = [ 'HDMI_1', 'HDMI_2', 'HDMI_3', 'HDMI_4', 'HDMI_5', 'HDMI_6', 'HDMI_7', 'HDMI_8', 'HDMI_9',
                 'AV_1', 'AV_2', 'AV_3', 'AV_4', 'AV_5', 'AV_6', 'AV_7', 'AV_8', 'AV_9',
+                'OPTICAL_1', 'OPTICAL_2', 'OPTICAL_3', 'OPTICAL_4', 'COAXIAL_1', 'COAXIAL_2', 'COAXIAL_3', 'COAXIAL_4', 'CD', 'LINE_1', 'LINE_2', 'LINE_3', 'LINE_4',
                 'V_AUX', 'Tuner', 'AUDIO', 'AUDIO_1', 'AUDIO_2', 'AUDIO_3', 'AUDIO_4',
                 'DOCK', 'SIRIUS', 'PC', 'MULTI_CH', 'PHONO', 'iPod', 'Bluetooth',
                 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster', 'SERVER',
@@ -160,27 +173,31 @@ INPUT_MAPPINGS = { 'SERVER': 'PC',
                    'Tuner': 'TUNER',
                    'MULTI_CH': 'MULTICH',
                    'iPod_USB':'iPod (USB)',
-                   'SIRIUS_IR': 'SIRIUSInternetRadio' }
+                   'SIRIUS_IR': 'SIRIUSInternetRadio',
+                   'NET_RADIO': 'NET RADIO'}
 
 # Setup generic input mappings for HDMI, AV, and AUDIO
 for i in range(1,10):
-    INPUT_MAPPINGS['HDMI_{0}'.format(i)] = 'HDMI{0}'.format(i)
-    INPUT_MAPPINGS['AV_{0}'.format(i)] = 'AV{0}'.format(i)
+    INPUT_MAPPINGS['HDMI{0}'.format(i)] = 'HDMI{0}'.format(i)
+    INPUT_MAPPINGS['AV{0}'.format(i)] = 'AV{0}'.format(i)
     if i <= 4:
-        INPUT_MAPPINGS['AUDIO_{0}'.format(i)] = 'AUDIO{0}'.format(i)
+        INPUT_MAPPINGS['AUDIO{0}'.format(i)] = 'AUDIO{0}'.format(i)
+        INPUT_MAPPINGS['OPTICAL{0}'.format(i)] = 'OPTICAL{0}'.format(i)
+        INPUT_MAPPINGS['COAXIAL{0}'.format(i)] = 'COAXIAL{0}'.format(i)
+        INPUT_MAPPINGS['LINE{0}'.format(i)] = 'LINE{0}'.format(i)
 
 # sources to directly copy over in mappings, because their names are the exact same
-direct_copy = [ 'PHONO', 'iPod', 'Bluetooth', 'AUDIO', 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster', 'NET RADIO', 'USB', 'DOCK', 'SIRIUS', 'PC' ]
+direct_copy = [ 'PHONO', 'iPod', 'Bluetooth', 'AUDIO', 'UAW', 'NET', 'Rhapsody', 'Pandora', 'Napster', 'NET RADIO', 'USB', 'DOCK', 'SIRIUS', 'PC', 'CD', 'SiriusXM', 'Spotify', 'AirPlay', 'V-AUX' ]
 for item in direct_copy:
     INPUT_MAPPINGS[item] = item
-
+"""
+"""
 # Sanity check for mappings, to ensure we have a mapping for every item
 if len(INPUT_MAPPINGS.keys()) != len(INPUT_CHECK):
     print "Error, missing mappings for:"
     for key in INPUT_CHECK:
         if key not in INPUT_MAPPINGS:
             print '\t', key
+"""
 
-# Available zones/sources. These are to be generated based on availability
-AVAILABLE_ZONES = []
-AVAILABLE_SOURCES = []
+

@@ -62,6 +62,9 @@ def toggle_mute(zone=-1):
 def change_source(source, zone=-1):
     zone_put_xml(zone, '<Input><Input_Sel>{0}</Input_Sel></Input>'.format(source))
 
+def feature_video_out(feature, source):
+    put_xml('<System><Input_Output><Assign><Video_Out><{0}>{1}</{0}></Video_Out></Assign></Input_Output></System>'.format(feature, source))
+
 def straight(zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>On</Straight><Sound_Program>Straight</Sound_Program></Current></Program_Sel></Surround>')
 
@@ -199,6 +202,11 @@ def set_active_zone(zone):
 def get_source_name(zone=-1):
     return get_status_string("Input_Sel", zone)
 
+def get_system_config():
+    xml = get_config()
+    xmldoc = minidom.parseString(xml)
+    return xmldoc
+    
 def get_availability_dict(items_to_check):
     xml = get_config()
     xmldoc = minidom.parseString(xml)
