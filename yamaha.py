@@ -64,6 +64,9 @@ def change_source(source, zone=-1):
 
 def feature_video_out(feature, source):
     put_xml('<System><Input_Output><Assign><Video_Out><{0}>{1}</{0}></Video_Out></Assign></Input_Output></System>'.format(feature, source))
+    
+def DisplayDimmer(level):
+    put_xml('<System><Misc><Display><FL><Dimmer>{0}</Dimmer></FL></Display></Misc></System>'.format(level))
 
 def straight(zone=-1):
     zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>On</Straight><Sound_Program>Straight</Sound_Program></Current></Program_Sel></Surround>')

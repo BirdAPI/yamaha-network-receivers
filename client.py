@@ -763,7 +763,7 @@ class SetFeatureVideoOut(eg.ActionBase):
                 if self.cbs[i].GetValue():
                     res = sources[i]
             panel.SetResult(globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()], res)
-
+            
     def SourceChanged(self, event, item):
         sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
         self.Source = sources[item]
@@ -772,5 +772,21 @@ class SetFeatureVideoOut(eg.ActionBase):
                 self.cbs[i].SetValue(True)
             else:
                 self.cbs[i].SetValue(False)
-    
-    
+
+class SetDisplayDimmer(eg.ActionBase):
+
+    def __call__(self, level):
+        levels = ['100%','75%','50%','25%','10%']
+        lev = levels.index(level)
+        DisplayDimmer(int(lev)*-1)
+
+    def Configure(self, level='100%'):
+        panel = eg.ConfigPanel()
+
+        levels = ['100%','75%','50%','25%','10%']
+        wx.StaticText(panel, label="Brightness: ", pos=(10, 10))
+        choice_level = wx.Choice(panel, -1, (10, 50), choices=levels)
+        if level in levels:
+            choice_level.SetStringSelection(level)
+        while panel.Affirmed():
+            panel.SetResult(levels[choice_level.GetCurrentSelection()])
