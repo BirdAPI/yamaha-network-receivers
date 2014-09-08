@@ -68,6 +68,9 @@ def feature_video_out(feature, source):
 def source_audio_in(audio, video):
     put_xml('<System><Input_Output><Assign><Audio_In><{0}>{1}</{0}></Audio_In></Assign></Input_Output></System>'.format(video, audio))
     
+def wallpaper(pic):
+    put_xml('<System><Misc><Display><Wall_Paper>{0}</Wall_Paper></Display></Misc></System>'.format(pic))
+    
 def DisplayDimmer(level):
     put_xml('<System><Misc><Display><FL><Dimmer>{0}</Dimmer></FL></Display></Misc></System>'.format(level))
 

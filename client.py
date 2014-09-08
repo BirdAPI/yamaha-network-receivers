@@ -730,6 +730,8 @@ class SetFeatureVideoOut(eg.ActionBase):
     def Configure(self, Feature="Tuner", Source="Off"):
         panel = eg.ConfigPanel()
         self.Source = Source
+        if Feature == "TUNER":
+            Feature = "Tuner"
 
         wx.StaticText(panel, label="Feature Input: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (95, 7), choices=globals.AVAILABLE_INFO_SOURCES)
@@ -762,7 +764,11 @@ class SetFeatureVideoOut(eg.ActionBase):
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
                     res = sources[i]
-            panel.SetResult(globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()], res)
+            if globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()] == "Tuner":
+                xx = "TUNER"
+            else:
+                xx = globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()]
+            panel.SetResult(xx, res)
             
     def SourceChanged(self, event, item):
         sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
@@ -831,3 +837,18 @@ class SetAudioIn(eg.ActionBase):
         self.choice_audio.Clear()
         self.choice_audio.AppendItems(self.AudChoices)
         self.choice_audio.SetSelection(0)
+        
+class SetWallPaper(eg.ActionBase):
+    def __call__(self, Pic):
+        wallpaper(Pic)
+        
+    def Configure(self, Pic="Picture 1"):
+        panel = eg.ConfigPanel()
+        PicChoices = ['Picture 1', 'Picture 2', 'Picture 3', 'Gray']
+        wx.StaticText(panel, label="Background Image: ", pos=(10, 10))
+        choice_pic = wx.Choice(panel, -1, (95, 7), choices=PicChoices)
+        if Pic in PicChoices:
+            choice_pic.SetStringSelection(Pic)
+        
+        while panel.Affirmed():
+            panel.SetResult(PicChoices[choice_pic.GetCurrentSelection()])
