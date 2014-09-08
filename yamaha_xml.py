@@ -40,10 +40,13 @@ def do_xml(xml, **kwargs):
             response = conn.getresponse()
             rval = response.read()
             conn.close()
-            if str(rval[25]) == "0":
-                return True
+            if rval != "":
+                if str(rval[25]) == "0":
+                    return True
+                else:
+                    print "Command did not go to Yamaha Receiver, error code " + str(rval[25])
             else:
-                print "Command did not go to Yamaha Receiver, error code " + str(rval[25])
+                print "Command did not go to Yamaha Receiver, error NOT possible to set on this model."
     except socket.error:
         if print_error:
            eg.PrintError("Unable to communicate with Yamaha Receiver. The connection timed out.")

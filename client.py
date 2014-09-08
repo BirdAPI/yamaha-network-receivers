@@ -790,3 +790,44 @@ class SetDisplayDimmer(eg.ActionBase):
             choice_level.SetStringSelection(level)
         while panel.Affirmed():
             panel.SetResult(levels[choice_level.GetCurrentSelection()])
+            
+class SetAudioIn(eg.ActionBase):
+
+    def __call__(self, Audio, Source):
+        source_audio_in(Audio, Source)
+        
+    def Configure(self, Audio="HDMI1", Source="HDMI_1"):
+        panel = eg.ConfigPanel()
+        self.Source = Source[:-2] + Source[-1:]
+        print self.Source
+        self.VidChoices = []
+        PosChoices = ['HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9', 'AV1', 'AV2']
+        for x in PosChoices:
+            if x in globals.AVAILABLE_SOURCES:
+                self.VidChoices.append(x)
+        wx.StaticText(panel, label="Video Input: ", pos=(10, 10))
+        self.choice_video = wx.Choice(panel, -1, (95, 7), choices=self.VidChoices)
+        if self.Source in self.VidChoices:
+            self.choice_video.SetStringSelection(self.Source)
+        self.choice_video.Bind(wx.EVT_CHOICE, self.VidChanged)
+        
+        PosSources = ['AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9', 'AUDIO1', 'AUDIO2']
+        self.AudChoices = [self.Source]
+        for x in PosSources:
+            if x in globals.AVAILABLE_SOURCES:
+                self.AudChoices.append(x)
+        wx.StaticText(panel, label="Audio Input: ", pos=(10, 40))
+        self.choice_audio = wx.Choice(panel, -1, (95, 37), choices=self.AudChoices)
+        if Audio in self.AudChoices:
+            self.choice_audio.SetStringSelection(Audio)
+         
+        while panel.Affirmed():
+            vid = self.VidChoices[self.choice_video.GetCurrentSelection()]
+            vid = vid[:-1] + "_" + vid[-1:]
+            panel.SetResult(self.AudChoices[self.choice_audio.GetCurrentSelection()], vid)
+            
+    def VidChanged(self, event):
+        self.AudChoices[0] = self.VidChoices[self.choice_video.GetCurrentSelection()]
+        self.choice_audio.Clear()
+        self.choice_audio.AppendItems(self.AudChoices)
+        self.choice_audio.SetSelection(0)
