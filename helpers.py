@@ -216,8 +216,9 @@ def setup_availability():
     globals.AVAILABLE_FEATURE_SOURCES = list(inputs)
     globals.AVAILABLE_INFO_SOURCES = list(inputs)
        
+    #models from RX-V use this
+    x = 0
     for node in xmldoc.getElementsByTagName("Input"):
-        x = 0
         stop = False
         while stop==False:
             try:
@@ -226,6 +227,20 @@ def setup_availability():
             except:
                 stop=True
             x = x + 1
+
+    #models from N-Line use this
+    if x == 0: #this means the other lookup resulted in nothing
+        MainInputxmldoc = yamaha.get_main_zone_inputs()
+        x = 0
+        for node in MainInputxmldoc.getElementsByTagName("Input_Sel_Item"):
+            stop = False
+            while stop==False:
+                try:
+                    globals.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.firstChild.data))
+                    inputs.append(str(node.childNodes[x].firstChild.firstChild.data))
+                except:
+                    stop=True
+                x = x + 1
             
     globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
     globals.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]

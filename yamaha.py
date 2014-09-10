@@ -216,6 +216,11 @@ def get_system_config():
     xmldoc = minidom.parseString(xml)
     return xmldoc
     
+def get_main_zone_inputs():
+    xml = get_xml('<Main_Zone><Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input></Main_Zone>')
+    xmldoc = minidom.parseString(xml)
+    return xmldoc
+    
 def get_availability_dict(items_to_check):
     xml = get_config()
     xmldoc = minidom.parseString(xml)
