@@ -244,6 +244,7 @@ def setup_availability():
             
     globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
     globals.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]
+    globals.AVAILABLE_SOURCES = list(set(globals.AVAILABLE_SOURCES))
 
 def get_available_zones(include_active, fallback_zones, limit=None):
     """

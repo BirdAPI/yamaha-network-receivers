@@ -190,10 +190,12 @@ def is_radio_on():
     return get_status_string('Input_Sel') == "TUNER"
 
 def auto_radio_freq(updown):
-    put_xml('<Tuner><Play_Control><Auto_Freq>{0}</Auto_Freq></Play_Control></Tuner>'.format(updown))
+    band = get_radio_band()
+    put_xml('<Tuner><Play_Control><Tuning><Freq><{1}><Val>{0}</Val></{1}></Freq></Tuning></Play_Control></Tuner>'.format(updown, band))
 
 def manual_radio_freq(updown):
-    put_xml('<Tuner><Play_Control><Tuning><Freq>{0}</Freq></Tuning></Play_Control></Tuner>'.format(updown))
+    band = get_radio_band()
+    put_xml('<Tuner><Play_Control><Tuning><Freq><{1}><Val>{0}</Val></{1}></Freq></Tuning></Play_Control></Tuner>'.format(updown, band))
 
 def set_radio_freq(freq):
     print "Not implemented!"
