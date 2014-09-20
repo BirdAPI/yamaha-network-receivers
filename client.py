@@ -605,7 +605,6 @@ class NextInput(eg.ActionBase):
         y_padding = 20
 
         sources = globals.AVAILABLE_SOURCES
-        sources = [s.replace('Tuner', 'TUNER') for s in sources]
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -624,8 +623,6 @@ class NextInput(eg.ActionBase):
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
                     res.append(sources[i])
-            if res == []:
-                res = list(sources)
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class PreviousInput(eg.ActionBase):
@@ -677,7 +674,6 @@ class PreviousInput(eg.ActionBase):
         y_padding = 20
 
         sources = globals.AVAILABLE_SOURCES
-        sources = [s.replace('Tuner', 'TUNER') for s in sources]
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -696,8 +692,6 @@ class PreviousInput(eg.ActionBase):
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
                     res.append(sources[i])
-            if res == []:
-                res = list(sources)
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class YamahaRXClient:
@@ -719,11 +713,11 @@ class YamahaRXClient:
             prev_radio_preset()
         elif msg == 'ToggleRadioAMFM':
             toggle_radio_amfm()
-        elif msg == 'RadioAutoFreqUp':
-            auto_radio_freq('Auto Up')
+        elif msg == 'RadioAutoFeqUp':
+            auto_radio_freq('Up')
         elif msg == 'RadioAutoFreqDown':
-            auto_radio_freq('Auto Down')
-        elif msg == 'RadioFreqUp':
+            auto_radio_freq('Down')
+        elif msg == 'RadioFeqUp':
             manual_radio_freq('Up')
         elif msg == 'RadioFreqDown':
             manual_radio_freq('Down')
@@ -852,9 +846,33 @@ class SetWallPaper(eg.ActionBase):
         panel = eg.ConfigPanel()
         PicChoices = ['Picture 1', 'Picture 2', 'Picture 3', 'Gray']
         wx.StaticText(panel, label="Background Image: ", pos=(10, 10))
-        choice_pic = wx.Choice(panel, -1, (10, 30), choices=PicChoices)
+        choice_pic = wx.Choice(panel, -1, (95, 7), choices=PicChoices)
         if Pic in PicChoices:
             choice_pic.SetStringSelection(Pic)
         
         while panel.Affirmed():
             panel.SetResult(PicChoices[choice_pic.GetCurrentSelection()])
+            
+class SendAnyCommand(eg.ActionBase):
+    def __call__(self, value, action):
+        if action == "Put":
+            send_any(value, action)
+        else:
+            result = send_any(value, action)
+            print result
+            return result
+        
+    def Configure(self, value="", action="Put"):
+        panel = eg.ConfigPanel()
+        wx.StaticText(panel, label="Command: ", pos=(10, 10))
+        CommandCtrl = wx.TextCtrl(panel, pos=(10, 30), size=(420,-1))
+        wx.StaticText(panel, label="Ex: <Main_Zone><Basic_Status><Volume><Lvl><Val>***</Val></Lvl>", pos=(10, 70))
+        wx.StaticText(panel, label="    <Exp>1</Exp><Unit>dB</Unit></Lvl></Volume></Basic_Status></Main_Zone>", pos=(10, 90))
+        CommandCtrl.SetValue(value)
+        Choices = ['Put', 'Get']
+        ChoiceCtrl = wx.Choice(panel, -1, (10, 110), choices=Choices)
+        ChoiceCtrl.SetStringSelection(action)
+        wx.StaticText(panel, label="***If Get is selected make sure GetParam is in place of value", pos=(10, 150))
+        
+        while panel.Affirmed():
+            panel.SetResult(CommandCtrl.GetValue(),Choices[ChoiceCtrl.GetCurrentSelection()])

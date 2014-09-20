@@ -8,6 +8,12 @@ import globals
 from helpers import *
 from yamaha_xml import *
 
+def send_any(value, action):
+    if action == "Put":
+        put_xml(value)
+    else:
+        return get_xml(value)
+
 def increase_volume(zone=-1, inc=0.5):
     change_volume(zone, inc)
 
@@ -190,12 +196,10 @@ def is_radio_on():
     return get_status_string('Input_Sel') == "TUNER"
 
 def auto_radio_freq(updown):
-    band = get_radio_band()
-    put_xml('<Tuner><Play_Control><Tuning><Freq><{1}><Val>{0}</Val></{1}></Freq></Tuning></Play_Control></Tuner>'.format(updown, band))
+    put_xml('<Tuner><Play_Control><Auto_Freq>{0}</Auto_Freq></Play_Control></Tuner>'.format(updown))
 
 def manual_radio_freq(updown):
-    band = get_radio_band()
-    put_xml('<Tuner><Play_Control><Tuning><Freq><{1}><Val>{0}</Val></{1}></Freq></Tuning></Play_Control></Tuner>'.format(updown, band))
+    put_xml('<Tuner><Play_Control><Tuning><Freq>{0}</Freq></Tuning></Play_Control></Tuner>'.format(updown))
 
 def set_radio_freq(freq):
     print "Not implemented!"
