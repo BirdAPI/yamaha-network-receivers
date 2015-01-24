@@ -92,6 +92,9 @@ def zone_get_xml(zone, xml, **kwargs):
     else:
         return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), **kwargs)
 
+def get_sound_video(zone=-1, **kwargs):
+    return zone_get_xml(zone, '<Sound_Video>GetParam</Sound_Video>', **kwargs)
+        
 def get_basic_status(zone=-1, **kwargs):
     return zone_get_xml(zone, '<Basic_Status>GetParam</Basic_Status>', **kwargs)
 
@@ -107,6 +110,17 @@ def get_tuner_presets(**kwargs):
 def get_config(**kwargs):
     return get_xml('<System><Config>GetParam</Config></System>', **kwargs)
 
+def get_sound_video_string(param, zone=-1, elem=None, **kwargs):
+    if elem == "Treble":
+        xml = zone_get_xml(zone, '<Sound_Video><Tone><Treble>GetParam</Treble></Tone></Sound_Video>', **kwargs)
+    elif elem == "Bass":
+        xml = zone_get_xml(zone, '<Sound_Video><Tone><Bass>GetParam</Bass></Tone></Sound_Video>', **kwargs)
+    else:
+        xml = get_sound_video(zone, **kwargs)
+    xmldoc = minidom.parseString(xml)
+    value = xmldoc.getElementsByTagName(param)[0].firstChild.data
+    return value
+    
 def get_status_string(param, zone=-1, **kwargs):
     xml = get_basic_status(zone, **kwargs)
     if kwargs.get('print_xml', False):

@@ -12,7 +12,20 @@ def send_any(value, action):
     if action == "Put":
         put_xml(value)
     else:
-        return get_xml(value)
+        #now find param
+        #to do this, parse value (originally passed)
+        param = value.split("GetParam")
+        param = param[0].split("<")
+        param = param[-1]
+        param = param[0:-1]
+        values = value.split("<" + param + ">")
+        values2 = values[1].split("</" + param + ">")
+        value = values[0] + "GetParam" + values2[1]
+        xml = get_xml(value)
+        xmldoc = minidom.parseString(xml)
+
+        return xmldoc.getElementsByTagName(param)[0].firstChild.data
+
 
 def increase_volume(zone=-1, inc=0.5):
     change_volume(zone, inc)
@@ -37,6 +50,12 @@ def get_volume():
 
 def set_volume(zone=-1, value=-25.0):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
+    
+def set_bass(zone=-1, value=-0.0):
+    zone_put_xml(zone, '<Sound_Video><Tone><Bass><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Bass></Tone></Sound_Video>'.format(int(value * 10.0)))
+    
+def set_treble(zone=-1, value=-0.0):
+    zone_put_xml(zone, '<Sound_Video><Tone><Treble><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video>'.format(int(value * 10.0)))
 
 def mute_on(zone=-1):
     zone_put_xml(zone, '<Volume><Mute>On</Mute></Volume>')

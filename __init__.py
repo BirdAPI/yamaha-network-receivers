@@ -38,6 +38,8 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetSourceInput, clsName="Set Source Input", description="Set the source input on the specified zone.")
         self.AddAction(NextInput, clsName="Next Input", description="Set the source input on the specified zone to the next input in the specified list of inputs.")
         self.AddAction(PreviousInput, clsName="Previous Input", description="Set the source input on the specified zone to the previous input in the specified list of inputs.")
+        self.AddAction(SetBass, clsName="Set Exact Bass", description="Set the bass tone control.")
+        self.AddAction(SetTreble, clsName="Set Exact Tremble", description="Set the treble tone control.")
         self.AddAction(SetFeatureVideoOut, clsName="Feature Input Video Out", description="Set the source video output from a specified input.  For Main Zone only.")
         self.AddAction(SetAudioIn, clsName="Set Audio In for Video Source", description="Sets a particular audio feed for a specific video source.")
         self.AddAction(SetPowerStatus, clsName="Set Power Status", description="Set the power status for the receiver (Main Zone), or turn on/off additional zones.")
@@ -71,6 +73,8 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(SetFeatureVideoOut, hidden=True)
         self.AddAction(SetWallPaper, hidden=True)
         self.AddAction(PreviousInput, hidden=True)
+        self.AddAction(SetBass, hidden=True)
+        self.AddAction(SetTreble, hidden=True)
         self.AddAction(SetPowerStatus, hidden=True)
         self.AddAction(SetSurroundMode, hidden=True)
         self.AddAction(Set7ChannelMode, hidden=True) # McB 1/11/2014 - Turn 7-channel mode on and off

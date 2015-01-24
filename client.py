@@ -169,6 +169,48 @@ class SetVolume(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
 
+class SetBass(eg.ActionBase):
+    def __call__(self, zone, val):
+        set_bass(convert_zone_to_int(zone), float(val))
+
+    def Configure(self, zone='Active Zone', val=0.0):
+        panel = eg.ConfigPanel()
+
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Exact Value (dB): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=-6.0, max_val=6.0,
+            increment=0.5, value=float(val), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
+            
+class SetTreble(eg.ActionBase):
+    def __call__(self, zone, val):
+        set_treble(convert_zone_to_int(zone), float(val))
+
+    def Configure(self, zone='Active Zone', val=0.0):
+        panel = eg.ConfigPanel()
+
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Exact Value (dB): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=-6.0, max_val=6.0,
+            increment=0.5, value=float(val), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
+            
 class SetActiveZone(eg.ActionBase):
     def __call__(self, zone):
         set_active_zone(convert_zone_to_int(zone))
@@ -427,6 +469,12 @@ class GetInfo(eg.ActionBase):
         if object == "Volume Level":
             val, unit = get_status_strings(["Val", "Unit"], zone)
             return "{0} {1}".format(float(val) / 10.0, unit)
+        if object == "Treble":
+            val = get_sound_video_string("Val", zone, "Treble")
+            return "{0} ".format(float(val) / 10.0) + "dB"
+        if object == "Bass":
+            val = get_sound_video_string("Val", zone, "Bass")
+            return "{0} ".format(float(val) / 10.0) + "dB"
         if zone is not None:
             return get_status_string(object,zone)
 
