@@ -51,6 +51,10 @@ def get_volume():
 def set_volume(zone=-1, value=-25.0):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
     
+def set_pattern1(levels):
+    for speaker in levels:
+        put_xml('<System><Speaker_Preout><Pattern_1><Lvl><{0}><Val>{1}</Val><Exp>1</Exp><Unit>dB</Unit></{0}></Lvl></Pattern_1></Speaker_Preout></System>'.format(speaker[0], int(speaker[1]*10)))
+    
 def set_bass(zone=-1, value=-0.0):
     zone_put_xml(zone, '<Sound_Video><Tone><Bass><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Bass></Tone></Sound_Video>'.format(int(value * 10.0)))
     

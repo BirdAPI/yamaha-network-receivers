@@ -211,6 +211,29 @@ class SetTreble(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
             
+class SetPattern1(eg.ActionBase):
+    def __call__(self, levels):
+        set_pattern1(levels)
+
+    def Configure(self, levels=None):
+        panel = eg.ConfigPanel()
+        if levels == None:
+            levels = get_system_pattern_1() #gets levels from receiver
+        adjpos = (10, 10)
+        floatspin = []
+        for speaker in levels:
+            wx.StaticText(panel, label=speaker[0] + " Exact Value (dB): ", pos=adjpos)
+            adjpos = (10, adjpos[1] + 20)
+            floatspin.append(FS.FloatSpin(panel, -1, pos=adjpos, min_val=-10.0, max_val=10.0,
+                increment=0.5, value=float(speaker[1]), agwStyle=FS.FS_LEFT))
+            floatspin[-1].SetFormat("%f")
+            floatspin[-1].SetDigits(1)
+            adjpos = (10, adjpos[1] + 30)
+        while panel.Affirmed():
+            for i in range(0,len(floatspin)):
+                levels[i] = [levels[i][0], floatspin[i].GetValue()]
+            panel.SetResult(levels)
+            
 class SetActiveZone(eg.ActionBase):
     def __call__(self, zone):
         set_active_zone(convert_zone_to_int(zone))
@@ -454,6 +477,10 @@ class NumCharAction(eg.ActionBase):
 
 class GetInfo(eg.ActionBase):
     def __call__(self, object, cat):
+        if object == "Active Speakers":
+            return get_system_pattern_1(object)
+        if object == "PreOut Levels":
+            return get_system_pattern_1(object)
         zone = None
         #zone specific objects
         if object == "Input Selection":
@@ -523,7 +550,7 @@ class GetInfo(eg.ActionBase):
     def Configure(self, object="Power", cat="Main Zone"):
         panel = eg.ConfigPanel()
 
-        self.cats = globals.AVAILABLE_ZONES + globals.AVAILABLE_INFO_SOURCES
+        self.cats = ["System"] + globals.AVAILABLE_ZONES + globals.AVAILABLE_INFO_SOURCES
 
         wx.StaticText(panel, label="Category: ", pos=(10, 10))
         self.choice_cat = wx.Choice(panel, -1, (10, 30), choices=self.cats)
@@ -543,7 +570,9 @@ class GetInfo(eg.ActionBase):
 
     def CategoryChanged(self, event=None):
         cat = self.cats[self.choice_cat.GetCurrentSelection()]
-        if cat == "Main Zone":
+        if cat == "System":
+            self.objects = globals.SYSTEM_OBJECTS
+        elif cat == "Main Zone":
             self.objects = globals.MAIN_ZONE_OBJECTS
         elif cat.startswith("Zone"):
             self.objects = globals.ZONE_OBJECTS

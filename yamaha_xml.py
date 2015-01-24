@@ -202,3 +202,40 @@ def get_device_strings(params, input, section, **kwargs):
         else:
             values.append(xmldoc.getElementsByTagName(param)[0].firstChild.data)
     return tuple(values)
+
+def get_system_pattern_1(param=None, **kwargs):
+    types = ['Front', 'Center', 'Sur', 'Sur_Back', 'Subwoofer']
+    speakers = []
+    levels = []
+    for type in types:
+        xml = get_xml('<System><Speaker_Preout><Pattern_1><Config><{0}>GetParam</{0}></Config></Pattern_1></Speaker_Preout></System>'.format(type), **kwargs)
+        xmldoc = minidom.parseString(xml)
+        value = xmldoc.getElementsByTagName("Type")[0].firstChild.data
+        if value != "None":
+            if value == "Use":
+                speakers.append("Subwoofer_1")
+                try:
+                    if xmldoc.getElementsByTagName("Type")[1].firstChild.data == "Use":
+                        speakers.append("Subwoofer_2")
+                except:
+                    pass
+            elif value[-2:] == "x2":
+                speakers.append("Sur_Back_R")
+                speakers.append("Sur_Back_L")
+            if type == "Sur":
+                speakers.append("Sur_R")
+                speakers.append("Sur_L")
+            if type == "Front":
+                speakers.append("Front_R")
+                speakers.append("Front_L")
+            if type == "Center":
+                speakers.append("Center")
+    if param == "Active Speakers":
+        return speakers
+    #This is then also done only if levels are requested
+    else:
+        for speaker in speakers:
+            xml = get_xml('<System><Speaker_Preout><Pattern_1><Lvl>GetParam</Lvl></Pattern_1></Speaker_Preout></System>', **kwargs)
+            xmldoc = minidom.parseString(xml)
+            levels.append([speaker, float(xmldoc.getElementsByTagName(speaker)[0].firstChild.firstChild.data) /10])
+        return levels
