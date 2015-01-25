@@ -51,6 +51,9 @@ def get_volume():
 def set_volume(zone=-1, value=-25.0):
     zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
     
+def set_max_volume(zone=-1, value=16.5):
+    zone_put_xml(zone, '<Volume><Max_Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Max_Lvl></Volume>'.format(int(value * 10.0)))
+    
 def set_init_volume(zone=-1, value=-50.0, mode="Off"):
     zone_put_xml(zone, '<Volume><Init_Lvl><Mode>{1}</Mode><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Init_Lvl></Volume>'.format(int(value * 10.0), mode))
     

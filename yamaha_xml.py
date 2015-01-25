@@ -121,6 +121,12 @@ def get_sound_video_string(param, zone=-1, elem=None, **kwargs):
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
     
+def get_volume_string(param, zone=-1, elem=None, **kwargs):
+    xml = zone_get_xml(zone, '<Volume><{0}>GetParam</{0}></Volume>'.format(elem), **kwargs)
+    xmldoc = minidom.parseString(xml)
+    value = xmldoc.getElementsByTagName(param)[0].firstChild.data
+    return value
+    
 def get_status_string(param, zone=-1, **kwargs):
     xml = get_basic_status(zone, **kwargs)
     if kwargs.get('print_xml', False):

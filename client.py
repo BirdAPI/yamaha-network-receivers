@@ -169,6 +169,27 @@ class SetVolume(eg.ActionBase):
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
             
+class SetMaxVolume(eg.ActionBase):
+    def __call__(self, zone, vol):
+        set_max_volume(convert_zone_to_int(zone), float(vol))
+
+    def Configure(self, zone='Active Zone', vol=16.5):
+        panel = eg.ConfigPanel()
+
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+
+        wx.StaticText(panel, label="Max Volume (dB): ", pos=(10, 60))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=-30.0, max_val=16.5,
+            increment=0.5, value=float(vol), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
+            
 class SetInitVolume(eg.ActionBase):
     def __call__(self, zone, vol, mode):
         set_init_volume(convert_zone_to_int(zone), float(vol), mode)
@@ -524,6 +545,14 @@ class GetInfo(eg.ActionBase):
             return "{0} ".format(float(val) / 10.0) + "dB"
         if object == "Bass":
             val = get_sound_video_string("Val", zone, "Bass")
+            return "{0} ".format(float(val) / 10.0) + "dB"
+        if object == "Init Volume Mode":
+            return get_volume_string("Mode", zone, "Init_Lvl")
+        if object == "Init Volume Level":
+            val = get_volume_string("Val", zone, "Init_Lvl")
+            return "{0} ".format(float(val) / 10.0) + "dB"
+        if object == "Max Volume Level":
+            val = get_volume_string("Val", zone, "Max_Lvl")
             return "{0} ".format(float(val) / 10.0) + "dB"
         if zone is not None:
             return get_status_string(object,zone)
