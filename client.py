@@ -168,6 +168,29 @@ class SetVolume(eg.ActionBase):
         floatspin.SetDigits(1)
         while panel.Affirmed():
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue())
+            
+class SetInitVolume(eg.ActionBase):
+    def __call__(self, zone, vol, mode):
+        set_init_volume(convert_zone_to_int(zone), float(vol), mode)
+
+    def Configure(self, zone='Active Zone', vol=-50.0, mode="Off"):
+        panel = eg.ConfigPanel()
+        modes = ["Off", "On"]
+        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        wx.StaticText(panel, label="Zone: ", pos=(10, 10))
+        choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
+        if zone in zones:
+            choice_zone.SetStringSelection(zone)
+        wx.StaticText(panel, label="Mode: ", pos=(10, 60))
+        choice_mode = wx.Choice(panel, -1, (10, 80), choices=modes)
+        choice_mode.SetStringSelection(mode)
+        wx.StaticText(panel, label="Exact Volume (dB): ", pos=(10, 110))
+        floatspin = FS.FloatSpin(panel, -1, pos=(10, 130), min_val=-100.0, max_val=50.0,
+            increment=0.5, value=float(vol), agwStyle=FS.FS_LEFT)
+        floatspin.SetFormat("%f")
+        floatspin.SetDigits(1)
+        while panel.Affirmed():
+            panel.SetResult(zones[choice_zone.GetCurrentSelection()], floatspin.GetValue(), modes[choice_mode.GetCurrentSelection()])
 
 class SetBass(eg.ActionBase):
     def __call__(self, zone, val):
