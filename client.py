@@ -844,6 +844,43 @@ class PreviousInput(eg.ActionBase):
                         res.append(sources[i])
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
+class InputVolumeTrim(eg.ActionBase):
+    def __call__(self, sources):
+        #sources = get_system_io_vol_trim(self.plugin)
+        #print sources
+        #sources = [['TUNER', '0'], ['HDMI_1', '0'], ['HDMI_2', '0'], ['HDMI_3', '0'], ['HDMI_4', '0'], ['HDMI_5', '0'], ['AV_1', '0'], ['AV_2', '0'], ['AV_3', '0'], ['AV_4', '0'], ['AV_5', '0'], ['AV_6', '0'], ['V_AUX', '0'], ['AUDIO_1', '0'], ['AUDIO_2', '0'], ['Rhapsody', '0'], ['SiriusXM', '0'], ['Spotify', '0'], ['Pandora', u'0'], ['SERVER', u'0'], ['NET_RADIO', '0'], ['USB', '0'], ['AirPlay', '0']]
+        set_system_io_vol_trim(self.plugin, sources)
+        
+    def Configure(self, sources=None):
+        panel = eg.ConfigPanel()
+        if sources == None:
+            sources = get_system_io_vol_trim(self.plugin)
+            
+        y = 10
+        x_start = 10
+        x = x_start
+        num_per_row = 3
+        x_padding = 110
+        y_padding = 45
+
+        self.fss = []
+        for i in range(len(sources)):
+            print sources[i][0]
+            if i > 0 and i % num_per_row == 0:
+                x = x_start
+                y += y_padding
+            wx.StaticText(panel, label=sources[i][0], pos=(x, y))
+            fs = FS.FloatSpin(panel, -1, min_val=-6.0, max_val=6.0, increment=0.5, pos=(x, y+15), value=float(sources[i][1]/10), agwStyle=FS.FS_LEFT)
+            fs.SetFormat("%f")
+            fs.SetDigits(1)
+            self.fss.append(fs)
+            x += x_padding
+            
+        while panel.Affirmed():
+            res = []
+            for i in range(len(self.fss)):
+                res.append([sources[i][0], int(self.fss[i].GetValue()*10)])
+            panel.SetResult(res)
 class ToggleMute(eg.ActionBase):
     def __call__(self):
         toggle_mute(self.plugin)

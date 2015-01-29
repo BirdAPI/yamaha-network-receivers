@@ -239,6 +239,18 @@ def get_system_config(self):
     xmldoc = minidom.parseString(xml)
     return xmldoc
     
+def get_system_io_vol_trim(self):
+    sources = []
+    xml = get_xml(self, '<System><Input_Output><Volume_Trim>GetParam</Volume_Trim></Input_Output></System>')
+    xmldoc = minidom.parseString(xml)
+    for item in xmldoc.getElementsByTagName('Val'):
+        sources.append([item.parentNode.tagName, item.firstChild.data])
+    return sources
+    
+def set_system_io_vol_trim(self, sources):
+    for source in sources:
+        put_xml(self, '<System><Input_Output><Volume_Trim><{0}><Val>{1}</Val><Exp>1</Exp><Unit>dB</Unit></{0}></Volume_Trim></Input_Output></System>'.format(source[0], source[1]))
+    
 def get_main_zone_inputs(self):
     xml = get_xml(self, '<Main_Zone><Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input></Main_Zone>')
     xmldoc = minidom.parseString(xml)
