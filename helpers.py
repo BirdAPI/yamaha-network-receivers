@@ -9,25 +9,25 @@ from collections import *
 import globals
 import yamaha
 
-def setup_ip():
+def setup_ip(self):
     """
     If auto detect ip is enabled, this function will attempt to configure the ip
     address, otherwise if static ip is enabled, this function will
     verify whether a yamaha receiver can be found at the given static ip.
     """
-    if globals.ip_auto_detect:
-        print "Searching for Yamaha Recievers ({0})...".format(globals.auto_detect_model)
-        ip = auto_detect_ip_threaded()
+    if self.ip_auto_detect:
+        print "Searching for Yamaha Recievers ({0})...".format(self.auto_detect_model)
+        ip = auto_detect_ip_threaded(self)
         if ip is not None:
-            globals.ip_address = ip
+            self.ip_address = ip
             return ip
     else:
         try:
-            model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=globals.ip_address, print_error=False)
-            print "Found Yamaha Receiver: {0} [{1}]".format(globals.ip_address, model)
-            return globals.ip_address
+            model = yamaha.get_config_string(self, 'Model_Name', timeout=self.auto_detect_timeout, ip=self.ip_address, print_error=False)
+            print "Found Yamaha Receiver: {0} [{1}]".format(self.ip_address, model)
+            return self.ip_address
         except:
-            eg.PrintError("Yamaha Receiver Not Found [{0}]!".format(globals.ip_address))
+            eg.PrintError("Yamaha Receiver Not Found [{0}]!".format(self.ip_address))
     return None
 
 def get_lan_ip():
@@ -53,7 +53,7 @@ def get_network_prefix():
     lan_ip = get_lan_ip()
     return lan_ip[:lan_ip.rfind('.')]
 
-def auto_detect_ip_threaded():
+def auto_detect_ip_threaded(self):
     """
     Blasts the network with requests, attempting to find any and all yamaha receivers
     on the local network. First it detects the user's local ip address, eg 192.168.1.100.
@@ -62,7 +62,7 @@ def auto_detect_ip_threaded():
     a separate thread in order to avoid waiting for the timeout for every 254 requests
     one by one.
     """
-    globals.FOUND_IP = None
+    self.FOUND_IP = None
     threads = []
 
     # Get network prefix (eg 192.168.1)
@@ -70,32 +70,34 @@ def auto_detect_ip_threaded():
     ip_range = create_ip_range(net_prefix + '.1', net_prefix + '.254')
 
     for ip in ip_range:
-        t = Thread(target=try_connect, kwargs={'ip':ip})
+        t = Thread(target=try_connect, kwargs={'self':self, 'ip':ip})
         t.daemon = True
         threads.append(t)
         t.start()
     for t in threads:
-        if globals.FOUND_IP is not None:
+        if self.FOUND_IP is not None:
             break
         else:
             t.join()
-    if globals.FOUND_IP is not None:
-        print "Found Yamaha Receiver IP: {0} [{1}]".format(globals.FOUND_IP, globals.MODEL)
+    if self.FOUND_IP is not None:
+        print "Found Yamaha Receiver IP: {0} [{1}]".format(self.FOUND_IP, self.MODEL)
     else:
         eg.PrintError("Yamaha Receiver Was Not Found!")
-    return globals.FOUND_IP
+    return self.FOUND_IP
 
-def try_connect(ip):
+def try_connect(self, ip):
     """
     Used with the auto-detect-ip functions, determines if a yamaha receiver is
     waiting at the other end of the given ip address.
     """
+    #print "value in self.active_zone " + str(self.active_zone)
+    #print "try connect " + ip
     try:
-        model = yamaha.get_config_string('Model_Name', timeout=globals.auto_detect_timeout, ip=ip, print_error=False)
+        model = yamaha.get_config_string(self,'Model_Name', timeout=self.auto_detect_timeout, ip=ip, print_error=False)
         print '{0}: {1}'.format(ip, model)
-        if globals.auto_detect_model in ["ANY", "", None] or model.upper() == globals.auto_detect_model.upper():
-            globals.FOUND_IP = ip
-            globals.MODEL = model
+        if self.auto_detect_model in ["ANY", "", None] or model.upper() == self.auto_detect_model.upper():
+            self.FOUND_IP = ip
+            self.MODEL = model
     except:
         pass
 
@@ -113,7 +115,7 @@ def create_ip_range(range_start, range_end):
         ip_range.append(ip)
     return ip_range
 
-def convert_zone_to_int(zone, convert_active=False):
+def convert_zone_to_int(self, zone, convert_active=False):
     """
     Convert a zone name into the integer value that it represents:
     Examples:
@@ -127,7 +129,7 @@ def convert_zone_to_int(zone, convert_active=False):
     elif 'active' in zone.lower():
         # -1 means active zone
         if convert_active:
-            return globals.active_zone
+            return self.active_zone
         else:
             return -1
     else:
@@ -189,12 +191,12 @@ def close_xml_tags(xml):
 
     return ''.join(output)
 
-def setup_availability():
+def setup_availability(self):
     """
     Query the receiver to see which zones and inputs it supports.
     Should be called after a successful ip check.
     """
-    xmldoc = yamaha.get_system_config()
+    xmldoc = yamaha.get_system_config(self)
 
     zones = []
     inputs = []
@@ -213,8 +215,8 @@ def setup_availability():
                 stop=True
             x = x + 1
 
-    globals.AVAILABLE_FEATURE_SOURCES = list(inputs)
-    globals.AVAILABLE_INFO_SOURCES = list(inputs)
+    self.AVAILABLE_FEATURE_SOURCES = list(inputs)
+    self.AVAILABLE_INFO_SOURCES = list(inputs)
        
     #models from RX-V use this
     x = 0
@@ -222,7 +224,7 @@ def setup_availability():
         stop = False
         while stop==False:
             try:
-                globals.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.data))
+                self.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.data))
                 inputs.append(str(node.childNodes[x].firstChild.data))
             except:
                 stop=True
@@ -230,36 +232,36 @@ def setup_availability():
 
     #models from N-Line use this
     if x == 0: #this means the other lookup resulted in nothing
-        MainInputxmldoc = yamaha.get_main_zone_inputs()
+        MainInputxmldoc = yamaha.get_main_zone_inputs(self)
         x = 0
         for node in MainInputxmldoc.getElementsByTagName("Input_Sel_Item"):
             stop = False
             while stop==False:
                 try:
-                    globals.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.firstChild.data))
+                    self.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.firstChild.data))
                     inputs.append(str(node.childNodes[x].firstChild.firstChild.data))
                 except:
                     stop=True
                 x = x + 1
             
-    globals.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
-    globals.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]
-    globals.AVAILABLE_SOURCES = list(set(globals.AVAILABLE_SOURCES))
+    self.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
+    self.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]
+    self.AVAILABLE_SOURCES = list(set(self.AVAILABLE_SOURCES))
 
-def get_available_zones(include_active, fallback_zones, limit=None):
+def get_available_zones(self, include_active, fallback_zones, limit=None):
     """
     Returns the zones that are marked as available based on availability, and
     optionally includes an active zone. If zone availability info is not present,
     this will return fallback_zones. Optionally a limit can be imposed to only show
     a certain amount of zones if the code does not support the extra zones yet.
     """
-    if len(globals.AVAILABLE_ZONES) > 0:
-        if limit is not None and limit < len(globals.AVAILABLE_ZONES):
+    if len(self.AVAILABLE_ZONES) > 0:
+        if limit is not None and limit < len(self.AVAILABLE_ZONES):
             # For example, limit to only 2 zones
-            zones = [ globals.AVAILABLE_ZONES[i] for i in range(limit) ]
+            zones = [ self.AVAILABLE_ZONES[i] for i in range(limit) ]
         else:
             # Must use list() to create a copy
-            zones = list(globals.AVAILABLE_ZONES)
+            zones = list(self.AVAILABLE_ZONES)
         if include_active:
             return ['Active Zone'] + zones
         else:

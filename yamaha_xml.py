@@ -6,20 +6,20 @@ import httplib
 import globals
 from helpers import *
 
-def do_xml(xml, **kwargs):
+def do_xml(self, xml, **kwargs):
     """
     Base function to send/receive xml using either GET or POST
 
     Optional Parameters:
     timeout, ip, port, return_result, print_error, close_xml, print_xml
     """
-    timeout = float(kwargs.get('timeout', globals.default_timeout))
-    ip = kwargs.get('ip', globals.ip_address)
-    port = kwargs.get('port', globals.port)
+    timeout = float(kwargs.get('timeout', self.default_timeout))
+    ip = kwargs.get('ip', self.ip_address)
+    port = kwargs.get('port', self.port)
     return_result = kwargs.get('return_result', False)
     print_error = kwargs.get('print_error', True)
     close_xml = kwargs.get('close_xml', False)
-    print_xml = kwargs.get('print_xml', False)
+    print_xml = kwargs.get('print_xml', True)
 
     if close_xml:
         xml = close_xml_tags(xml)
@@ -54,92 +54,92 @@ def do_xml(xml, **kwargs):
         else:
             raise
 
-def send_xml(xml, **kwargs):
+def send_xml(self, xml, **kwargs):
     """
     Communicate with the receiver, but do not wait or return the results
     """
     if not 'return_result' in kwargs:
         kwargs['return_result'] = False
-    do_xml(xml, **kwargs)
+    do_xml(self, xml, **kwargs)
 
-def put_xml(xml, **kwargs):
-    send_xml('<YAMAHA_AV cmd="PUT">{0}</YAMAHA_AV>'.format(xml), **kwargs)
+def put_xml(self, xml, **kwargs):
+    send_xml(self, '<YAMAHA_AV cmd="PUT">{0}</YAMAHA_AV>'.format(xml), **kwargs)
 
-def zone_put_xml(zone, xml, **kwargs):
+def zone_put_xml(self, zone, xml, **kwargs):
     if zone == -1:
-        zone = globals.active_zone
+        zone = self.active_zone
     if zone < 2:
-        put_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), **kwargs)
+        put_xml(self, '<Main_Zone>{0}</Main_Zone>'.format(xml), **kwargs)
     elif zone < -1:
-        put_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), **kwargs)
+        put_xml(self, '<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), **kwargs)
     else:
-        put_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), **kwargs)
+        put_xml(self, '<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), **kwargs)
 
-def receive_xml(xml, **kwargs):
+def receive_xml(self, xml, **kwargs):
     kwargs['return_result'] = True
-    return do_xml(xml, **kwargs)
+    return do_xml(self, xml, **kwargs)
 
-def get_xml(xml, **kwargs):
-    return receive_xml('<YAMAHA_AV cmd="GET">{0}</YAMAHA_AV>'.format(xml), **kwargs)
+def get_xml(self, xml, **kwargs):
+    return receive_xml(self, '<YAMAHA_AV cmd="GET">{0}</YAMAHA_AV>'.format(xml), **kwargs)
 
-def zone_get_xml(zone, xml, **kwargs):
+def zone_get_xml(self, zone, xml, **kwargs):
     if zone == -1:
-        zone = globals.active_zone
+        zone = self.active_zone
     if zone < 2:
-        return get_xml('<Main_Zone>{0}</Main_Zone>'.format(xml), **kwargs)
+        return get_xml(self, '<Main_Zone>{0}</Main_Zone>'.format(xml), **kwargs)
     elif zone < -1:
-        return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), **kwargs)
+        return get_xml(self, '<Zone_{1}>{0}</Zone_{1}>'.format(xml, chr(-1 * zone)), **kwargs)
     else:
-        return get_xml('<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), **kwargs)
+        return get_xml(self, '<Zone_{1}>{0}</Zone_{1}>'.format(xml, zone), **kwargs)
 
-def get_sound_video(zone=-1, **kwargs):
-    return zone_get_xml(zone, '<Sound_Video>GetParam</Sound_Video>', **kwargs)
+def get_sound_video(self, zone=-1, **kwargs):
+    return zone_get_xml(self, zone, '<Sound_Video>GetParam</Sound_Video>', **kwargs)
         
-def get_basic_status(zone=-1, **kwargs):
-    return zone_get_xml(zone, '<Basic_Status>GetParam</Basic_Status>', **kwargs)
+def get_basic_status(self, zone=-1, **kwargs):
+    return zone_get_xml(self, zone, '<Basic_Status>GetParam</Basic_Status>', **kwargs)
 
-def get_tuner_status(**kwargs):
-    return get_xml('<Tuner><Play_Info>GetParam</Play_Info></Tuner>', **kwargs)
+def get_tuner_status(self, **kwargs):
+    return get_xml(self, '<Tuner><Play_Info>GetParam</Play_Info></Tuner>', **kwargs)
 
-def get_device_status(input, section, **kwargs):
-    return get_xml('<{0}><{1}>GetParam</{1}></{0}>'.format(input, section), **kwargs)
+def get_device_status(self, input, section, **kwargs):
+    return get_xml(self, '<{0}><{1}>GetParam</{1}></{0}>'.format(input, section), **kwargs)
 
-def get_tuner_presets(**kwargs):
-    return get_xml('<Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner>', **kwargs)
-    
-def get_config(**kwargs):
-    return get_xml('<System><Config>GetParam</Config></System>', **kwargs)
+def get_tuner_presets(self, **kwargs):
+    return get_xml(self, '<Tuner><Play_Control><Preset><Data>GetParam</Data></Preset></Play_Control></Tuner>', **kwargs)
 
-def get_sound_video_string(param, zone=-1, elem=None, **kwargs):
+def get_config(self, **kwargs):
+    return get_xml(self, '<System><Config>GetParam</Config></System>', **kwargs)
+
+def get_sound_video_string(self, param, zone=-1, elem=None, **kwargs):
     if elem == "Treble":
-        xml = zone_get_xml(zone, '<Sound_Video><Tone><Treble>GetParam</Treble></Tone></Sound_Video>', **kwargs)
+        xml = zone_get_xml(self, zone, '<Sound_Video><Tone><Treble>GetParam</Treble></Tone></Sound_Video>', **kwargs)
     elif elem == "Bass":
-        xml = zone_get_xml(zone, '<Sound_Video><Tone><Bass>GetParam</Bass></Tone></Sound_Video>', **kwargs)
+        xml = zone_get_xml(self, zone, '<Sound_Video><Tone><Bass>GetParam</Bass></Tone></Sound_Video>', **kwargs)
     else:
-        xml = get_sound_video(zone, **kwargs)
+        xml = get_sound_video(self, zone, **kwargs)
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
     
-def get_volume_string(param, zone=-1, elem=None, **kwargs):
-    xml = zone_get_xml(zone, '<Volume><{0}>GetParam</{0}></Volume>'.format(elem), **kwargs)
+def get_volume_string(self, param, zone=-1, elem=None, **kwargs):
+    xml = zone_get_xml(self, zone, '<Volume><{0}>GetParam</{0}></Volume>'.format(elem), **kwargs)
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
     
-def get_status_string(param, zone=-1, **kwargs):
-    xml = get_basic_status(zone, **kwargs)
+def get_status_string(self, param, zone=-1, **kwargs):
+    xml = get_basic_status(self, zone, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
 
-def get_status_strings(params, zone=-1, **kwargs):
+def get_status_strings(self, params, zone=-1, **kwargs):
     """
     Return multiple values as to to not query the receiver over the network more than once
     """
-    xml = get_basic_status(zone, **kwargs)
+    xml = get_basic_status(self, zone, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
@@ -148,42 +148,45 @@ def get_status_strings(params, zone=-1, **kwargs):
         values.append(xmldoc.getElementsByTagName(param)[0].firstChild.data)
     return tuple(values)
 
-def get_status_param_is_on(param, zone=-1, **kwargs):
-    return get_status_string(param, zone, **kwargs) == "On"
+def get_status_param_is_on(self, param, zone=-1, **kwargs):
+    return get_status_string(self, param, zone, **kwargs) == "On"
 
-def get_status_int(param, zone=-1, **kwargs):
-    return int(get_status_string(param, zone, **kwargs))
+def get_status_int(self, param, zone=-1, **kwargs):
+    return int(get_status_string(self, param, zone, **kwargs))
 
-def get_config_string(param, **kwargs):
-    xml = get_config(**kwargs)
+def get_config_string(self, param, **kwargs):
+    #print "in get config string"
+    #print self.FOUND_IP
+    #print "value in self.active_zone " + str(self.active_zone)
+    xml = get_config(self, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
-
+"""
 def get_config_param_is_on(param, **kwargs):
     return get_config_string(param, **kwargs) == "On"
 
 def get_config_int(param, **kwargs):
     return int(get_config_string(param, **kwargs))
-
-def get_tuner_string(param, **kwargs):
-    xml = get_tuner_status(**kwargs)
+"""
+def get_tuner_string(self, param, **kwargs):
+    xml = get_tuner_status(self, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
     value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
-
+"""
 def get_tuner_param_is_on(param, **kwargs):
     return get_tuner_string(param, **kwargs) == "On"
 
 def get_tuner_int(param, **kwargs):
     return int(get_tuner_string(param, **kwargs))
-    
-def get_device_string(param, input, section, **kwargs):
-    xml = get_device_status(input, section, **kwargs)
+"""    
+def get_device_string(self, param, input, section, **kwargs):
+    xml = get_device_status(self, input, section, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
@@ -193,11 +196,11 @@ def get_device_string(param, input, section, **kwargs):
         value = xmldoc.getElementsByTagName(param)[0].firstChild.data
     return value
 
-def get_device_strings(params, input, section, **kwargs):
+def get_device_strings(self, params, input, section, **kwargs):
     """
     Return multiple values as to to not query the receiver over the network more than once
     """
-    xml = get_device_status(input, section, **kwargs)
+    xml = get_device_status(self, input, section, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
@@ -209,12 +212,12 @@ def get_device_strings(params, input, section, **kwargs):
             values.append(xmldoc.getElementsByTagName(param)[0].firstChild.data)
     return tuple(values)
 
-def get_system_pattern_1(param=None, **kwargs):
+def get_system_pattern_1(self, param=None, **kwargs):
     types = ['Front', 'Center', 'Sur', 'Sur_Back', 'Subwoofer']
     speakers = []
     levels = []
     for type in types:
-        xml = get_xml('<System><Speaker_Preout><Pattern_1><Config><{0}>GetParam</{0}></Config></Pattern_1></Speaker_Preout></System>'.format(type), **kwargs)
+        xml = get_xml(self, '<System><Speaker_Preout><Pattern_1><Config><{0}>GetParam</{0}></Config></Pattern_1></Speaker_Preout></System>'.format(type), **kwargs)
         xmldoc = minidom.parseString(xml)
         value = xmldoc.getElementsByTagName("Type")[0].firstChild.data
         if value != "None":
@@ -241,7 +244,7 @@ def get_system_pattern_1(param=None, **kwargs):
     #This is then also done only if levels are requested
     else:
         for speaker in speakers:
-            xml = get_xml('<System><Speaker_Preout><Pattern_1><Lvl>GetParam</Lvl></Pattern_1></Speaker_Preout></System>', **kwargs)
+            xml = get_xml(self, '<System><Speaker_Preout><Pattern_1><Lvl>GetParam</Lvl></Pattern_1></Speaker_Preout></System>', **kwargs)
             xmldoc = minidom.parseString(xml)
             levels.append([speaker, float(xmldoc.getElementsByTagName(speaker)[0].firstChild.firstChild.data) /10])
         return levels

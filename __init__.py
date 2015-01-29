@@ -10,7 +10,7 @@ from yamaha import *
 eg.RegisterPlugin(
     name = "Yamaha RX-V Network Receiver",
     author = "Anthony Casagrande (BirdAPI), Jason Kloepping (Dragon470)",
-    version = "1.0",
+    version = "1.1",
     kind = "external",
     # We don't auto load macros because they are not configured yet.
     createMacrosOnAdd = False,
@@ -18,13 +18,6 @@ eg.RegisterPlugin(
     url = "http://www.eventghost.net/forum/viewtopic.php?f=9&t=3382",
     description = "Control Yamaha RX-V network receivers."
 )
-
-class ActionPrototype(eg.ActionClass):
-    def __call__(self):
-        try:
-            self.plugin.client.send_action(self.value, globals.ACTION_BUTTON)
-        except:
-            raise self.Exceptions.ProgramNotRunning
 
 class YamahaRX(eg.PluginClass):
     def __init__(self):
@@ -53,7 +46,15 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(NumCharAction, clsName="NumChar Action", description="Generic NumChar action: 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, +10, ENT")
         self.AddAction(OperationAction, clsName="Operation Action", description="Generic Operation action: Play, Stop, Pause, Search-, Search+, Skip-, Skip+, FM, AM")
         self.AddAction(SetActiveZone, clsName="Set Active Zone", description="Sets which zone is currently active. This affects any action that is based on 'Active Zone'.")
-        self.AddActionsFromList(globals.ACTIONS, ActionPrototype)
+        self.AddAction(ToggleMute, clsName="Toggle Mute", description="Toggles mute state")
+        self.AddAction(ToggleEnhancer, clsName="Toggle Enhancer", description="Toggles the enhancer on and off")
+        self.AddAction(NextRadioPreset, clsName="Next Radio Preset", description="Goes to next radio preset, or if radio is not on, it turns it on. Also wraps when you go past the last preset.")
+        self.AddAction(PreviousRadioPreset, clsName="Previous Radio Preset", description="Goes to previous radio preset, or if radio is not on, it turns it on. Also wraps to the end when you go past the first preset.")
+        self.AddAction(ToggleRadioAMFM, clsName="Toggle Radio AM / FM", description="Toggles radio between AM and FM")
+        self.AddAction(RadioAutoFreqUp, clsName="Radio Auto Freq Up", description="Auto increases the radio frequency")
+        self.AddAction(RadioAutoFreqDown, clsName="Radio Auto Freq Down", description="Auto decreases the radio frequency")
+        self.AddAction(RadioFreqUp, clsName="Radio Freq Up", description="Increases the radio frequency")
+        self.AddAction(RadioFreqDown, clsName="Radio Freq Down", description="Decreases the radio frequency")
         self.AddAction(SetDisplayDimmer, clsName="Set Display Brightness", description="Sets the front display brightness level.")
         self.AddAction(SetWallPaper, clsName="Set Wall Paper", description="Sets the background image for use when no video source is in use as a background.")
         self.AddAction(GetInfo, clsName="Get Info", description="Gets various info from the receiver.")
@@ -89,23 +90,46 @@ class YamahaRX(eg.PluginClass):
         self.AddAction(NumCharAction, hidden=True)
         self.AddAction(OperationAction, hidden=True)
         self.AddAction(SetActiveZone, hidden=True)
+        self.AddAction(ToggleMute, hidden=True)
+        self.AddAction(ToggleEnhancer, hidden=True)
+        self.AddAction(NextRadioPreset, hidden=True)
+        self.AddAction(PreviousRadioPreset, hidden=True)
+        self.AddAction(ToggleRadioAMFM, hidden=True)
+        self.AddAction(RadioAutoFreqUp, hidden=True)
+        self.AddAction(RadioAutoFreqDown, hidden=True)
+        self.AddAction(RadioFreqUp, hidden=True)
+        self.AddAction(RadioFreqDown, hidden=True)
         self.AddAction(GetInfo, hidden=True)
         self.AddAction(SetDisplayDimmer, hidden=True)
         self.AddAction(GetAvailability, hidden=True)
         self.AddAction(SendAnyCommand, hidden=True)
         self.grp1.AddAction(AutoDetectIP, hidden=True)
         self.grp1.AddAction(VerifyStaticIP, hidden=True)
-        self.client = YamahaRXClient()
         
     def __start__(self, ip_address="", port=80, ip_auto_detect=True, auto_detect_model="ANY", auto_detect_timeout=1.0, default_timeout=3.0):
-        globals.ip_address = ip_address
-        globals.port = port
-        globals.ip_auto_detect = ip_auto_detect
-        globals.auto_detect_model = auto_detect_model
-        globals.auto_detect_timeout = auto_detect_timeout
-        ip = setup_ip()
+        self.ip_address = ip_address
+        self.port = port
+        self.ip_auto_detect = ip_auto_detect
+        self.auto_detect_model = auto_detect_model
+        self.auto_detect_timeout = auto_detect_timeout
+        self.default_timeout = default_timeout
+        self.FOUND_IP = None
+        self.MODEL = None
+        self.active_zone = 0
+        self.smart_vol_up_start = None
+        self.smart_vol_down_start = None
+        ip = setup_ip(self)
+        
+        #populated by the Setup Availability function
+        # Available zones/sources. These are to be generated based on availability
+        self.AVAILABLE_ZONES = []
+        self.AVAILABLE_SOURCES = []
+        self.AVAILABLE_INFO_SOURCES = []
+        self.AVAILABLE_FEATURE_SOURCES = []
+        self.AVAILABLE_INPUT_SOURCES = []
+        
         if ip is not None:
-            setup_availability()
+            setup_availability(self)
 
     def autoDetectChanged(self, event):
         if self.cb.GetValue():

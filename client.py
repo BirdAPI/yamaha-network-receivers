@@ -12,26 +12,26 @@ from helpers import *
 
 class SmartVolumeFinished(eg.ActionBase):
     def __call__(self):
-        globals.smart_vol_up_start = None
-        globals.smart_vol_down_start = None
+        self.plugin.smart_vol_up_start = None
+        self.plugin.smart_vol_down_start = None
 
 class SmartVolumeUp(eg.ActionBase):
     def __call__(self, zone, step1, step2, wait):
-        izone = convert_zone_to_int(zone)
-        if globals.smart_vol_up_start is None:
-            globals.smart_vol_up_start = datetime.now()
-        diff = datetime.now() - globals.smart_vol_up_start
+        izone = convert_zone_to_int(self.plugin, zone)
+        if self.plugin.smart_vol_up_start is None:
+            self.plugin.smart_vol_up_start = datetime.now()
+        diff = datetime.now() - self.plugin.smart_vol_up_start
         if diff.seconds < float(wait):
             #print "Volume Up:", step1
-            increase_volume(izone, step1)
+            increase_volume(self.plugin, izone, step1)
         else:
             #print "Volume Up:", step2
-            increase_volume(izone, step2)
+            increase_volume(self.plugin, izone, step2)
 
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -64,19 +64,19 @@ class SmartVolumeUp(eg.ActionBase):
 
 class SmartVolumeDown(eg.ActionBase):
     def __call__(self, zone, step1, step2, wait):
-        izone = convert_zone_to_int(zone)
-        if globals.smart_vol_down_start is None:
-            globals.smart_vol_down_start = datetime.now()
-        diff = datetime.now() - globals.smart_vol_down_start
+        izone = convert_zone_to_int(self.plugin, zone)
+        if self.plugin.smart_vol_down_start is None:
+            self.plugin.smart_vol_down_start = datetime.now()
+        diff = datetime.now() - self.plugin.smart_vol_down_start
         if diff.seconds < float(wait):
-            decrease_volume(izone, step1)
+            decrease_volume(self.plugin, izone, step1)
         else:
-            decrease_volume(izone, step2)
+            decrease_volume(self.plugin, izone, step2)
 
     def Configure(self, zone='Active Zone', step1=0.5, step2=2.0, wait=2.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -108,12 +108,12 @@ class SmartVolumeDown(eg.ActionBase):
 
 class IncreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
-        increase_volume(convert_zone_to_int(zone), float(step))
+        increase_volume(self.plugin, convert_zone_to_int(self.plugin, zone), float(step))
 
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -129,12 +129,12 @@ class IncreaseVolume(eg.ActionBase):
 
 class DecreaseVolume(eg.ActionBase):
     def __call__(self, zone, step):
-        decrease_volume(convert_zone_to_int(zone), float(step))
+        decrease_volume(self.plugin, convert_zone_to_int(self.plugin, zone), float(step))
 
     def Configure(self, zone='Active Zone', step=0.5):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -150,12 +150,12 @@ class DecreaseVolume(eg.ActionBase):
 
 class SetVolume(eg.ActionBase):
     def __call__(self, zone, vol):
-        set_volume(convert_zone_to_int(zone), float(vol))
+        set_volume(self.plugin, convert_zone_to_int(self.plugin, zone), float(vol))
 
     def Configure(self, zone='Active Zone', vol=-50.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -171,12 +171,12 @@ class SetVolume(eg.ActionBase):
             
 class SetMaxVolume(eg.ActionBase):
     def __call__(self, zone, vol):
-        set_max_volume(convert_zone_to_int(zone), float(vol))
+        set_max_volume(self.plugin, convert_zone_to_int(self.plugin, zone), float(vol))
 
     def Configure(self, zone='Active Zone', vol=16.5):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -192,12 +192,12 @@ class SetMaxVolume(eg.ActionBase):
             
 class SetInitVolume(eg.ActionBase):
     def __call__(self, zone, vol, mode):
-        set_init_volume(convert_zone_to_int(zone), float(vol), mode)
+        set_init_volume(self.plugin, convert_zone_to_int(self.plugin, zone), float(vol), mode)
 
     def Configure(self, zone='Active Zone', vol=-50.0, mode="Off"):
         panel = eg.ConfigPanel()
         modes = ["Off", "On"]
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -215,12 +215,12 @@ class SetInitVolume(eg.ActionBase):
 
 class SetBass(eg.ActionBase):
     def __call__(self, zone, val):
-        set_bass(convert_zone_to_int(zone), float(val))
+        set_bass(self.plugin, convert_zone_to_int(self.plugin, zone), float(val))
 
     def Configure(self, zone='Active Zone', val=0.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -236,12 +236,12 @@ class SetBass(eg.ActionBase):
             
 class SetTreble(eg.ActionBase):
     def __call__(self, zone, val):
-        set_treble(convert_zone_to_int(zone), float(val))
+        set_treble(self.plugin, convert_zone_to_int(self.plugin, zone), float(val))
 
     def Configure(self, zone='Active Zone', val=0.0):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -257,12 +257,12 @@ class SetTreble(eg.ActionBase):
             
 class SetPattern1(eg.ActionBase):
     def __call__(self, levels):
-        set_pattern1(levels)
+        set_pattern1(self.plugin, levels)
 
     def Configure(self, levels=None):
         panel = eg.ConfigPanel()
         if levels == None:
-            levels = get_system_pattern_1() #gets levels from receiver
+            levels = get_system_pattern_1(self.plugin) #gets levels from receiver
         adjpos = (10, 10)
         floatspin = []
         for speaker in levels:
@@ -280,11 +280,11 @@ class SetPattern1(eg.ActionBase):
             
 class SetActiveZone(eg.ActionBase):
     def __call__(self, zone):
-        set_active_zone(convert_zone_to_int(zone))
+        set_active_zone(self.plugin, convert_zone_to_int(self.plugin, zone))
 
     def Configure(self, zone='Main Zone'):
         panel = eg.ConfigPanel()
-        zones = get_available_zones(False, globals.AVAILABLE_ZONES) # Don't include active zone!
+        zones = get_available_zones(self.plugin, False, self.plugin.AVAILABLE_ZONES) # Don't include active zone!
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -294,7 +294,7 @@ class SetActiveZone(eg.ActionBase):
 
 class SetScene(eg.ActionBase):
     def __call__(self, scene):
-        set_scene(int(scene))
+        set_scene(self.plugin, int(scene))
 
     def Configure(self, scene=1):
         panel = eg.ConfigPanel()
@@ -308,20 +308,20 @@ class SetScene(eg.ActionBase):
 
 class SetSourceInput(eg.ActionBase):
     def __call__(self, zone, source):
-        izone = convert_zone_to_int(zone)
+        izone = convert_zone_to_int(self.plugin, zone)
         if source =="Tuner":        #special case.  I don't know why
             source = "TUNER"
-        change_source(source, izone)
+        change_source(self.plugin, source, izone)
 
     def Configure(self, zone="Active Zone", source="HDMI1"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
             choice_zone.SetStringSelection(zone)
-        inputs = globals.AVAILABLE_SOURCES
+        inputs = self.plugin.AVAILABLE_SOURCES
         wx.StaticText(panel, label="Source Input: ", pos=(10, 60))
         choice_input = wx.Choice(panel, -1, (10, 80), choices=inputs)
         if source in inputs:
@@ -331,18 +331,18 @@ class SetSourceInput(eg.ActionBase):
 
 class SetPowerStatus(eg.ActionBase):
     def __call__(self, zone, status):
-        izone = convert_zone_to_int(zone)
+        izone = convert_zone_to_int(self.plugin, zone)
         if status == 'Toggle On/Standby':
-            toggle_on_standby(izone)
+            toggle_on_standby(self.plugin, izone)
         elif status == 'On':
-            power_on(izone)
+            power_on(self.plugin, izone)
         elif status == 'Standby':
-            power_standby(izone)
+            power_standby(self.plugin, izone)
 
     def Configure(self, zone="Active Zone", status="Toggle On/Standby"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -358,13 +358,13 @@ class SetPowerStatus(eg.ActionBase):
 
 class SetSleepStatus(eg.ActionBase):
     def __call__(self, zone, status):
-        izone = convert_zone_to_int(zone)
-        set_sleep(status, izone)
+        izone = convert_zone_to_int(self.plugin, zone)
+        set_sleep(self.plugin, status, izone)
 
     def Configure(self, zone="Active Zone", status="Off"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (10, 30), choices=zones)
         if zone in zones:
@@ -381,11 +381,11 @@ class SetSleepStatus(eg.ActionBase):
 class SetSurroundMode(eg.ActionBase):
     def __call__(self, mode):
         if mode == 'Toggle Straight/Surround Decode':
-            toggle_straight_decode()
+            toggle_straight_decode(self.plugin)
         elif mode == 'Straight':
-            straight()
+            straight(self.plugin)
         elif mode == 'Surround Decode':
-            surround_decode()
+            surround_decode(self.plugin)
 
     def Configure(self, mode='Toggle Straight/Surround Decode'):
         panel = eg.ConfigPanel()
@@ -401,9 +401,9 @@ class SetSurroundMode(eg.ActionBase):
 class Set7ChannelMode(eg.ActionBase): # McB 1/11/2014 - Turn 7-channel mode on and off
     def __call__(self, mode):
         if mode == 'On':
-            channel7_on()
+            channel7_on(self.plugin)
         elif mode == 'Off':
-            channel7_off()
+            channel7_off(self.plugin)
 
     def Configure(self, mode='On'):
         panel = eg.ConfigPanel()
@@ -419,7 +419,7 @@ class Set7ChannelMode(eg.ActionBase): # McB 1/11/2014 - Turn 7-channel mode on a
 class CursorAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone, convert_active=True)
+        izone = convert_zone_to_int(self.plugin, zone, convert_active=True)
         if izone in [0,1]:
             code = globals.CURSOR_CODES[1][action]
         if izone == 2:
@@ -427,7 +427,7 @@ class CursorAction(eg.ActionBase):
             code = globals.CURSOR_CODES[2].get(action, None)
 
         if code is not None:
-            send_code(code)
+            send_code(self.plugin, code)
         else:
             # It is possible the user's active zone is not yet supported
             eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
@@ -435,7 +435,7 @@ class CursorAction(eg.ActionBase):
     def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
         actions = globals.CURSOR_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -454,14 +454,14 @@ class CursorAction(eg.ActionBase):
 class OperationAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone, convert_active=True)
+        izone = convert_zone_to_int(self.plugin, zone, convert_active=True)
         if izone in [0,1]:
             code = globals.OPERATION_CODES[1][action]
         if izone == 2:
             code = globals.OPERATION_CODES[2][action]
 
         if code is not None:
-            send_code(code)
+            send_code(self.plugin, code)
         else:
             # It is possible the user's active zone is not yet supported
             eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
@@ -469,7 +469,7 @@ class OperationAction(eg.ActionBase):
     def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
         actions = globals.OPERATION_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -488,14 +488,14 @@ class OperationAction(eg.ActionBase):
 class NumCharAction(eg.ActionBase):
     def __call__(self, action, zone):
         code = None
-        izone = convert_zone_to_int(zone, convert_active=True)
+        izone = convert_zone_to_int(self.plugin, zone, convert_active=True)
         if izone in [0,1]:
             code = globals.NUMCHAR_CODES[1][action]
         if izone == 2:
             code = globals.NUMCHAR_CODES[2][action]
 
         if code is not None:
-            send_code(code)
+            send_code(self.plugin, code)
         else:
             # It is possible the user's active zone is not yet supported
             eg.PrintError("Zone {0} is not yet supported for this action".format(izone if izone > -1 else chr(-1 * izone)))
@@ -503,7 +503,7 @@ class NumCharAction(eg.ActionBase):
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
         actions = sorted(globals.NUMCHAR_CODES[1].keys(), key=lambda k: int(k) if len(k) == 1 else 10 + len(k))
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -522,9 +522,9 @@ class NumCharAction(eg.ActionBase):
 class GetInfo(eg.ActionBase):
     def __call__(self, object, cat):
         if object == "Active Speakers":
-            return get_system_pattern_1(object)
+            return get_system_pattern_1(self.plugin, object)
         if object == "PreOut Levels":
-            return get_system_pattern_1(object)
+            return get_system_pattern_1(self.plugin, object)
         zone = None
         #zone specific objects
         if object == "Input Selection":
@@ -536,26 +536,26 @@ class GetInfo(eg.ActionBase):
         if cat == "Main Zone":
             zone = 1
         if cat.startswith("Zone"):
-            zone = convert_zone_to_int(cat)
+            zone = convert_zone_to_int(self.plugin, cat)
         if object == "Volume Level":
-            val, unit = get_status_strings(["Val", "Unit"], zone)
+            val, unit = get_status_strings(self.plugin, ["Val", "Unit"], zone)
             return "{0} {1}".format(float(val) / 10.0, unit)
         if object == "Treble":
-            val = get_sound_video_string("Val", zone, "Treble")
+            val = get_sound_video_string(self.plugin, "Val", zone, "Treble")
             return "{0} ".format(float(val) / 10.0) + "dB"
         if object == "Bass":
-            val = get_sound_video_string("Val", zone, "Bass")
+            val = get_sound_video_string(self.plugin, "Val", zone, "Bass")
             return "{0} ".format(float(val) / 10.0) + "dB"
         if object == "Init Volume Mode":
-            return get_volume_string("Mode", zone, "Init_Lvl")
+            return get_volume_string(self.plugin, "Mode", zone, "Init_Lvl")
         if object == "Init Volume Level":
-            val = get_volume_string("Val", zone, "Init_Lvl")
+            val = get_volume_string(self.plugin, "Val", zone, "Init_Lvl")
             return "{0} ".format(float(val) / 10.0) + "dB"
         if object == "Max Volume Level":
-            val = get_volume_string("Val", zone, "Max_Lvl")
+            val = get_volume_string(self.plugin, "Val", zone, "Max_Lvl")
             return "{0} ".format(float(val) / 10.0) + "dB"
         if zone is not None:
-            return get_status_string(object,zone)
+            return get_status_string(self.plugin, object,zone)
 
         #all the rest are zone agnostic
         #object, input, location to get_device_string
@@ -569,7 +569,7 @@ class GetInfo(eg.ActionBase):
             object = "FM_Mode"
         elif object == "Frequency":
             try:
-                val, unit, band, exp = get_device_strings(["Val", "Unit", "Band", "Exp"], cat, section)
+                val, unit, band, exp = get_device_strings(self.plugin, ["Val", "Unit", "Band", "Exp"], cat, section)
                 if int(exp) == 0:
                     real_val = int(val)
                 else:
@@ -594,7 +594,7 @@ class GetInfo(eg.ActionBase):
             object = "Connect_Info"
 
         try:
-            return get_device_string(object, cat, section)
+            return get_device_string(self.plugin, object, cat, section)
         except:
             eg.PrintError("Input not active or unavailable with your model.")
 
@@ -602,7 +602,7 @@ class GetInfo(eg.ActionBase):
     def Configure(self, object="Power", cat="Main Zone"):
         panel = eg.ConfigPanel()
 
-        self.cats = ["System"] + globals.AVAILABLE_ZONES + globals.AVAILABLE_INFO_SOURCES
+        self.cats = ["System"] + self.plugin.AVAILABLE_ZONES + self.plugin.AVAILABLE_INFO_SOURCES
 
         wx.StaticText(panel, label="Category: ", pos=(10, 10))
         self.choice_cat = wx.Choice(panel, -1, (10, 30), choices=self.cats)
@@ -662,33 +662,34 @@ class GetInfo(eg.ActionBase):
 
 class GetAvailability(eg.ActionBase):
     def __call__(self):
-        setup_availability()
-        print 'Zones:', globals.AVAILABLE_ZONES
-        print 'Inputs:', globals.AVAILABLE_SOURCES
-        return list(globals.AVAILABLE_SOURCES)
+        setup_availability(self.plugin)
+        print 'Zones:', self.plugin.AVAILABLE_ZONES
+        print 'Inputs:', self.plugin.AVAILABLE_SOURCES
+        return list(self.plugin.AVAILABLE_SOURCES)
 
 class AutoDetectIP(eg.ActionBase):
     def __call__(self):
-        ip = auto_detect_ip_threaded()
+        ip = auto_detect_ip_threaded(self.plugin)
         if ip is not None:
-            setup_availability()
+            setup_availability(self.plugin)
         return ip
 
 class VerifyStaticIP(eg.ActionBase):
     def __call__(self):
-        if globals.ip_auto_detect:
+        if self.plugin.ip_auto_detect:
             eg.PrintError('Static IP is not enabled!')
             return False
         else:
-            ip = setup_ip()
+            ip = setup_ip(self.plugin)
             if ip is not None:
-                setup_availability()
+                setup_availability(self.plugin)
             return ip is not None
 
 class NextInput(eg.ActionBase):
     def __call__(self, zone, inputs):
-        izone = convert_zone_to_int(zone, convert_active=True)
-        src = get_source_name(izone)
+        print inputs
+        izone = convert_zone_to_int(self.plugin, zone, convert_active=True)
+        src = get_source_name(self.plugin, izone)
         index = inputs.index(src) if src in inputs else -1
         self._next_input(izone, index, inputs)
 
@@ -704,14 +705,14 @@ class NextInput(eg.ActionBase):
             next_index = 0
             print "Warning: Current source was not in the list of sources. Changing to first source in list."
         print "Switching input to", inputs[next_index]
-        change_source(inputs[next_index], izone)
+        change_source(self.plugin, inputs[next_index], izone)
 
         t = Thread(target=self._verify_input, args=[izone, next_index, inputs])
         t.start()
 
     def _verify_input(self, izone, index, inputs, wait=0.3):
         time.sleep(wait)
-        src = get_source_name(izone)
+        src = get_source_name(self.plugin, izone)
         if src != inputs[index]:
             eg.PrintError("Source input did not change! Your receiver may not have this input.")
             print "Skipping to next input."
@@ -719,8 +720,15 @@ class NextInput(eg.ActionBase):
 
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
+        #reset "TUNER" to "Tuner"
+        newinputs = []
+        for source in inputs:
+            if source == "TUNER":
+                source = "Tuner"
+            newinputs.append(source)
+        inputs = newinputs
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -733,7 +741,7 @@ class NextInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
-        sources = globals.AVAILABLE_SOURCES
+        sources = self.plugin.AVAILABLE_SOURCES
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -751,13 +759,16 @@ class NextInput(eg.ActionBase):
             res = []
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
-                    res.append(sources[i])
+                    if sources[i] == "Tuner":
+                        res.append("TUNER")
+                    else:
+                        res.append(sources[i])
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
 class PreviousInput(eg.ActionBase):
     def __call__(self, zone, inputs):
-        izone = convert_zone_to_int(zone, convert_active=True)
-        src = get_source_name(izone)
+        izone = convert_zone_to_int(self.plugin, zone, convert_active=True)
+        src = get_source_name(self.plugin, izone)
         index = inputs.index(src) if src in inputs else -1
         self._prev_input(izone, index, inputs)
 
@@ -773,14 +784,14 @@ class PreviousInput(eg.ActionBase):
             prev_index = 0
             print "Warning: Current source was not in the list of sources. Changing to first source in list."
         print "Switching input to", inputs[prev_index]
-        change_source(inputs[prev_index], izone)
+        change_source(self.plugin, inputs[prev_index], izone)
 
         t = Thread(target=self._verify_input, args=[izone, prev_index, inputs])
         t.start()
 
     def _verify_input(self, izone, index, inputs, wait=0.3):
         time.sleep(wait)
-        src = get_source_name(izone)
+        src = get_source_name(self.plugin, izone)
         if src != inputs[index]:
             eg.PrintError("Source input did not change! Your receiver may not have this input.")
             print "Skipping to previous input."
@@ -788,8 +799,15 @@ class PreviousInput(eg.ActionBase):
 
     def Configure(self, zone='Active Zone', inputs=['HDMI1']):
         panel = eg.ConfigPanel()
+        #reset "TUNER" to "Tuner"
+        newinputs = []
+        for source in inputs:
+            if source == "TUNER":
+                source = "Tuner"
+            newinputs.append(source)
+        inputs = newinputs
 
-        zones = get_available_zones(True, globals.AVAILABLE_ZONES)
+        zones = get_available_zones(self.plugin, True, self.plugin.AVAILABLE_ZONES)
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
         choice_zone = wx.Choice(panel, -1, (45, 7), choices=zones)
         if zone in zones:
@@ -802,7 +820,7 @@ class PreviousInput(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
-        sources = globals.AVAILABLE_SOURCES
+        sources = self.plugin.AVAILABLE_SOURCES
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -820,41 +838,52 @@ class PreviousInput(eg.ActionBase):
             res = []
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
-                    res.append(sources[i])
+                    if sources[i] == "Tuner":
+                        res.append("TUNER")
+                    else:
+                        res.append(sources[i])
             panel.SetResult(zones[choice_zone.GetCurrentSelection()], res)
 
-class YamahaRXClient:
-    def __init__(self):
-        pass
-
-    def send_action(self, msg = '', type=globals.ACTION_EXECBUILTIN):
-        if msg == 'ToggleMute':
-            toggle_mute()
-        elif msg == 'ToggleEnhancer':
-            toggle_enhancer()
-        elif msg == 'PreviousSource':
-            next_source()
-        elif msg == 'NextSource':
-            previous_source()
-        elif msg == 'NextRadioPreset':
-            next_radio_preset()
-        elif msg == 'PreviousRadioPreset':
-            prev_radio_preset()
-        elif msg == 'ToggleRadioAMFM':
-            toggle_radio_amfm()
-        elif msg == 'RadioAutoFeqUp':
-            auto_radio_freq('Up')
-        elif msg == 'RadioAutoFreqDown':
-            auto_radio_freq('Down')
-        elif msg == 'RadioFeqUp':
-            manual_radio_freq('Up')
-        elif msg == 'RadioFreqDown':
-            manual_radio_freq('Down')
-
+class ToggleMute(eg.ActionBase):
+    def __call__(self):
+        toggle_mute(self.plugin)
+            
+class ToggleEnhancer(eg.ActionBase):
+    def __call__(self):
+        toggle_enhancer(self.plugin)
+        
+class NextRadioPreset(eg.ActionBase):
+    def __call__(self):
+        next_radio_preset(self.plugin)
+    
+class PreviousRadioPreset(eg.ActionBase):
+    def __call__(self):
+        prev_radio_preset(self.plugin)
+    
+class ToggleRadioAMFM(eg.ActionBase):
+    def __call__(self):
+        toggle_radio_amfm(self.plugin)
+            
+class RadioAutoFreqUp(eg.ActionBase):
+    def __call__(self):
+        radio_freq(self.plugin, 'Auto Up')
+    
+class RadioAutoFreqDown(eg.ActionBase):
+    def __call__(self):
+        radio_freq(self.plugin, 'Auto Down')
+    
+class RadioFreqUp(eg.ActionBase):
+    def __call__(self):
+        radio_freq(self.plugin, 'Up')
+        
+class RadioFreqDown(eg.ActionBase):
+    def __call__(self):
+        radio_freq(self.plugin, 'Down')
+        
 class SetFeatureVideoOut(eg.ActionBase):
 
     def __call__(self, Feature, Source):
-        feature_video_out(Feature, Source)
+        feature_video_out(self.plugin, Feature, Source)
         
     def Configure(self, Feature="Tuner", Source="Off"):
         panel = eg.ConfigPanel()
@@ -863,8 +892,8 @@ class SetFeatureVideoOut(eg.ActionBase):
             Feature = "Tuner"
 
         wx.StaticText(panel, label="Feature Input: ", pos=(10, 10))
-        choice_zone = wx.Choice(panel, -1, (95, 7), choices=globals.AVAILABLE_INFO_SOURCES)
-        if Feature in globals.AVAILABLE_INFO_SOURCES:
+        choice_zone = wx.Choice(panel, -1, (95, 7), choices=self.plugin.AVAILABLE_INFO_SOURCES)
+        if Feature in self.plugin.AVAILABLE_INFO_SOURCES:
             choice_zone.SetStringSelection(Feature)
 
         y = 45
@@ -874,7 +903,7 @@ class SetFeatureVideoOut(eg.ActionBase):
         x_padding = 80
         y_padding = 20
 
-        sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
+        sources = ['Off'] + self.plugin.AVAILABLE_INPUT_SOURCES
         self.cbs = []
         for i in range(len(sources)):
             if i > 0 and i % num_per_row == 0:
@@ -893,14 +922,14 @@ class SetFeatureVideoOut(eg.ActionBase):
             for i in range(len(self.cbs)):
                 if self.cbs[i].GetValue():
                     res = sources[i]
-            if globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()] == "Tuner":
+            if self.plugin.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()] == "Tuner":
                 xx = "TUNER"
             else:
-                xx = globals.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()]
+                xx = self.plugin.AVAILABLE_INFO_SOURCES[choice_zone.GetCurrentSelection()]
             panel.SetResult(xx, res)
             
     def SourceChanged(self, event, item):
-        sources = ['Off'] + globals.AVAILABLE_INPUT_SOURCES
+        sources = ['Off'] + self.plugin.AVAILABLE_INPUT_SOURCES
         self.Source = sources[item]
         for i in range(len(sources)):
             if i == item:
@@ -913,7 +942,7 @@ class SetDisplayDimmer(eg.ActionBase):
     def __call__(self, level):
         levels = ['100%','75%','50%','25%','10%']
         lev = levels.index(level)
-        DisplayDimmer(int(lev)*-1)
+        DisplayDimmer(self.plugin, int(lev)*-1)
 
     def Configure(self, level='100%'):
         panel = eg.ConfigPanel()
@@ -929,7 +958,7 @@ class SetDisplayDimmer(eg.ActionBase):
 class SetAudioIn(eg.ActionBase):
 
     def __call__(self, Audio, Source):
-        source_audio_in(Audio, Source)
+        source_audio_in(self.plugin, Audio, Source)
         
     def Configure(self, Audio="HDMI1", Source="HDMI_1"):
         panel = eg.ConfigPanel()
@@ -938,7 +967,7 @@ class SetAudioIn(eg.ActionBase):
         self.VidChoices = []
         PosChoices = ['HDMI1', 'HDMI2', 'HDMI3', 'HDMI4', 'HDMI5', 'HDMI6', 'HDMI7', 'HDMI8', 'HDMI9', 'AV1', 'AV2']
         for x in PosChoices:
-            if x in globals.AVAILABLE_SOURCES:
+            if x in self.plugin.AVAILABLE_SOURCES:
                 self.VidChoices.append(x)
         wx.StaticText(panel, label="Video Input: ", pos=(10, 10))
         self.choice_video = wx.Choice(panel, -1, (95, 7), choices=self.VidChoices)
@@ -949,7 +978,7 @@ class SetAudioIn(eg.ActionBase):
         PosSources = ['AV1', 'AV2', 'AV3', 'AV4', 'AV5', 'AV6', 'AV7', 'AV8', 'AV9', 'AUDIO1', 'AUDIO2']
         self.AudChoices = [self.Source]
         for x in PosSources:
-            if x in globals.AVAILABLE_SOURCES:
+            if x in self.plugin.AVAILABLE_SOURCES:
                 self.AudChoices.append(x)
         wx.StaticText(panel, label="Audio Input: ", pos=(10, 40))
         self.choice_audio = wx.Choice(panel, -1, (95, 37), choices=self.AudChoices)
@@ -969,13 +998,13 @@ class SetAudioIn(eg.ActionBase):
         
 class SetWallPaper(eg.ActionBase):
     def __call__(self, Pic):
-        wallpaper(Pic)
+        wallpaper(self.plugin, Pic)
         
     def Configure(self, Pic="Picture 1"):
         panel = eg.ConfigPanel()
         PicChoices = ['Picture 1', 'Picture 2', 'Picture 3', 'Gray']
         wx.StaticText(panel, label="Background Image: ", pos=(10, 10))
-        choice_pic = wx.Choice(panel, -1, (95, 7), choices=PicChoices)
+        choice_pic = wx.Choice(panel, -1, (10, 30), choices=PicChoices)
         if Pic in PicChoices:
             choice_pic.SetStringSelection(Pic)
         
@@ -985,9 +1014,9 @@ class SetWallPaper(eg.ActionBase):
 class SendAnyCommand(eg.ActionBase):
     def __call__(self, value, action):
         if action == "Put":
-            send_any(value, action)
+            send_any(self.plugin, value, action)
         else:
-            result = send_any(value, action)
+            result = send_any(self.plugin, value, action)
             print result
             return result
         

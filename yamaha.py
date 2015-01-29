@@ -8,9 +8,9 @@ import globals
 from helpers import *
 from yamaha_xml import *
 
-def send_any(value, action):
+def send_any(self, value, action):
     if action == "Put":
-        put_xml(value)
+        put_xml(self, value)
     else:
         #now find param
         #to do this, parse value (originally passed)
@@ -21,192 +21,176 @@ def send_any(value, action):
         values = value.split("<" + param + ">")
         values2 = values[1].split("</" + param + ">")
         value = values[0] + "GetParam" + values2[1]
-        xml = get_xml(value)
+        xml = get_xml(self, value)
         xmldoc = minidom.parseString(xml)
 
         return xmldoc.getElementsByTagName(param)[0].firstChild.data
 
 
-def increase_volume(zone=-1, inc=0.5):
-    change_volume(zone, inc)
+def increase_volume(self, zone=-1, inc=0.5):
+    change_volume(self, zone, inc)
 
-def decrease_volume(zone=-1, dec=0.5):
-    change_volume(zone, -1 * dec)
+def decrease_volume(self, zone=-1, dec=0.5):
+    change_volume(self, zone, -1 * dec)
 
-def change_volume(zone=-1, diff=0.0):
+def change_volume(self, zone=-1, diff=0.0):
     if abs(diff) == 0.5 or int(abs(diff)) in [1, 2, 5]:
         # Faster volume method which uses the built in methods
         param1 = 'Up' if diff > 0 else 'Down'
         param2 = ' {0} dB'.format(int(abs(diff))) if abs(diff) != 0.5 else ''
-        zone_put_xml(zone, '<Volume><Lvl><Val>{0}{1}</Val><Exp></Exp><Unit></Unit></Lvl></Volume>'.format(param1, param2))
+        zone_put_xml(self, zone, '<Volume><Lvl><Val>{0}{1}</Val><Exp></Exp><Unit></Unit></Lvl></Volume>'.format(param1, param2))
         # Sleep for a little amount of time to ensure we do not get "stuck" sending too many calls in short succession
         time.sleep(0.03)
     else:
         # Slower method that relies on get_volume() first
-        set_volume(zone, (get_volume() / 10.0) + diff)
+        set_volume(self, zone, (get_volume(self) / 10.0) + diff)
 
-def get_volume():
-    return get_status_int('Val')
+def get_volume(self):
+    return get_status_int(self, 'Val')
 
-def set_volume(zone=-1, value=-25.0):
-    zone_put_xml(zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
+def set_volume(self, zone=-1, value=-25.0):
+    zone_put_xml(self, zone, '<Volume><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>'.format(int(value * 10.0)))
     
-def set_max_volume(zone=-1, value=16.5):
-    zone_put_xml(zone, '<Volume><Max_Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Max_Lvl></Volume>'.format(int(value * 10.0)))
+def set_max_volume(self, zone=-1, value=16.5):
+    zone_put_xml(self, zone, '<Volume><Max_Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Max_Lvl></Volume>'.format(int(value * 10.0)))
     
-def set_init_volume(zone=-1, value=-50.0, mode="Off"):
-    zone_put_xml(zone, '<Volume><Init_Lvl><Mode>{1}</Mode><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Init_Lvl></Volume>'.format(int(value * 10.0), mode))
+def set_init_volume(self, zone=-1, value=-50.0, mode="Off"):
+    zone_put_xml(self, zone, '<Volume><Init_Lvl><Mode>{1}</Mode><Lvl><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Init_Lvl></Volume>'.format(int(value * 10.0), mode))
     
-def set_pattern1(levels):
+def set_pattern1(self, levels):
     for speaker in levels:
-        put_xml('<System><Speaker_Preout><Pattern_1><Lvl><{0}><Val>{1}</Val><Exp>1</Exp><Unit>dB</Unit></{0}></Lvl></Pattern_1></Speaker_Preout></System>'.format(speaker[0], int(speaker[1]*10)))
+        put_xml(self, '<System><Speaker_Preout><Pattern_1><Lvl><{0}><Val>{1}</Val><Exp>1</Exp><Unit>dB</Unit></{0}></Lvl></Pattern_1></Speaker_Preout></System>'.format(speaker[0], int(speaker[1]*10)))
     
-def set_bass(zone=-1, value=-0.0):
-    zone_put_xml(zone, '<Sound_Video><Tone><Bass><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Bass></Tone></Sound_Video>'.format(int(value * 10.0)))
+def set_bass(self, zone=-1, value=-0.0):
+    zone_put_xml(self, zone, '<Sound_Video><Tone><Bass><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Bass></Tone></Sound_Video>'.format(int(value * 10.0)))
     
-def set_treble(zone=-1, value=-0.0):
-    zone_put_xml(zone, '<Sound_Video><Tone><Treble><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video>'.format(int(value * 10.0)))
+def set_treble(self, zone=-1, value=-0.0):
+    zone_put_xml(self, zone, '<Sound_Video><Tone><Treble><Val>{0}</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video>'.format(int(value * 10.0)))
 
-def mute_on(zone=-1):
-    zone_put_xml(zone, '<Volume><Mute>On</Mute></Volume>')
+def mute_on(self, zone=-1):
+    zone_put_xml(self, zone, '<Volume><Mute>On</Mute></Volume>')
 
-def mute_off(zone=-1):
-    zone_put_xml(zone, '<Volume><Mute>Off</Mute></Volume>')
+def mute_off(self, zone=-1):
+    zone_put_xml(self, zone, '<Volume><Mute>Off</Mute></Volume>')
 
-def get_mute(zone=-1):
-    return get_status_param_is_on('Mute', zone)
+def get_mute(self, zone=-1):
+    return get_status_param_is_on(self, 'Mute', zone)
 
-def power_on(zone=-1):
-    zone_put_xml(zone, '<Power_Control><Power>On</Power></Power_Control>')
+def power_on(self, zone=-1):
+    zone_put_xml(self, zone, '<Power_Control><Power>On</Power></Power_Control>')
 
-def power_off(zone=-1):
-    zone_put_xml(zone, '<Power_Control><Power>Off</Power></Power_Control>')
+def power_off(self, zone=-1):
+    zone_put_xml(sef, zone, '<Power_Control><Power>Off</Power></Power_Control>')
 
-def power_standby(zone=-1):
-    zone_put_xml(zone, '<Power_Control><Power>Standby</Power></Power_Control>')
+def power_standby(self, zone=-1):
+    zone_put_xml(self, zone, '<Power_Control><Power>Standby</Power></Power_Control>')
 
-def toggle_on_standby(zone=-1):
-    zone_put_xml(zone, '<Power_Control><Power>On/Standby</Power></Power_Control>')
+def toggle_on_standby(self, zone=-1):
+    zone_put_xml(self, zone, '<Power_Control><Power>On/Standby</Power></Power_Control>')
 
-def toggle_mute(zone=-1):
-    if get_mute(zone):
-        mute_off(zone)
+def toggle_mute(self, zone=-1):
+    if get_mute(self, zone):
+        mute_off(self, zone)
     else:
-        mute_on(zone)
+        mute_on(self, zone)
 
-def change_source(source, zone=-1):
-    zone_put_xml(zone, '<Input><Input_Sel>{0}</Input_Sel></Input>'.format(source))
+def change_source(self, source, zone=-1):
+    zone_put_xml(self, zone, '<Input><Input_Sel>{0}</Input_Sel></Input>'.format(source))
 
-def feature_video_out(feature, source):
-    put_xml('<System><Input_Output><Assign><Video_Out><{0}>{1}</{0}></Video_Out></Assign></Input_Output></System>'.format(feature, source))
+def feature_video_out(self, feature, source):
+    put_xml(self, '<System><Input_Output><Assign><Video_Out><{0}>{1}</{0}></Video_Out></Assign></Input_Output></System>'.format(feature, source))
     
-def source_audio_in(audio, video):
-    put_xml('<System><Input_Output><Assign><Audio_In><{0}>{1}</{0}></Audio_In></Assign></Input_Output></System>'.format(video, audio))
+def source_audio_in(self, audio, video):
+    put_xml(self, '<System><Input_Output><Assign><Audio_In><{0}>{1}</{0}></Audio_In></Assign></Input_Output></System>'.format(video, audio))
     
-def wallpaper(pic):
-    put_xml('<System><Misc><Display><Wall_Paper>{0}</Wall_Paper></Display></Misc></System>'.format(pic))
+def wallpaper(self, pic):
+    put_xml(self, '<System><Misc><Display><Wall_Paper>{0}</Wall_Paper></Display></Misc></System>'.format(pic))
     
-def DisplayDimmer(level):
-    put_xml('<System><Misc><Display><FL><Dimmer>{0}</Dimmer></FL></Display></Misc></System>'.format(level))
+def DisplayDimmer(self, level):
+    put_xml(self, '<System><Misc><Display><FL><Dimmer>{0}</Dimmer></FL></Display></Misc></System>'.format(level))
 
-def straight(zone=-1):
-    zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>On</Straight><Sound_Program>Straight</Sound_Program></Current></Program_Sel></Surround>')
+def straight(self, zone=-1):
+    zone_put_xml(self, zone, '<Surround><Program_Sel><Current><Straight>On</Straight><Sound_Program>Straight</Sound_Program></Current></Program_Sel></Surround>')
 
-def surround_decode(zone=-1):
-    zone_put_xml(zone, '<Surround><Program_Sel><Current><Straight>Off</Straight><Sound_Program>Surround Decoder</Sound_Program></Current></Program_Sel></Surround>')
+def surround_decode(self, zone=-1):
+    zone_put_xml(self, zone, '<Surround><Program_Sel><Current><Straight>Off</Straight><Sound_Program>Surround Decoder</Sound_Program></Current></Program_Sel></Surround>')
 
-def toggle_straight_decode(zone=-1):
-    if get_straight(zone):
-        surround_decode(zone)
+def toggle_straight_decode(self, zone=-1):
+    if get_straight(self, zone):
+        surround_decode(self, zone)
     else:
-        straight(zone)
+        straight(self, zone)
 
-def get_straight(zone=-1):
-    return get_status_param_is_on('Straight', zone)
+def get_straight(self, zone=-1):
+    return get_status_param_is_on(self, 'Straight', zone)
 
-def channel7_on(zone=-1): # McB 1/11/2014 - Turn 7-channel mode on and off
-    zone_put_xml(zone, '<Surround><Program_Sel><Current><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel></Surround>')
+def channel7_on(self, zone=-1): # McB 1/11/2014 - Turn 7-channel mode on and off
+    zone_put_xml(self, zone, '<Surround><Program_Sel><Current><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel></Surround>')
 
-def channel7_off(zone=-1):
-    zone_put_xml(zone, '<Surround><Program_Sel><Current><Sound_Program>Standard</Sound_Program></Current></Program_Sel></Surround>')
+def channel7_off(self, zone=-1):
+    zone_put_xml(self, zone, '<Surround><Program_Sel><Current><Sound_Program>Standard</Sound_Program></Current></Program_Sel></Surround>')
 
+def set_enhancer(self, arg, zone=-1):
+    zone_put_xml(self, zone, '<Surround><Program_Sel><Current><Enhancer>{0}</Enhancer></Current></Program_Sel></Surround>'.format(arg))
 
-def set_enhancer(arg, zone=-1):
-    zone_put_xml(zone, '<Surround><Program_Sel><Current><Enhancer>{0}</Enhancer></Current></Program_Sel></Surround>'.format(arg))
+def get_enhancer(self, zone=-1):
+    return get_status_param_is_on(self, 'Enhancer', zone)
 
-def get_enhancer(zone=-1):
-    return get_status_param_is_on('Enhancer', zone)
-
-def get_sound_program_name():
-    return get_status_string('Sound_Program')
-
-def get_source_number():
-    return get_status_int('Src_Number')
-
-def toggle_enhancer():
-    if get_enhancer():
-        set_enhancer("Off")
+def toggle_enhancer(self):
+    if get_enhancer(self):
+        set_enhancer(self, "Off")
     else:
-        set_enhancer("On")
+        set_enhancer(self, "On")
 
-def next_source():
-    set_source_number(get_source_number() + 1)
+def set_sleep(self, arg, zone=-1):
+    zone_put_xml(self, zone, '<Power_Control><Sleep>{0}</Sleep></Power_Control>'.format(arg))
 
-def previous_source():
-    set_source_number(get_source_number() - 1)
+def set_radio_preset(self, preset):
+    put_xml(self, '<Tuner><Play_Control><Preset><Preset_Sel>{0}</Preset_Sel></Preset></Play_Control></Tuner>'.format(preset))
 
-def set_source_number(num, zone=-1):
-    zone_put_xml(zone, '<Input><Current_Input_Sel_Item><Src_Number>{0}</Src_Number></Current_Input_Sel_Item></Input>'.format(num))
+def get_radio_band(self):
+    return get_tuner_string(self, 'Band')
 
-def set_sleep(arg, zone=-1):
-    zone_put_xml(zone, '<Power_Control><Sleep>{0}</Sleep></Power_Control>'.format(arg))
-
-def set_radio_preset(preset):
-    put_xml('<Tuner><Play_Control><Preset><Preset_Sel>{0}</Preset_Sel></Preset></Play_Control></Tuner>'.format(preset))
-
-def get_radio_band():
-    return get_tuner_string('Band')
-
-def toggle_radio_amfm():
-    if get_radio_band() == 'FM':
-        set_radio_band('AM')
+def toggle_radio_amfm(self):
+    if get_radio_band(self) == 'FM':
+        set_radio_band(self, 'AM')
     else:
-        set_radio_band('FM')
+        set_radio_band(self, 'FM')
 
-def set_radio_band(band):
-    put_xml('<Tuner><Play_Control><Tuning><Band>{0}</Band></Tuning></Play_Control></Tuner>'.format(band))
+def set_radio_band(self, band):
+    put_xml(self, '<Tuner><Play_Control><Tuning><Band>{0}</Band></Tuning></Play_Control></Tuner>'.format(band))
 
-def next_radio_preset():
-    put_xml('<Tuner><Play_Control><Preset><Preset_Sel>Up', close_xml=True)
+def next_radio_preset(self):
+    put_xml(self, '<Tuner><Play_Control><Preset><Preset_Sel>Up', close_xml=True)
 
-def prev_radio_preset():
-    put_xml('<Tuner><Play_Control><Preset><Preset_Sel>Down', close_xml=True)
+def prev_radio_preset(self):
+    put_xml(self, '<Tuner><Play_Control><Preset><Preset_Sel>Down', close_xml=True)
 
-def modify_radio_preset(diff, turn_on, wrap):
+def modify_radio_preset(self, diff, turn_on, wrap):
     """
     Deprecated
     """
-    oldpreset = get_tuner_int('Preset_Sel')
+    oldpreset = get_tuner_int(self, 'Preset_Sel')
     preset = oldpreset + diff
-    set_radio_preset(preset)
+    set_radio_preset(self, preset)
     if turn_on:
-        is_on = is_radio_on()
+        is_on = is_radio_on(self)
         if not is_on:
             change_source('TUNER')
     if wrap and (not turn_on or is_on):
-        count = get_radio_preset_count()
+        count = get_radio_preset_count(self)
         if diff > 0 and preset > count:
             preset = 1
-            set_radio_preset(preset)
+            set_radio_preset(self, preset)
         elif diff < 0 and preset < 1:
             preset = count
-            set_radio_preset(preset)
+            set_radio_preset(self, preset)
 
 def get_radio_preset_count(**kwargs):
     """
     Currently broken
     """
-    xml = get_tuner_presets(**kwargs)
+    xml = get_tuner_presets(self, **kwargs)
     if kwargs.get('print_xml', False):
         print xml
     xmldoc = minidom.parseString(xml)
@@ -221,43 +205,44 @@ def get_radio_preset_count(**kwargs):
             done = True
     return count
 
-def is_radio_on():
-    return get_status_string('Input_Sel') == "TUNER"
+def is_radio_on(self):
+    return get_status_string(self, 'Input_Sel') == "TUNER"
 
-def auto_radio_freq(updown):
-    put_xml('<Tuner><Play_Control><Auto_Freq>{0}</Auto_Freq></Play_Control></Tuner>'.format(updown))
-
-def manual_radio_freq(updown):
-    put_xml('<Tuner><Play_Control><Tuning><Freq>{0}</Freq></Tuning></Play_Control></Tuner>'.format(updown))
+def radio_freq(self, updown):
+    if get_radio_band(self) == 'FM':
+        val = '<FM><Val>{0}</Val></FM>'.format(updown)
+    else:
+        val = '<AM><Val>{0}</Val></AM>'.format(updown)
+    put_xml(self, '<Tuner><Play_Control><Tuning><Freq>{0}</Freq></Tuning></Play_Control></Tuner>'.format(val))
 
 def set_radio_freq(freq):
     print "Not implemented!"
 
-def set_scene(scene_num, zone=-1):
-    zone_put_xml(zone, '<Scene><Scene_Sel>Scene {0}</Scene_Sel></Scene>'.format(scene_num))
+def set_scene(self, scene_num, zone=-1):
+    zone_put_xml(self, zone, '<Scene><Scene_Sel>Scene {0}</Scene_Sel></Scene>'.format(scene_num))
 
-def send_code(code):
-    put_xml('<System><Misc><Remote_Signal><Receive><Code>{0}</Code></Receive></Remote_Signal></Misc></System>'.format(code))
+def send_code(self, code):
+    put_xml(self, '<System><Misc><Remote_Signal><Receive><Code>{0}</Code></Receive></Remote_Signal></Misc></System>'.format(code))
 
-def set_active_zone(zone):
-    globals.active_zone = zone
+def set_active_zone(self, zone):
+    self.active_zone = zone
     print "Active Zone: Zone", zone if zone > -1 else chr(-1 * zone)
 
-def get_source_name(zone=-1):
-    return get_status_string("Input_Sel", zone)
+def get_source_name(self, zone=-1):
+    return get_status_string(self, "Input_Sel", zone)
 
-def get_system_config():
-    xml = get_config()
+def get_system_config(self):
+    xml = get_config(self)
     xmldoc = minidom.parseString(xml)
     return xmldoc
     
-def get_main_zone_inputs():
-    xml = get_xml('<Main_Zone><Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input></Main_Zone>')
+def get_main_zone_inputs(self):
+    xml = get_xml(self, '<Main_Zone><Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input></Main_Zone>')
     xmldoc = minidom.parseString(xml)
     return xmldoc
     
-def get_availability_dict(items_to_check):
-    xml = get_config()
+def get_availability_dict(self, items_to_check):
+    xml = get_config(self)
     xmldoc = minidom.parseString(xml)
     res = {}
     for item in items_to_check:
