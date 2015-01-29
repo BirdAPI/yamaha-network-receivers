@@ -19,7 +19,7 @@ def do_xml(self, xml, **kwargs):
     return_result = kwargs.get('return_result', False)
     print_error = kwargs.get('print_error', True)
     close_xml = kwargs.get('close_xml', False)
-    print_xml = kwargs.get('print_xml', True)
+    print_xml = kwargs.get('print_xml', False)
 
     if close_xml:
         xml = close_xml_tags(xml)

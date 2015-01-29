@@ -880,6 +880,54 @@ class RadioFreqDown(eg.ActionBase):
     def __call__(self):
         radio_freq(self.plugin, 'Down')
         
+
+class RadioSetExact(eg.ActionBase):
+    def __call__(self, freq, band):
+        set_radio_freq(self.plugin, freq, band)
+        
+    def Configure(self, freq="87.5", band="FM"):
+        panel = eg.ConfigPanel()
+        self.freq = freq
+        self.bands = ['AM', 'FM']
+        wx.StaticText(panel, label="Band: ", pos=(10, 10))
+        self.choice_band = wx.Choice(panel, -1, (10, 30), choices=self.bands)
+        if band in self.bands:
+            self.choice_band.SetStringSelection(band)
+        self.choice_band.Bind(wx.EVT_CHOICE, self.BandChanged)
+
+        wx.StaticText(panel, label="Frequency: ", pos=(10, 60))
+        self.floatspin = FS.FloatSpin(panel, -1, pos=(10, 80), min_val=87.5, max_val=107.9,
+            increment=0.2, value=float(freq), agwStyle=FS.FS_LEFT)
+        self.floatspin.SetFormat("%f")
+        self.floatspin.SetDigits(1)
+        
+        #self.objects = [ 'Power', 'Sleep', 'Volume Level', 'Mute', 'Input Selection', 'Scene', 'Straight', 'Enhancer', 'Sound Program']
+        #wx.StaticText(panel, label="Object: ", pos=(10, 60))
+        #self.choice_object = wx.Choice(panel, -1, (10, 80), choices=self.objects)
+        self.BandChanged()
+        #if object in self.objects:
+        #    self.choice_object.SetStringSelection(object)
+            
+        while panel.Affirmed():
+            panel.SetResult(self.floatspin.GetValue(), self.bands[self.choice_band.GetCurrentSelection()])
+
+    def BandChanged(self, event=None):
+        band = self.bands[self.choice_band.GetCurrentSelection()]
+        if band == "FM":
+            self.floatspin.SetRange(min_val=87.5, max_val=107.9)
+            if 87.5 <= float(self.freq) and float(self.freq) <= 107.9:
+                self.floatspin.SetValue(float(self.freq))
+            else:
+                self.floatspin.SetValue(float(87.5))
+            self.floatspin.SetIncrement(0.2)
+        else:
+            self.floatspin.SetRange(min_val=530, max_val=1710)
+            if 530 <= float(self.freq) and float(self.freq) <= 1710:
+                self.floatspin.SetValue(float(self.freq))
+            else:
+                self.floatspin.SetValue(float(530))
+            self.floatspin.SetIncrement(10)
+        
 class SetFeatureVideoOut(eg.ActionBase):
 
     def __call__(self, Feature, Source):

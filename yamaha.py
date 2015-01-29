@@ -215,8 +215,11 @@ def radio_freq(self, updown):
         val = '<AM><Val>{0}</Val></AM>'.format(updown)
     put_xml(self, '<Tuner><Play_Control><Tuning><Freq>{0}</Freq></Tuning></Play_Control></Tuner>'.format(val))
 
-def set_radio_freq(freq):
-    print "Not implemented!"
+def set_radio_freq(self, freq, band):
+    if band == 'FM':
+        put_xml(self, '<Tuner><Play_Control><Tuning><Freq><FM><Val>{0}</Val></FM></Freq></Tuning></Play_Control></Tuner>'.format(int(freq*100)))
+    else:
+        put_xml(self, '<Tuner><Play_Control><Tuning><Freq><AM><Val>{0}</Val></AM></Freq></Tuning></Play_Control></Tuner>'.format(int(freq)))
 
 def set_scene(self, scene_num, zone=-1):
     zone_put_xml(self, zone, '<Scene><Scene_Sel>Scene {0}</Scene_Sel></Scene>'.format(scene_num))
