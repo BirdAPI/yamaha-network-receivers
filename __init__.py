@@ -177,6 +177,7 @@ class YamahaRX(eg.PluginClass):
         self.AVAILABLE_INFO_SOURCES = []
         self.AVAILABLE_FEATURE_SOURCES = []
         self.AVAILABLE_INPUT_SOURCES = []
+        self.AVAILABLE_SOURCES_RENAME = []
         
         if ip is not None:
             setup_availability(self)

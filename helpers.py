@@ -224,6 +224,7 @@ def setup_availability(self):
         stop = False
         while stop==False:
             try:
+                self.AVAILABLE_SOURCES_RENAME.append([str(node.childNodes[x].tagName), str(node.childNodes[x].firstChild.data)])
                 self.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.data))
                 inputs.append(str(node.childNodes[x].firstChild.data))
             except:
@@ -238,6 +239,7 @@ def setup_availability(self):
             stop = False
             while stop==False:
                 try:
+                    self.AVAILABLE_SOURCES_RENAME.append([str(node.childNodes[x].tagName), str(node.childNodes[x].firstChild.data)])
                     self.AVAILABLE_INPUT_SOURCES.append(str(node.childNodes[x].firstChild.firstChild.data))
                     inputs.append(str(node.childNodes[x].firstChild.firstChild.data))
                 except:
@@ -246,7 +248,11 @@ def setup_availability(self):
             
     self.AVAILABLE_ZONES = [ zone.replace('_', ' ') for zone in zones ]
     self.AVAILABLE_SOURCES = [ input.replace('_', ' ') for input in inputs ]
-    self.AVAILABLE_SOURCES = list(set(self.AVAILABLE_SOURCES))
+    #self.AVAILABLE_SOURCES = list(set(self.AVAILABLE_SOURCES))
+    tempList =[]
+    for source in self.AVAILABLE_SOURCES_RENAME:
+        tempList.append([source[0].replace('_',''),source[1].replace('_','')])
+    self.AVAILABLE_SOURCES_RENAME = list(tempList)
 
 def get_available_zones(self, include_active, fallback_zones, limit=None):
     """

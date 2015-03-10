@@ -95,12 +95,32 @@ def toggle_mute(self, zone=-1):
         mute_on(self, zone)
 
 def change_source(self, source, zone=-1):
+    #first look to see if the source has been renamed
+    for s in self.AVAILABLE_SOURCES_RENAME:
+        if source == s[1]:
+            source = s[0]
     zone_put_xml(self, zone, '<Input><Input_Sel>{0}</Input_Sel></Input>'.format(source))
 
 def feature_video_out(self, feature, source):
+    #first look to see if the source has been renamed
+    for s in self.AVAILABLE_SOURCES_RENAME:
+        if source == s[1]:
+            source = s[0]
+    #first look to see if the source has been renamed
+    for s in self.AVAILABLE_SOURCES_RENAME:
+        if feature == s[1]:
+            feature = s[0]
     put_xml(self, '<System><Input_Output><Assign><Video_Out><{0}>{1}</{0}></Video_Out></Assign></Input_Output></System>'.format(feature, source))
     
 def source_audio_in(self, audio, video):
+    #first look to see if the source has been renamed
+    for s in self.AVAILABLE_SOURCES_RENAME:
+        if audio == s[1]:
+            audio = s[0]
+    #first look to see if the source has been renamed
+    for s in self.AVAILABLE_SOURCES_RENAME:
+        if video == s[1]:
+            video = s[0]
     put_xml(self, '<System><Input_Output><Assign><Audio_In><{0}>{1}</{0}></Audio_In></Assign></Input_Output></System>'.format(video, audio))
     
 def wallpaper(self, pic):
