@@ -435,7 +435,7 @@ class CursorAction(eg.ActionBase):
     def Configure(self, action="Up", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.All_ZONES_PLUS_ACTIVE, limit=2)
         actions = globals.CURSOR_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -469,7 +469,7 @@ class OperationAction(eg.ActionBase):
     def Configure(self, action="Play", zone="Active Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.ALL_ZONES_PLUS_ACTIVE, limit=2)
         actions = globals.OPERATION_CODES[1].keys()
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -503,7 +503,7 @@ class NumCharAction(eg.ActionBase):
     def Configure(self, action="1", zone="Main Zone"):
         panel = eg.ConfigPanel()
 
-        zones = get_available_zones(self.plugin, True, globals.TWO_ZONES_PLUS_ACTIVE, limit=2)
+        zones = get_available_zones(self.plugin, True, globals.ALL_ZONES_PLUS_ACTIVE, limit=2)
         actions = sorted(globals.NUMCHAR_CODES[1].keys(), key=lambda k: int(k) if len(k) == 1 else 10 + len(k))
 
         wx.StaticText(panel, label="Zone: ", pos=(10, 10))
@@ -661,10 +661,8 @@ class GetInfo(eg.ActionBase):
         self.choice_object.SetSelection(0) 
 
 class GetAvailability(eg.ActionBase):
-    def __call__(self):
-        setup_availability(self.plugin)
-        print 'Zones:', self.plugin.AVAILABLE_ZONES
-        print 'Inputs:', self.plugin.AVAILABLE_SOURCES
+    def __call__(self, **kwargs):
+        setup_availability(self.plugin, **kwargs)
         return list(self.plugin.AVAILABLE_SOURCES)
 
 class AutoDetectIP(eg.ActionBase):

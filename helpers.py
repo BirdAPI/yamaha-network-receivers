@@ -191,13 +191,13 @@ def close_xml_tags(xml):
 
     return ''.join(output)
 
-def setup_availability(self):
+def setup_availability(self, **kwargs):
     """
     Query the receiver to see which zones and inputs it supports.
     Should be called after a successful ip check.
     """
-    xmldoc = yamaha.get_system_config(self)
-
+    xmldoc = yamaha.get_system_config(self, **kwargs)
+        
     zones = []
     inputs = []
     

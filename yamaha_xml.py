@@ -11,7 +11,6 @@ def do_xml(self, xml, **kwargs):
     Base function to send/receive xml using either GET or POST
 
     Optional Parameters:
-    timeout, ip, port, return_result, print_error, close_xml, print_xml
     """
     timeout = float(kwargs.get('timeout', self.default_timeout))
     ip = kwargs.get('ip', self.ip_address)
@@ -20,6 +19,8 @@ def do_xml(self, xml, **kwargs):
     print_error = kwargs.get('print_error', True)
     close_xml = kwargs.get('close_xml', False)
     print_xml = kwargs.get('print_xml', False)
+    retry_count = kwargs.get('retry_count', 0)  #used for retry errors
+    print_response = kwargs.get('print_response', False)  #used for returning raw xml response
 
     if close_xml:
         xml = close_xml_tags(xml)
@@ -34,6 +35,8 @@ def do_xml(self, xml, **kwargs):
         if return_result:
             response = conn.getresponse()
             rval = response.read()
+            if print_response:
+                print rval
             conn.close()
             return rval
         else:
@@ -49,8 +52,14 @@ def do_xml(self, xml, **kwargs):
                 print "Command did not go to Yamaha Receiver, error NOT possible to set on this model."
     except socket.error:
         if print_error:
-           eg.PrintError("Unable to communicate with Yamaha Receiver. The connection timed out.")
-           return None
+            #eg.PrintError("Unable to communicate with Yamaha Receiver. Will try again for 10 times.")
+            kwargs['retry_count'] = retry_count + 1
+            if retry_count < 10:
+                kwargs['close_xml'] = False #could have potential for further errors if not done.
+                return do_xml(self, xml, **kwargs)
+            else:
+                eg.PrintError("Need to check communication with Yamaha Receiver.")
+                return None
         else:
             raise
 

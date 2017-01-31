@@ -254,8 +254,8 @@ def set_active_zone(self, zone):
 def get_source_name(self, zone=-1):
     return get_status_string(self, "Input_Sel", zone)
 
-def get_system_config(self):
-    xml = get_config(self)
+def get_system_config(self, **kwargs):
+    xml = get_config(self, **kwargs)
     xmldoc = minidom.parseString(xml)
     return xmldoc
     
