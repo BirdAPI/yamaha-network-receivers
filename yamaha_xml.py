@@ -11,6 +11,7 @@ def do_xml(self, xml, **kwargs):
     Base function to send/receive xml using either GET or POST
 
     Optional Parameters:
+    timeout, ip, port, return_result, print_error, close_xml, print_xml, retry_count, print_response
     """
     timeout = float(kwargs.get('timeout', self.default_timeout))
     ip = kwargs.get('ip', self.ip_address)

@@ -80,7 +80,7 @@ def power_on(self, zone=-1):
     zone_put_xml(self, zone, '<Power_Control><Power>On</Power></Power_Control>')
 
 def power_off(self, zone=-1):
-    zone_put_xml(sef, zone, '<Power_Control><Power>Off</Power></Power_Control>')
+    zone_put_xml(self, zone, '<Power_Control><Power>Off</Power></Power_Control>')
 
 def power_standby(self, zone=-1):
     zone_put_xml(self, zone, '<Power_Control><Power>Standby</Power></Power_Control>')

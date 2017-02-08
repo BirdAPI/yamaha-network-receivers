@@ -8,7 +8,11 @@ ALL_MODELS = [ 'ANY',
                '',
                'RX-V473', 'RX-V573', 'RX-V673', 'RX-V773',
                '',
-               'RX-V475', 'RX-V575', 'RX-V675', 'RX-V775' ]
+               'RX-V475', 'RX-V575', 'RX-V675', 'RX-V775',
+               '',
+               'RX-V381', 'RX-V481', 'RX-V581', 'RX-V681', 'RX-V781',
+               '',
+               'TSR-5790']
 
 # NUMCHAR_CODES[zone][action]
 NUMCHAR_CODES = {
